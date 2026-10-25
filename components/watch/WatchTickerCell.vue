@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
-import { Check } from "lucide-vue-next";
+import { Check, Pause } from "lucide-vue-next";
 import type {
   TickerCellModel,
   TickerPlayer,
@@ -26,6 +26,7 @@ const props = defineProps<{
 const { t } = useI18n();
 
 const platform = computed(() => streamPlatformMeta(props.model.streams[0]));
+const paused = computed(() => props.model.status.dot === "paused");
 const mySteamId = computed(() => useAuthStore().me?.steam_id);
 
 // Team and player avatars are stored as paths on the API host.
@@ -74,9 +75,12 @@ const cellClasses = computed(() => [
   "group relative flex h-[5.5rem] w-56 shrink-0 snap-start flex-col gap-1.5 rounded-lg border px-3 pb-2.5 pt-2 text-left transition-[background-color,border-color,box-shadow] duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--tac-amber))] focus-visible:ring-offset-2 focus-visible:ring-offset-background",
   props.staged
     ? "border-[hsl(var(--tac-amber))] bg-muted/30 shadow-[inset_0_0_0_1px_hsl(var(--tac-amber))]"
-    : props.model.kind === "pre"
-      ? "border-[hsl(var(--tac-amber)/0.4)] bg-[hsl(var(--tac-amber)/0.06)] hover:border-[hsl(var(--tac-amber)/0.7)] hover:bg-[hsl(var(--tac-amber)/0.1)]"
-      : "border-border bg-muted/20 hover:border-foreground/20 hover:bg-muted/40",
+    : paused.value
+      ? "border-[hsl(var(--tac-amber)/0.55)] bg-muted/20 hover:border-[hsl(var(--tac-amber)/0.8)] hover:bg-muted/40"
+      : props.model.kind === "pre"
+        ? "border-[hsl(var(--tac-amber)/0.4)] bg-[hsl(var(--tac-amber)/0.06)] hover:border-[hsl(var(--tac-amber)/0.7)] hover:bg-[hsl(var(--tac-amber)/0.1)]"
+        : "border-border bg-muted/20 hover:border-foreground/20 hover:bg-muted/40",
+  paused.value && "paused-hatch",
 ]);
 
 const checkInWidth = computed(() =>
@@ -100,12 +104,18 @@ const checkInWidth = computed(() =>
         class="inline-flex min-w-0 max-w-[70%] shrink-0 items-center gap-1.5 tabular-nums"
         :class="{
           'font-semibold text-foreground':
-            model.kind === 'live' || model.kind === 'upcoming',
-          'font-bold text-[hsl(var(--tac-amber))]': model.kind === 'pre',
+            !paused && (model.kind === 'live' || model.kind === 'upcoming'),
+          'font-bold text-[hsl(var(--tac-amber))]':
+            paused || model.kind === 'pre',
         }"
       >
+        <Pause
+          v-if="paused"
+          class="size-2.5 shrink-0 fill-current"
+          aria-hidden="true"
+        />
         <span
-          v-if="model.status.dot"
+          v-else-if="model.status.dot"
           class="relative inline-flex size-2 shrink-0"
         >
           <span

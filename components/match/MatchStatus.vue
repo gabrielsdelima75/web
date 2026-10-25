@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { computed } from "vue";
-import { e_match_status_enum, e_match_map_status_enum } from "~/generated/zeus";
+import { Pause } from "lucide-vue-next";
+import { e_match_status_enum } from "~/generated/zeus";
 import TimeAgo from "~/components/TimeAgo.vue";
+import { isMatchPaused } from "~/utilities/matchPaused";
 import {
   isEndedWithResult,
   resultStatusLabelKey,
@@ -35,11 +37,7 @@ const PROBLEM_STATUSES = [
 
 const resultLabelKey = computed(() => resultStatusLabelKey(props.match));
 
-const hasPausedMap = computed(() => {
-  return props.match.match_maps?.some(
-    (m) => m.status === e_match_map_status_enum.Paused,
-  );
-});
+const paused = computed(() => isMatchPaused(props.match));
 
 const badgeVariant = computed(() => {
   if (
@@ -58,6 +56,10 @@ const badgeClasses = computed(() => {
 
   if (badgeVariant.value === "destructive") {
     return `${base} border-destructive/45 bg-destructive/10 text-destructive`;
+  }
+
+  if (paused.value) {
+    return `${base} paused-hatch border-[hsl(var(--tac-amber)/0.45)] bg-[hsl(var(--tac-amber)/0.1)] text-[hsl(var(--tac-amber))]`;
   }
 
   if (props.match.status === e_match_status_enum.Live) {
@@ -93,9 +95,8 @@ const badgeClasses = computed(() => {
         <template v-else>{{ $t("match.status.scheduled_asap") }}</template>
       </span>
     </template>
-    <template
-      v-else-if="match.status === e_match_status_enum.Live && hasPausedMap"
-    >
+    <template v-else-if="paused">
+      <Pause class="h-2 w-2 shrink-0 fill-current" aria-hidden="true" />
       {{ $t("match.status.paused") }}
     </template>
     <template v-else>

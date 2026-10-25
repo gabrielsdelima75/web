@@ -79,4 +79,29 @@ describe("EventMatchRow", () => {
         .every((name) => !name.classes("text-muted-foreground")),
     ).toBe(true);
   });
+
+  it("says paused, without the live marker, while the map is paused", async () => {
+    const wrapper = await mountSuspended(EventMatchRow, {
+      props: {
+        match: match({
+          status: "Live",
+          winning_lineup_id: null,
+          match_maps: [
+            {
+              id: "mm1",
+              status: "Paused",
+              is_current_map: true,
+              lineup_1_score: 4,
+              lineup_2_score: 11,
+              winning_lineup_id: null,
+              map: { name: "de_inferno", label: "Inferno" },
+            },
+          ],
+        }),
+      },
+    });
+
+    expect(wrapper.text()).toContain("Paused");
+    expect(wrapper.find(".animate-ping").exists()).toBe(false);
+  });
 });

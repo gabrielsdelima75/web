@@ -36,4 +36,19 @@ describe("MatchStatus", () => {
       expect(wrapper.classes()).toContain("text-destructive");
     },
   );
+
+  it("shows a live match on a paused map as paused, not live", async () => {
+    const wrapper = await mountSuspended(MatchStatus, {
+      props: {
+        match: {
+          ...match("Live", null),
+          match_maps: [{ status: "Finished" }, { status: "Paused" }],
+        },
+      },
+    });
+
+    expect(wrapper.text()).toBe("Paused");
+    expect(wrapper.classes()).toContain("paused-hatch");
+    expect(wrapper.classes()).not.toContain("text-green-500");
+  });
 });

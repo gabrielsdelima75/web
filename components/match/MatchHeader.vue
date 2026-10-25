@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
-import { AlertTriangle } from "lucide-vue-next";
+import { AlertTriangle, Pause } from "lucide-vue-next";
 import { NuxtLink } from "#components";
 import MatchLineupScoreDisplay from "~/components/match/MatchLineupScoreDisplay.vue";
 import TimeAgo from "~/components/TimeAgo.vue";
+import { isMatchPaused } from "~/utilities/matchPaused";
 import MatchActions from "~/components/match/MatchActions.vue";
 import MatchHeaderVeto from "~/components/match/MatchHeaderVeto.vue";
 import MatchSourceBadge from "~/components/MatchSourceBadge.vue";
@@ -43,6 +44,7 @@ const ENDED = [
 ];
 
 const isLive = computed(() => props.match.status === e_match_status_enum.Live);
+const paused = computed(() => isMatchPaused(props.match));
 const isEnded = computed(() => ENDED.includes(props.match.status));
 const isNative = computed(
   () => !props.match.source || props.match.source === "5stack",
@@ -50,6 +52,9 @@ const isNative = computed(
 const bestOf = computed<number>(() => props.match.options?.best_of ?? 1);
 const maps = computed<any[]>(() => props.match.match_maps ?? []);
 const statusText = computed(() => {
+  if (paused.value) {
+    return t("match.status.paused");
+  }
   const labelKey = resultStatusLabelKey(props.match);
   if (labelKey) {
     return t(labelKey);
@@ -60,6 +65,9 @@ const statusText = computed(() => {
 const statusTone = computed(() => {
   if (isEndedWithResult(props.match)) {
     return "text-success";
+  }
+  if (paused.value) {
+    return "text-[hsl(var(--tac-amber))]";
   }
   switch (props.match.status) {
     case e_match_status_enum.Live:
@@ -226,7 +234,12 @@ const resultText = computed(() =>
           class="inline-flex items-center gap-2 whitespace-nowrap text-[13px] font-semibold"
           :class="statusTone"
         >
-          <span class="relative flex size-2 shrink-0">
+          <Pause
+            v-if="paused"
+            class="size-2.5 shrink-0 fill-current"
+            aria-hidden="true"
+          />
+          <span v-else class="relative flex size-2 shrink-0">
             <span
               v-if="isLive"
               class="absolute inline-flex size-full animate-ping rounded-full bg-current opacity-75 motion-reduce:animate-none"
@@ -427,7 +440,12 @@ const resultText = computed(() =>
                   <span
                     class="inline-flex items-center gap-1.5 text-[13px] font-bold text-foreground"
                   >
-                    <span v-if="isLive" class="relative flex size-2">
+                    <Pause
+                      v-if="paused"
+                      class="size-2.5 fill-current text-[hsl(var(--tac-amber))]"
+                      aria-hidden="true"
+                    />
+                    <span v-else-if="isLive" class="relative flex size-2">
                       <span
                         class="absolute inline-flex size-full animate-ping rounded-full bg-destructive opacity-75 motion-reduce:animate-none"
                       ></span>
@@ -571,7 +589,11 @@ const resultText = computed(() =>
         <span
           class="flex items-center gap-1.5 pl-[52px] pt-2.5 text-[15px] tabular-nums"
           :class="
-            isLive ? 'font-semibold text-destructive' : 'text-muted-foreground'
+            paused
+              ? 'font-semibold text-[hsl(var(--tac-amber))]'
+              : isLive
+                ? 'font-semibold text-destructive'
+                : 'text-muted-foreground'
           "
         >
           {{ mapLabel(headline.map.map) }}
@@ -608,11 +630,13 @@ const resultText = computed(() =>
             :key="chip.key"
             class="grid min-w-0 justify-items-center gap-1 px-1.5 py-2"
             :class="
-              chip.matchMap?.is_current_map && isLive
-                ? 'bg-destructive/10 text-foreground/90'
-                : chip.matchMap
-                  ? 'text-foreground/90'
-                  : 'text-muted-foreground/60'
+              chip.matchMap?.is_current_map && paused
+                ? 'bg-[hsl(var(--tac-amber)/0.1)] text-foreground/90'
+                : chip.matchMap?.is_current_map && isLive
+                  ? 'bg-destructive/10 text-foreground/90'
+                  : chip.matchMap
+                    ? 'text-foreground/90'
+                    : 'text-muted-foreground/60'
             "
           >
             <span
@@ -657,9 +681,11 @@ const resultText = computed(() =>
           :class="
             !chip.matchMap
               ? 'outline-dashed outline-1 -outline-offset-1 outline-white/[0.11]'
-              : chip.matchMap.is_current_map && isLive
-                ? 'bg-white/[0.04] text-foreground/90 ring-1 ring-inset ring-destructive/45'
-                : 'bg-white/[0.04] text-foreground/90 ring-1 ring-inset ring-white/[0.07]'
+              : chip.matchMap.is_current_map && paused
+                ? 'paused-hatch bg-white/[0.04] text-foreground/90 ring-1 ring-inset ring-[hsl(var(--tac-amber)/0.55)]'
+                : chip.matchMap.is_current_map && isLive
+                  ? 'bg-white/[0.04] text-foreground/90 ring-1 ring-inset ring-destructive/45'
+                  : 'bg-white/[0.04] text-foreground/90 ring-1 ring-inset ring-white/[0.07]'
           "
         >
           <template v-if="chip.matchMap">

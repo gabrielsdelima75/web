@@ -22,6 +22,7 @@ type MatchMap = {
   lineup_1_score?: number | null;
   lineup_2_score?: number | null;
   winning_lineup_id?: string | null;
+  status?: string | null;
   vetos?: Veto[];
 };
 
@@ -41,7 +42,7 @@ const props = defineProps<{
   };
 }>();
 
-type DotStatus = "completed" | "current" | "not_started" | "unused";
+type DotStatus = "completed" | "current" | "paused" | "not_started" | "unused";
 
 type Dot = {
   status: DotStatus;
@@ -64,7 +65,7 @@ const dots = computed<Dot[]>(() => {
     } else if (matchOver) {
       status = "unused";
     } else if (matchMap && !foundCurrent) {
-      status = "current";
+      status = matchMap.status === "Paused" ? "paused" : "current";
       foundCurrent = true;
     } else {
       status = "not_started";
@@ -84,6 +85,8 @@ const statusLabel = (status: DotStatus) => {
       return t("map_dots.complete");
     case "current":
       return t("map_dots.live");
+    case "paused":
+      return t("match.status.paused");
     case "unused":
       return t("map_dots.unplayed");
     default:
@@ -111,12 +114,14 @@ const pickedBy = (matchMap?: MatchMap) => {
 };
 
 const showScoreFor = (status: DotStatus) =>
-  status === "completed" || status === "current";
+  status === "completed" || status === "current" || status === "paused";
 
 const dotClass = (status: DotStatus) => {
   switch (status) {
     case "current":
       return "bg-[hsl(142_71%_55%)] shadow-[0_0_8px_hsl(142_71%_55%/0.6)]";
+    case "paused":
+      return "bg-[hsl(var(--tac-amber))]";
     case "completed":
       return "bg-zinc-300";
     case "unused":
@@ -130,6 +135,8 @@ const statusAccent = (status: DotStatus) => {
   switch (status) {
     case "current":
       return "text-[hsl(142_71%_60%)] bg-[hsl(142_71%_40%/0.12)]";
+    case "paused":
+      return "text-[hsl(var(--tac-amber))] bg-[hsl(var(--tac-amber)/0.12)]";
     case "completed":
       return "text-foreground bg-muted/40";
     case "unused":

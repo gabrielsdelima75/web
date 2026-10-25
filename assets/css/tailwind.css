@@ -252,6 +252,16 @@ mark {
   height: clamp(1.75rem, 4.2vw, 3rem);
 }
 
+/* Faint amber hatching over a paused match's surface, so it reads apart from
+   live (red/green) and pre-match (flat amber) at a glance. */
+.paused-hatch {
+  background-image: repeating-linear-gradient(
+    135deg,
+    hsl(var(--tac-amber) / 0.12) 0 4px,
+    transparent 4px 10px
+  );
+}
+
 /* Settings content is overwhelmingly label-left / control-right rows and prose.
    Unbounded on a wide monitor, a row stretches until the switch is half a screen
    from the label it belongs to, and a paragraph runs past a comfortable measure.

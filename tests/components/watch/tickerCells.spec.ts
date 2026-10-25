@@ -94,8 +94,27 @@ describe("ticker cell", () => {
       ).status.text;
 
     expect(at("Warmup")).toBe("Warmup · Inferno");
-    expect(at("Paused")).toBe("Paused · Inferno");
+    expect(at("Paused")).toBe("Paused · R25 · Inferno");
     expect(at("Overtime")).toBe("OT · R25 · Inferno");
+  });
+
+  it("marks a paused map apart from live play", () => {
+    const cell = tickerCell(
+      match({
+        match_maps: [
+          { id: "b", status: "Paused", is_current_map: true, lineup_1_score: 4, lineup_2_score: 11, map: inferno },
+        ],
+      }),
+      ctx,
+    );
+
+    expect(cell.kind).toBe("live");
+    expect(cell.status).toEqual({
+      dot: "paused",
+      text: "Paused · R16 · Inferno",
+      detail: null,
+    });
+    expect(cell.teams.map((team) => team.score)).toEqual([4, 11]);
   });
 
   it("names an official map, which has no label, the way the rest of the site does", () => {

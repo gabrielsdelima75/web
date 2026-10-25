@@ -53,7 +53,11 @@ export type TickerCellModel = {
   id: string;
   kind: TickerKind;
   // detail: the pre-match step beside "About to go live" (Check-in, Map veto).
-  status: { dot: "live" | "soon" | null; text: string; detail: string | null };
+  status: {
+    dot: "live" | "soon" | "paused" | null;
+    text: string;
+    detail: string | null;
+  };
   // Both lineups together, for the check-in progress bar.
   checkIn: TickerCheckIn | null;
   teams: [TickerTeam, TickerTeam];
@@ -255,7 +259,15 @@ function statusLine(
     case "Scheduled":
       return live(join(t("match.stream.card.up_next"), map));
     case "Paused":
-      return live(join(t("match.stream.card.paused"), map));
+      return {
+        dot: "paused",
+        text: join(
+          t("match.stream.card.paused"),
+          t("pages.watch.ticker.round_short", { round }),
+          map,
+        ),
+        detail: null,
+      };
     case "Overtime":
       return live(
         join(

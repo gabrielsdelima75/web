@@ -5,6 +5,7 @@ import gql from "graphql-tag";
 import {
   CirclePlus,
   MoreVertical,
+  Pause,
   RotateCcw,
   Settings2,
   TriangleAlert,
@@ -52,6 +53,7 @@ import {
   type NegotiationWindow,
 } from "~/utilities/bracketNegotiation";
 import { isBracketManuallyScheduled } from "~/utilities/tournamentManualScheduling";
+import { isMatchPaused } from "~/utilities/matchPaused";
 import {
   isEndedWithResult,
   resultStatusLabelKey,
@@ -708,15 +710,17 @@ const cardClasses = (bracket: Bracket) => {
       : "bg-[hsl(240_6%_8%)]",
     onPath
       ? "border-[hsl(var(--tac-amber))]"
-      : isActiveMatch(bracket)
-        ? "border-emerald-500/70 shadow-[0_0_0_1px_rgb(16_185_129/0.25)]"
-        : isWaitingForCheckIn(bracket)
-          ? "border-amber-500/60"
-          : hasProblemStatus(bracket)
-            ? "border-red-500/60"
-            : isEmptyBracket(bracket)
-              ? ""
-              : "border-border [@media(hover:hover)]:hover:border-foreground/35",
+      : isMatchPaused(bracket.match)
+        ? "border-[hsl(var(--tac-amber)/0.7)] shadow-[0_0_0_1px_hsl(var(--tac-amber)/0.25)]"
+        : isActiveMatch(bracket)
+          ? "border-emerald-500/70 shadow-[0_0_0_1px_rgb(16_185_129/0.25)]"
+          : isWaitingForCheckIn(bracket)
+            ? "border-amber-500/60"
+            : hasProblemStatus(bracket)
+              ? "border-red-500/60"
+              : isEmptyBracket(bracket)
+                ? ""
+                : "border-border [@media(hover:hover)]:hover:border-foreground/35",
     following && !onPath && "opacity-30",
   ];
 };
@@ -984,6 +988,7 @@ const useEtaClock = createSharedComposable(() =>
     >
       <div
         class="flex h-[1.375rem] items-center justify-between gap-2 bg-muted/35 pl-2 pr-1 text-[0.66rem] font-semibold text-muted-foreground"
+        :class="isMatchPaused(bracket.match) && 'paused-hatch'"
       >
         <span
           class="min-w-0 truncate"
@@ -1006,6 +1011,14 @@ const useEtaClock = createSharedComposable(() =>
         <span class="flex shrink-0 items-center gap-1.5">
           <template v-if="isActiveMatch(bracket)">
             <span
+              v-if="isMatchPaused(bracket.match)"
+              class="inline-flex items-center gap-1 font-bold uppercase tracking-[0.08em] text-[hsl(var(--tac-amber))]"
+            >
+              <Pause class="h-2 w-2 fill-current" aria-hidden="true" />
+              {{ $t("match.status.paused") }}
+            </span>
+            <span
+              v-else
               class="inline-flex items-center gap-1 font-bold uppercase tracking-[0.08em] text-emerald-400"
             >
               <span class="relative flex h-1.5 w-1.5">

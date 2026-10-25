@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import { Pause } from "lucide-vue-next";
 import MatchLineupScoreDisplay from "~/components/match/MatchLineupScoreDisplay.vue";
 import { TICKER_LIVE_STATUSES } from "~/components/watch/watchTicker";
 import { dateLocale } from "~/utilities/dateLocale";
 import mapLabel from "~/utilities/mapLabel";
+import { isMatchPaused } from "~/utilities/matchPaused";
 import { resultStatusLabelKey } from "~/utilities/teamResults";
 
 // One dense result line for the event overview: when, where, who, score.
@@ -14,6 +16,7 @@ const props = defineProps<{ match: any }>();
 const live = computed(() =>
   (TICKER_LIVE_STATUSES as readonly string[]).includes(props.match.status),
 );
+const paused = computed(() => isMatchPaused(props.match));
 const map = computed(
   () =>
     props.match.match_maps?.find((matchMap: any) => matchMap.is_current_map)
@@ -46,7 +49,14 @@ const lost = (lineupId: string) =>
         class="whitespace-nowrap text-xs tabular-nums text-muted-foreground"
       >
         <span
-          v-if="live"
+          v-if="paused"
+          class="inline-flex items-center gap-1.5 font-semibold text-[hsl(var(--tac-amber))]"
+        >
+          <Pause class="h-2.5 w-2.5 fill-current" aria-hidden="true" />
+          {{ $t("match.status.paused") }}
+        </span>
+        <span
+          v-else-if="live"
           class="inline-flex items-center gap-1.5 font-semibold text-destructive"
         >
           <span class="relative inline-flex h-2 w-2">

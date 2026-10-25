@@ -4,6 +4,7 @@ import { useApolloClient } from "@vue/apollo-composable";
 import { createReusableTemplate } from "@vueuse/core";
 import { ChevronDown, Trophy } from "lucide-vue-next";
 import { Drawer, DrawerContent, DrawerTitle } from "~/components/ui/drawer";
+import { injectPageFullscreen } from "~/composables/usePageFullscreen";
 import { order_by } from "~/generated/zeus";
 import { generateSubscription } from "~/graphql/graphqlGen";
 import MatchLineupScoreDisplay from "~/components/match/MatchLineupScoreDisplay.vue";
@@ -48,10 +49,14 @@ const props = withDefaults(
 const open = defineModel<boolean>("open", { default: false });
 
 // Fullscreen tracking — gates visibility when requireFullscreen is set.
-const isFullscreen = ref(false);
+const elementFullscreen = ref(false);
 function onFullscreenChange() {
-  isFullscreen.value = !!document.fullscreenElement;
+  elementFullscreen.value = !!document.fullscreenElement;
 }
+const pageFullscreen = injectPageFullscreen();
+const isFullscreen = computed(
+  () => elementFullscreen.value || !!pageFullscreen?.active.value,
+);
 
 // On a phone the player is too small to read the panel in, so it opens in a
 // drawer instead. Fullscreen keeps it in the player: nothing else shows there.

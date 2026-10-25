@@ -211,6 +211,27 @@ describe("LiveStreamPlayer on the match page", () => {
     expect(wrapper.text()).toContain("Stream stopped");
   });
 
+  it("leaves fullscreen from the close instead of stopping", async () => {
+    const exitPageFullscreen = vi.fn();
+    const FullscreenCanvas = defineComponent({
+      setup(_, { expose, slots }) {
+        expose({ pageFullscreen: true, exitPageFullscreen });
+        return () => h("div", { class: "stream-canvas" }, slots.default?.());
+      },
+    });
+    vi.stubGlobal("matchMedia", (query: string) => ({
+      matches: query === "(pointer: coarse)",
+    }));
+    const wrapper = await mountPlayer({}, { StreamCanvas: FullscreenCanvas });
+    await pushStream(streamRow);
+    vi.unstubAllGlobals();
+
+    await wrapper.find('button[aria-label="Close"]').trigger("click");
+
+    expect(exitPageFullscreen).toHaveBeenCalledOnce();
+    expect(wrapper.text()).not.toContain("Stream stopped");
+  });
+
   it("has no close over the stream on desktop", async () => {
     const wrapper = await mountPlayer({});
     await pushStream(streamRow);

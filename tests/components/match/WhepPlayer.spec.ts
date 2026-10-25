@@ -1,7 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { defineComponent, h } from "vue";
 import { flushPromises } from "@vue/test-utils";
 import { mountSuspended } from "@nuxt/test-utils/runtime";
 import WhepPlayer from "~/components/match/WhepPlayer.vue";
+import {
+  providePageFullscreen,
+  type PageFullscreen,
+} from "~/composables/usePageFullscreen";
 
 const WHEP_URL = "https://stream.example/match-1/whep";
 const FALLBACK_URL = "https://stream.example/match-1/";
@@ -288,6 +293,62 @@ describe("WhepPlayer", () => {
       expect((wrapper.find("video").element as HTMLVideoElement).volume).toBe(
         0.75,
       );
+    });
+  });
+
+  // iPhone Safari: no element fullscreen, only iOS's own video player.
+  describe("where the page can't go fullscreen", () => {
+    let enter: ReturnType<typeof vi.fn>;
+
+    beforeEach(() => {
+      Object.defineProperty(document, "fullscreenEnabled", {
+        value: false,
+        configurable: true,
+      });
+      enter = vi.fn();
+      (HTMLVideoElement.prototype as any).webkitEnterFullscreen = enter;
+    });
+
+    afterEach(() => {
+      delete (document as any).fullscreenEnabled;
+      delete (HTMLVideoElement.prototype as any).webkitEnterFullscreen;
+    });
+
+    async function connect() {
+      await answered(1);
+      peers[0].become("connected");
+      await flushPromises();
+    }
+
+    it("fills its frame's page instead of handing the video to iOS's player", async () => {
+      let frame: PageFullscreen | undefined;
+      mounted = await mountSuspended(
+        defineComponent({
+          setup() {
+            frame = providePageFullscreen();
+            return () =>
+              h(WhepPlayer, { whepUrl: WHEP_URL, fallbackUrl: FALLBACK_URL });
+          },
+        }),
+      );
+      await connect();
+
+      await mounted.get('button[aria-label="Fullscreen"]').trigger("click");
+
+      expect(frame!.active.value).toBe(true);
+      expect(enter).not.toHaveBeenCalled();
+      expect(
+        mounted.find('button[aria-label="Exit fullscreen"]').exists(),
+      ).toBe(true);
+    });
+
+    it("uses iOS's player when nothing around it can fill the page", async () => {
+      const wrapper = await mountPlayer();
+      await connect();
+
+      await wrapper.get('button[aria-label="Fullscreen"]').trigger("click");
+
+      expect(enter).toHaveBeenCalledOnce();
     });
   });
 

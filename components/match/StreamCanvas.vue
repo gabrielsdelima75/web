@@ -4,6 +4,14 @@ import WhepPlayer from "~/components/match/WhepPlayer.vue";
 import BootSequence from "~/components/match/BootSequence.vue";
 import type { BootMode } from "~/composables/useBootStages";
 import type { WhepPhase } from "~/composables/useWhepStatusCopy";
+import {
+  pageFullscreenClasses,
+  providePageFullscreen,
+} from "~/composables/usePageFullscreen";
+
+// The frame can be moved to <body> for page fullscreen, so what a host passes
+// goes on the frame itself.
+defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(
   defineProps<{
@@ -109,94 +117,113 @@ const effectiveHistory = computed<any[]>(
 const emit = defineEmits<{ (e: "phase", phase: WhepPhase | null): void }>();
 
 const rootEl = ref<HTMLDivElement | null>(null);
-defineExpose({ rootEl });
+const pageFullscreen = providePageFullscreen();
+defineExpose({
+  rootEl,
+  pageFullscreen: pageFullscreen.active,
+  exitPageFullscreen: pageFullscreen.exit,
+});
 </script>
 
 <template>
-  <div ref="rootEl" class="relative w-full bg-black">
-    <div v-if="$slots.video" class="absolute inset-0">
-      <slot name="video" />
-    </div>
-    <template v-else-if="!showBoot">
-      <WhepPlayer
-        v-if="displayWhepUrl"
-        :whep-url="displayWhepUrl"
-        :fallback-url="displayFallback"
-        :disable-fullscreen-shortcut="disableFullscreenShortcut"
-        :enable-pip="enablePip"
-        :muted="muted"
-        :volume="volume"
-        :audio="audio"
-        :controls="controls"
-        :disable-shortcuts="disableShortcuts"
-        trickle
-        class="absolute inset-0"
-        @phase="emit('phase', $event)"
-      >
-        <template v-if="$slots.status" #status="statusProps">
-          <slot name="status" v-bind="statusProps" />
-        </template>
-        <template v-if="$slots.controls" #controls>
-          <slot name="controls" />
-        </template>
-      </WhepPlayer>
-    </template>
-    <!-- Boot → live is a crossfade, not out-in: the player mounts (and
+  <!-- Holds the frame's place on the page while it is fullscreen. -->
+  <div
+    v-if="pageFullscreen.active.value"
+    class="relative w-full bg-black"
+    :class="$attrs.class"
+    :style="$attrs.style"
+  />
+  <Teleport to="body" :disabled="!pageFullscreen.active.value">
+    <div
+      ref="rootEl"
+      v-bind="$attrs"
+      class="relative w-full bg-black"
+      :class="pageFullscreen.active.value && pageFullscreenClasses"
+    >
+      <div v-if="$slots.video" class="absolute inset-0">
+        <slot name="video" />
+      </div>
+      <template v-else-if="!showBoot">
+        <WhepPlayer
+          v-if="displayWhepUrl"
+          :whep-url="displayWhepUrl"
+          :fallback-url="displayFallback"
+          :disable-fullscreen-shortcut="disableFullscreenShortcut"
+          :enable-pip="enablePip"
+          :muted="muted"
+          :volume="volume"
+          :audio="audio"
+          :controls="controls"
+          :disable-shortcuts="disableShortcuts"
+          trickle
+          class="absolute inset-0"
+          @phase="emit('phase', $event)"
+        >
+          <template v-if="$slots.status" #status="statusProps">
+            <slot name="status" v-bind="statusProps" />
+          </template>
+          <template v-if="$slots.controls" #controls>
+            <slot name="controls" />
+          </template>
+        </WhepPlayer>
+      </template>
+      <!-- Boot → live is a crossfade, not out-in: the player mounts (and
          starts its WebRTC handshake) the moment the stream is live, and
          the boot screen fades away on top of it. out-in held the player
          back until the boot screen had finished leaving. -->
-    <template v-else>
-      <WhepPlayer
-        v-if="mountPlayer"
-        :whep-url="displayWhepUrl!"
-        :fallback-url="displayFallback"
-        :disable-fullscreen-shortcut="disableFullscreenShortcut"
-        :enable-pip="enablePip"
-        :muted="muted"
-        :volume="volume"
-        :audio="audio"
-        :controls="controls"
-        :disable-shortcuts="disableShortcuts"
-        trickle
-        :jitter-buffer-ms="jitterBufferMs"
-        class="absolute inset-0"
-        :class="{ isolate: !canPlay }"
-        @phase="emit('phase', $event)"
-      >
-        <template v-if="$slots.status" #status="statusProps">
-          <slot name="status" v-bind="statusProps" />
-        </template>
-        <template v-if="$slots.controls" #controls>
-          <slot name="controls" />
-        </template>
-      </WhepPlayer>
-      <Transition name="boot-fade">
-        <div
-          v-if="!canPlay"
-          class="absolute inset-0 flex flex-col items-center justify-center gap-4 overflow-auto bg-black px-6 py-6 text-center"
+      <template v-else>
+        <WhepPlayer
+          v-if="mountPlayer"
+          :whep-url="displayWhepUrl!"
+          :fallback-url="displayFallback"
+          :disable-fullscreen-shortcut="disableFullscreenShortcut"
+          :enable-pip="enablePip"
+          :muted="muted"
+          :volume="volume"
+          :audio="audio"
+          :controls="controls"
+          :disable-shortcuts="disableShortcuts"
+          trickle
+          :jitter-buffer-ms="jitterBufferMs"
+          class="absolute inset-0"
+          :class="{ isolate: !canPlay }"
+          @phase="emit('phase', $event)"
         >
-          <slot
-            name="boot"
-            :status="effectiveStatus"
-            :error-message="effectiveError"
-            :last-status-at="effectiveLastStatusAt"
-            :status-history="effectiveHistory"
+          <template v-if="$slots.status" #status="statusProps">
+            <slot name="status" v-bind="statusProps" />
+          </template>
+          <template v-if="$slots.controls" #controls>
+            <slot name="controls" />
+          </template>
+        </WhepPlayer>
+        <Transition name="boot-fade">
+          <div
+            v-if="!canPlay"
+            class="absolute inset-0 flex flex-col items-center justify-center gap-4 overflow-auto bg-black px-6 py-6 text-center"
           >
-            <BootSequence
-              :mode="mode"
+            <slot
+              name="boot"
               :status="effectiveStatus"
               :error-message="effectiveError"
               :last-status-at="effectiveLastStatusAt"
-              :histories="[effectiveHistory]"
-              :header-label="headerLabel"
-            />
-          </slot>
-        </div>
-      </Transition>
-    </template>
+              :status-history="effectiveHistory"
+            >
+              <BootSequence
+                :mode="mode"
+                :status="effectiveStatus"
+                :error-message="effectiveError"
+                :last-status-at="effectiveLastStatusAt"
+                :histories="[effectiveHistory]"
+                :header-label="headerLabel"
+              />
+            </slot>
+          </div>
+        </Transition>
+      </template>
 
-    <slot />
-  </div>
+      <slot />
+    </div>
+  </Teleport>
 </template>
 
 <style scoped>

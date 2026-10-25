@@ -2,6 +2,11 @@
 import { ref, computed, watch, onMounted, onBeforeUnmount } from "vue";
 import { Lock } from "lucide-vue-next";
 import { useClipRenderActive } from "~/composables/useClipRenderActive";
+import {
+  injectPageFullscreen,
+  isIphone,
+  wantsPageFullscreen,
+} from "~/composables/usePageFullscreen";
 import StreamStatusPanel from "~/components/match/StreamStatusPanel.vue";
 import StreamControls from "~/components/match/StreamControls.vue";
 import { Button } from "~/components/ui/button";
@@ -171,8 +176,12 @@ type IosVideo = HTMLVideoElement & {
   webkitPresentationMode?: string;
 };
 
-const isIphone =
-  typeof navigator !== "undefined" && /iPhone|iPod/.test(navigator.userAgent);
+// A frame that can fill the page (StreamCanvas) keeps our own controls on an
+// iPhone instead of handing the video to iOS's player.
+const pageFullscreen = injectPageFullscreen();
+const fullscreen = computed(
+  () => isFullscreen.value || !!pageFullscreen?.active.value,
+);
 
 const docFullscreenSupported = computed(() => {
   if (typeof document === "undefined") return false;
@@ -192,6 +201,11 @@ async function toggleFullscreen() {
     containerRef.value) as FullscreenEl | null;
   const doc = document as FullscreenDoc;
   const fsElement = doc.fullscreenElement ?? doc.webkitFullscreenElement;
+
+  if (pageFullscreen && wantsPageFullscreen()) {
+    pageFullscreen.toggle();
+    return;
+  }
 
   // iPhone: element fullscreen exists since iOS 16.4 but stays locked to
   // the page orientation — video.webkitEnterFullscreen() (the native
@@ -1033,7 +1047,7 @@ defineExpose({ connect, teardown });
 
     <StreamControls
       v-if="controls && !phase"
-      :fullscreen="hasPicture ? isFullscreen : null"
+      :fullscreen="hasPicture ? fullscreen : null"
       :muted="sound"
       :volume="volume"
       unmute-pill

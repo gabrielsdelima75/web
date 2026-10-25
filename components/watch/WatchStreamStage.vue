@@ -27,6 +27,11 @@ import {
   type WhepPhase,
 } from "~/composables/useWhepStatusCopy";
 import { useApplicationSettingsStore } from "~/stores/ApplicationSettings";
+import {
+  pageFullscreenClasses,
+  providePageFullscreen,
+  wantsPageFullscreen,
+} from "~/composables/usePageFullscreen";
 import { embedStreamKey } from "~/composables/useStoppedStreams";
 import { usePressedStreams } from "~/composables/usePressedStreams";
 import { useAuthStore } from "~/stores/AuthStore";
@@ -258,32 +263,23 @@ const canSetVolume = computed(
 const stageRef = ref<HTMLElement | null>(null);
 const elementFullscreen =
   typeof document !== "undefined" && !!document.fullscreenEnabled;
-// iPhone has no element fullscreen, so the game stream goes to the native
-// player, as it does on the match page.
-const isIphone =
-  typeof navigator !== "undefined" && /iPhone|iPod/.test(navigator.userAgent);
-const videoFullscreen =
-  typeof HTMLVideoElement !== "undefined" &&
-  "webkitEnterFullscreen" in HTMLVideoElement.prototype;
-const nativeFullscreen = computed(
-  () =>
-    mode.value === "game" &&
-    videoFullscreen &&
-    (isIphone || !elementFullscreen),
+// iPhone has no element fullscreen, so the game stream fills the page
+// instead, as it does on the match page. An embed can't: moving its iframe
+// would reload it.
+const stageFullscreen = providePageFullscreen();
+const pageFullscreen = computed(
+  () => mode.value === "game" && wantsPageFullscreen(),
 );
+watch(mode, (next) => {
+  if (next !== "game") stageFullscreen.exit();
+});
 const canFullscreen = computed(
-  () => elementFullscreen || nativeFullscreen.value,
+  () => elementFullscreen || pageFullscreen.value,
 );
 const isFullscreen = ref(false);
 function fullscreen() {
-  if (nativeFullscreen.value) {
-    const video = stageRef.value?.querySelector("video") as
-      (HTMLVideoElement & { webkitEnterFullscreen?: () => void }) | null;
-    try {
-      video?.webkitEnterFullscreen?.();
-    } catch {
-      // Nothing to show before the first frame.
-    }
+  if (pageFullscreen.value) {
+    stageFullscreen.toggle();
     return;
   }
   if (document.fullscreenElement) {
@@ -454,113 +450,125 @@ const waitingCopy = computed(() => copyFor("waiting"));
     </div>
 
     <div class="watch-stage-grid" :class="{ solo: others.length === 0 }">
+      <!-- Holds the stage's place while it fills the page. -->
       <div
-        ref="stageRef"
-        class="watch-stage-screen relative aspect-video w-full max-w-full overflow-hidden rounded-lg border border-border bg-black [container-type:inline-size]"
-        :class="{ 'cursor-none': !chromeVisible }"
-        @mousemove="showChrome"
-        @mouseleave="hideChrome"
-        @touchstart.passive="showChrome"
-      >
+        v-if="stageFullscreen.active.value"
+        class="watch-stage-screen aspect-video w-full rounded-lg border border-border bg-black"
+      />
+      <Teleport to="body" :disabled="!stageFullscreen.active.value">
         <div
-          v-if="mode === 'login'"
-          class="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black px-4 pb-[18%] text-center text-sm text-white/70"
+          ref="stageRef"
+          class="watch-stage-screen relative aspect-video w-full max-w-full overflow-hidden rounded-lg border border-border bg-black [container-type:inline-size]"
+          :class="[
+            { 'cursor-none': !chromeVisible },
+            stageFullscreen.active.value && pageFullscreenClasses,
+          ]"
+          @mousemove="showChrome"
+          @mouseleave="hideChrome"
+          @touchstart.passive="showChrome"
         >
-          <span>{{ $t("pages.watch.stage.login") }}</span>
-          <Button size="sm" variant="outline" @click="login">
-            {{ $t("pages.watch.stage.login_action") }}
-          </Button>
-        </div>
-        <div
-          v-else-if="mode === 'elsewhere'"
-          class="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black px-4 pb-[18%] text-center text-sm text-white/80"
-        >
-          <PictureInPicture class="size-5 text-white/50" />
-          <span>{{ $t("pages.watch.stage.playing_elsewhere") }}</span>
-          <Button size="sm" variant="outline" @click="returnHere">
-            {{ $t("ui.return_here") }}
-          </Button>
-        </div>
-        <StreamMatchCard
-          v-else-if="mode === 'waiting'"
-          :match-id="current.id"
-        >
-          <StreamStatusPanel
-            :title="waitingCopy.title"
-            :hint="waitingCopy.hint"
-            :progress="waitingCopy.progress"
-          />
-        </StreamMatchCard>
-        <LiveStreamPlayer
-          v-else-if="mode === 'game'"
-          :key="current.id"
-          :match-id="current.id"
-          bare
-          :muted="muted"
-          :volume="volume"
-          disable-shortcuts
-          class="absolute inset-0"
-          @phase="phase = $event"
-        />
-        <StreamEmbed
-          v-else-if="stream"
-          :key="stream.id"
-          ref="embedRef"
-          v-model:started="embedStarted"
-          inline
-          :streams="[stream as any]"
-          :match-id="current.id"
-          class="absolute inset-0"
-        />
-
-        <template v-if="showLowerThird">
-          <StreamMatchCard
-            :match-id="current.id"
-            :backdrop="false"
-            class="max-sm:hidden"
-          />
           <div
-            class="absolute bottom-2 left-2 rounded-[3px] bg-background/90 px-2.5 py-1.5 text-[13px] font-semibold tabular-nums sm:hidden"
+            v-if="mode === 'login'"
+            class="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black px-4 pb-[18%] text-center text-sm text-white/70"
           >
-            {{ scoreBug }}
+            <span>{{ $t("pages.watch.stage.login") }}</span>
+            <Button size="sm" variant="outline" @click="login">
+              {{ $t("pages.watch.stage.login_action") }}
+            </Button>
           </div>
-        </template>
+          <div
+            v-else-if="mode === 'elsewhere'"
+            class="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-black px-4 pb-[18%] text-center text-sm text-white/80"
+          >
+            <PictureInPicture class="size-5 text-white/50" />
+            <span>{{ $t("pages.watch.stage.playing_elsewhere") }}</span>
+            <Button size="sm" variant="outline" @click="returnHere">
+              {{ $t("ui.return_here") }}
+            </Button>
+          </div>
+          <StreamMatchCard
+            v-else-if="mode === 'waiting'"
+            :match-id="current.id"
+          >
+            <StreamStatusPanel
+              :title="waitingCopy.title"
+              :hint="waitingCopy.hint"
+              :progress="waitingCopy.progress"
+            />
+          </StreamMatchCard>
+          <LiveStreamPlayer
+            v-else-if="mode === 'game'"
+            :key="current.id"
+            :match-id="current.id"
+            bare
+            :muted="muted"
+            :volume="volume"
+            disable-shortcuts
+            class="absolute inset-0"
+            @phase="phase = $event"
+          />
+          <StreamEmbed
+            v-else-if="stream"
+            :key="stream.id"
+            ref="embedRef"
+            v-model:started="embedStarted"
+            inline
+            :streams="[stream as any]"
+            :match-id="current.id"
+            class="absolute inset-0"
+          />
 
-        <StreamLiveTag
-          :match-id="current.id"
-          :dim="mode === 'waiting' || (mode === 'game' && phase !== null)"
-          class="absolute left-3 top-3 z-10"
-          :class="chromeFade"
-        />
-
-        <!-- Over an embed, whose own player keeps a control bar along the
-             bottom edge, they move to the top right. Until the game stream
-             has a picture its status card holds the bottom left. -->
-        <StreamControls
-          :fullscreen="canFullscreen ? isFullscreen : null"
-          :muted="mode === 'game' || mode === 'embed' ? muted : null"
-          :volume="canSetVolume ? volume : null"
-          unmute-pill
-          :visible="chromeVisible"
-          :placement="mode === 'embed' ? 'top' : 'bottom'"
-          :align="mode === 'game' && phase === null ? 'split' : 'end'"
-          @toggle-fullscreen="fullscreen"
-          @toggle-mute="toggleMute"
-          @update:volume="setVolume"
-        >
-          <template v-if="canFloat" #default>
-            <button
-              type="button"
-              :title="$t('ui.pin_overlay')"
-              :aria-label="$t('ui.pin_overlay')"
-              :class="streamControlButtonClasses"
-              @click="watchInPlayer"
+          <template v-if="showLowerThird">
+            <StreamMatchCard
+              :match-id="current.id"
+              :backdrop="false"
+              class="max-sm:hidden"
+            />
+            <div
+              class="absolute bottom-2 left-2 rounded-[3px] bg-background/90 px-2.5 py-1.5 text-[13px] font-semibold tabular-nums sm:hidden"
             >
-              <PictureInPicture :class="streamControlIconClasses" />
-            </button>
+              {{ scoreBug }}
+            </div>
           </template>
-        </StreamControls>
-      </div>
+
+          <StreamLiveTag
+            :match-id="current.id"
+            :dim="mode === 'waiting' || (mode === 'game' && phase !== null)"
+            class="absolute left-3 top-3 z-10"
+            :class="chromeFade"
+          />
+
+          <!-- Over an embed, whose own player keeps a control bar along the
+               bottom edge, they move to the top right. Until the game stream
+               has a picture its status card holds the bottom left. -->
+          <StreamControls
+            :fullscreen="
+              canFullscreen ? isFullscreen || stageFullscreen.active.value : null
+            "
+            :muted="mode === 'game' || mode === 'embed' ? muted : null"
+            :volume="canSetVolume ? volume : null"
+            unmute-pill
+            :visible="chromeVisible"
+            :placement="mode === 'embed' ? 'top' : 'bottom'"
+            :align="mode === 'game' && phase === null ? 'split' : 'end'"
+            @toggle-fullscreen="fullscreen"
+            @toggle-mute="toggleMute"
+            @update:volume="setVolume"
+          >
+            <template v-if="canFloat" #default>
+              <button
+                type="button"
+                :title="$t('ui.pin_overlay')"
+                :aria-label="$t('ui.pin_overlay')"
+                :class="streamControlButtonClasses"
+                @click="watchInPlayer"
+              >
+                <PictureInPicture :class="streamControlIconClasses" />
+              </button>
+            </template>
+          </StreamControls>
+        </div>
+      </Teleport>
 
       <div
         class="watch-stage-bar flex flex-wrap items-center justify-between gap-x-4 gap-y-2.5"

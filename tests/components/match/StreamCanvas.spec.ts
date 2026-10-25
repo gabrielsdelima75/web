@@ -1,7 +1,8 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { h } from "vue";
+import { defineComponent, h, nextTick } from "vue";
 import { mountSuspended } from "@nuxt/test-utils/runtime";
 import StreamCanvas from "~/components/match/StreamCanvas.vue";
+import { injectPageFullscreen } from "~/composables/usePageFullscreen";
 
 const WHEP_URL = "https://stream.example/demo-1/whep";
 
@@ -62,5 +63,32 @@ describe("StreamCanvas", () => {
     await wrapper.setProps({ isLive: true, preconnect: false });
 
     expect(wrapper.find(".whep-player").element).toBe(player);
+  });
+
+  it("fills the page for a player that asks, keeping its place on the page", async () => {
+    const Toggle = defineComponent({
+      setup() {
+        const fullscreen = injectPageFullscreen();
+        return () =>
+          h("button", { class: "toggle", onClick: () => fullscreen?.toggle() });
+      },
+    });
+    const wrapper = await mountCanvas(
+      { isLive: true, class: "aspect-video" },
+      { default: () => h(Toggle) },
+    );
+
+    await wrapper.get(".toggle").trigger("click");
+
+    const frame = document.body.querySelector(":scope > .bg-black");
+    expect(frame?.className).toContain("!fixed");
+    expect(frame?.querySelector(".whep-player")).not.toBeNull();
+    expect(wrapper.find(".aspect-video").exists()).toBe(true);
+
+    (frame!.querySelector(".toggle") as HTMLButtonElement).click();
+    await nextTick();
+
+    expect(document.body.querySelector(":scope > .bg-black")).toBeNull();
+    expect(wrapper.find(".aspect-video .whep-player").exists()).toBe(true);
   });
 });

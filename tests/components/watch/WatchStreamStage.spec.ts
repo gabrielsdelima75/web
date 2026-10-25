@@ -458,28 +458,40 @@ describe("WatchStreamStage like the match page's player", () => {
     });
   });
 
-  it("opens the game stream in the native player on an iPhone", async () => {
-    const enter = vi.fn();
-    vi.spyOn(navigator, "userAgent", "get").mockReturnValue(
-      "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X)",
+  // iPhone Safari: no element fullscreen, only iOS's own video player.
+  it("fills the page with the game stream and its own controls where the page can't go fullscreen", async () => {
+    Object.defineProperty(document, "fullscreenEnabled", {
+      value: false,
+      configurable: true,
+    });
+    const wrapper = await mountStage([liveMatch({ streams: [gameStreamer] })]);
+
+    await wrapper
+      .get('.stream-controls button[aria-label="Fullscreen"]')
+      .trigger("click");
+
+    const screen = document.body.querySelector(
+      ":scope > .watch-stage-screen",
     );
-    (HTMLVideoElement.prototype as any).webkitEnterFullscreen = enter;
+    expect(screen?.className).toContain("!fixed");
+    expect(screen?.querySelector(".live-player")).not.toBeNull();
+    expect(document.documentElement.style.overflow).toBe("hidden");
 
-    try {
-      const wrapper = await mountStage(
-        [liveMatch({ streams: [gameStreamer] })],
-        undefined,
-        { template: '<div class="live-player"><video /></div>' },
-      );
+    (
+      screen!.querySelector(
+        'button[aria-label="Exit fullscreen"]',
+      ) as HTMLButtonElement
+    ).click();
+    await flushPromises();
 
-      await wrapper
-        .get('.stream-controls button[aria-label="Fullscreen"]')
-        .trigger("click");
-
-      expect(enter).toHaveBeenCalledOnce();
-    } finally {
-      delete (HTMLVideoElement.prototype as any).webkitEnterFullscreen;
-    }
+    expect(
+      document.body.querySelector(":scope > .watch-stage-screen"),
+    ).toBeNull();
+    expect(wrapper.find(".watch-stage-screen .live-player").exists()).toBe(
+      true,
+    );
+    expect(document.documentElement.style.overflow).toBe("");
+    delete (document as any).fullscreenEnabled;
   });
 
   it("keeps the stream playing, floating, when its match is opened", async () => {

@@ -317,6 +317,20 @@ function resumeStream() {
   stoppedStreams.resume(liveStreamKey(props.matchId));
 }
 
+// In fullscreen the close leaves fullscreen, as the native player's does.
+const canvas = ref<InstanceType<typeof StreamCanvas> | null>(null);
+function close() {
+  if (document.fullscreenElement) {
+    void document.exitFullscreen?.();
+    return;
+  }
+  if (canvas.value?.pageFullscreen) {
+    canvas.value.exitPageFullscreen();
+    return;
+  }
+  stopStream();
+}
+
 // Closing the pop-out window means stop, same as the floating player's ✕
 // (see StreamGlobal) — otherwise the page takes the stream back and
 // autoplays it.
@@ -428,6 +442,7 @@ const hasHostControls = computed(
     :class="[frameClass, fills ? 'flex h-full w-full flex-col' : '']"
   >
     <StreamCanvas
+      ref="canvas"
       :stream="displayStream"
       :is-live="isLive"
       mode="live"
@@ -502,7 +517,7 @@ const hasHostControls = computed(
           :title="$t('common.close')"
           :aria-label="$t('common.close')"
           :class="streamControlButtonClasses"
-          @click="stopStream"
+          @click="close"
         >
           <Cross2Icon :class="streamControlIconClasses" />
         </button>

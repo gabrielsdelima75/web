@@ -234,6 +234,13 @@ ChartJS.register({
 
 <script lang="ts">
 import { dateLocale } from "~/utilities/dateLocale";
+import {
+  pendingSeason,
+  ratingRestarts,
+  seasonLadderStarts,
+  type SeasonBreak,
+  type SeasonEloEntry,
+} from "~/utilities/seasonPace";
 
 interface EloHistoryEntry {
   current_elo?: number | null;
@@ -252,6 +259,9 @@ interface EloSeries {
   // Fixed line color (e.g. the cyan comparison overlay) — bypasses the
   // elo-tier coloring.
   color?: string;
+  // A rating that starts over each season, so a point that does not carry on
+  // from the one before is drawn as a reset rather than as a result.
+  restarts?: boolean;
 }
 
 export default {
@@ -292,7 +302,7 @@ export default {
     // Season starts: every rating resets there, so the line breaks instead of
     // reading the reset as a losing streak.
     seasonBreaks: {
-      type: Array as () => Array<{ at: string; label: string }>,
+      type: Array as () => Array<{ at: string; label: string; id?: string }>,
       required: false,
       default: () => [],
     },
@@ -374,7 +384,22 @@ export default {
       }
       return [];
     },
-    // Unified x-axis: every match_created_at across all series, deduped and sorted asc.
+    seasons(): SeasonBreak[] {
+      return (this.seasonBreaks ?? []).filter(
+        (brk): brk is SeasonBreak => !!brk.id,
+      );
+    },
+    focusLine(): SeasonEloEntry[] {
+      return this.focusSeries?.restarts
+        ? (this.focusSeries.history as unknown as SeasonEloEntry[])
+        : [];
+    },
+    pending(): SeasonBreak | null {
+      return pendingSeason(this.focusLine, this.seasons);
+    },
+    // Unified x-axis: every match_created_at across all series, deduped and
+    // sorted asc, then a slot after the last for a season under way the player
+    // has no rating in yet.
     unifiedTimestamps(): string[] {
       const set = new Set<string>();
       for (const s of this.normalizedSeries) {
@@ -382,9 +407,19 @@ export default {
           if (entry.match_created_at) set.add(entry.match_created_at);
         }
       }
-      return Array.from(set).sort(
+      const labels = Array.from(set).sort(
         (a, b) => new Date(a).getTime() - new Date(b).getTime(),
       );
+      const last = labels.at(-1);
+      if (this.pending && last) {
+        const lastAt = new Date(last).getTime();
+        labels.push(
+          new Date(this.pending.at).getTime() > lastAt
+            ? this.pending.at
+            : new Date(lastAt + 1).toISOString(),
+        );
+      }
+      return labels;
     },
     // At most ~8 x labels, one per calendar day, with the year only where it
     // changes — the raw labels repeat a date for every match played that day.
@@ -429,6 +464,24 @@ export default {
       }
       return out;
     },
+    // Season starts, where the focused line's ladder starts over, and the
+    // season under way after the last match.
+    markers(): Array<{ index: number; label: string }> {
+      const labels: string[] = this.unifiedTimestamps || [];
+      const out = [...this.breakIndices];
+      const add = (index: number, label: string) => {
+        if (index >= 0 && !out.some((brk) => brk.index === index)) {
+          out.push({ index, label });
+        }
+      };
+      for (const start of seasonLadderStarts(this.focusLine, this.seasons)) {
+        add(labels.indexOf(start.at) - 1, start.label);
+      }
+      if (this.pending) {
+        add(labels.length - 2, this.pending.label);
+      }
+      return out;
+    },
     seasonBreakMarkers() {
       const self = this;
       return {
@@ -438,7 +491,7 @@ export default {
           const area = chart.chartArea;
           if (!x || !area) return;
           const ctx = chart.ctx;
-          for (const brk of self.breakIndices) {
+          for (const brk of self.markers) {
             const pos =
               (x.getPixelForValue(brk.index) +
                 x.getPixelForValue(brk.index + 1)) /
@@ -454,8 +507,8 @@ export default {
             ctx.font = "600 10px Oxanium, sans-serif";
             ctx.fillStyle = "rgba(251, 191, 36, 0.95)";
             ctx.textAlign = "left";
-            ctx.textBaseline = "top";
-            ctx.fillText(brk.label, pos + 4, area.top + 2);
+            ctx.textBaseline = "bottom";
+            ctx.fillText(brk.label, pos + 4, area.top - 1);
             ctx.restore();
           }
         },
@@ -688,6 +741,18 @@ export default {
           return typeof entry?.elo_change === "number" ? entry.elo_change : 0;
         });
 
+        const restartFlags = series.restarts
+          ? ratingRestarts(series.history as unknown as SeasonEloEntry[])
+          : [];
+        const restartsAt = new Set(
+          series.history
+            .filter((_, i) => restartFlags[i])
+            .map((entry) => labels.indexOf(entry.match_created_at)),
+        );
+        const resetSegment = (ctx: any) =>
+          this.crossesBreak(ctx.p0DataIndex, ctx.p1DataIndex) ||
+          restartsAt.has(ctx.p1DataIndex);
+
         const radius = focus ? focusRadius : dimRadius;
         return {
           label: series.label,
@@ -707,13 +772,8 @@ export default {
           // A segment that crosses a season start is the reset, not a result.
           segment: {
             borderColor: (ctx: any) =>
-              this.crossesBreak(ctx.p0DataIndex, ctx.p1DataIndex)
-                ? "rgba(255,255,255,0.15)"
-                : undefined,
-            borderDash: (ctx: any) =>
-              this.crossesBreak(ctx.p0DataIndex, ctx.p1DataIndex)
-                ? [2, 5]
-                : undefined,
+              resetSegment(ctx) ? "rgba(255,255,255,0.15)" : undefined,
+            borderDash: (ctx: any) => (resetSegment(ctx) ? [2, 5] : undefined),
           },
           data,
           eloChanges,

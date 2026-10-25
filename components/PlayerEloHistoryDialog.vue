@@ -49,6 +49,7 @@ interface EloEntry {
   match_id: string | null;
   match_result: string | null;
   type: string;
+  season_id?: string | null;
   kills: number | null;
   deaths: number | null;
   assists: number | null;
@@ -69,7 +70,7 @@ const props = defineProps<{
   provider?: string;
   // The season a season comparison is set against, match by match.
   season?: Season | null;
-  seasonBreaks?: Array<{ at: string; label: string }>;
+  seasonBreaks?: Array<{ at: string; label: string; id?: string }>;
 }>();
 
 const sourceRef = computed<StatSource>(() =>
@@ -166,6 +167,7 @@ const ELO_HISTORY_QUERY = gql`
       match_id
       match_result
       type
+      season_id
       kills
       deaths
       assists
@@ -789,6 +791,7 @@ const chartSeries = computed(() => {
     history: EloEntry[];
     focus: boolean;
     color?: string;
+    restarts?: boolean;
   }> = [];
 
   if (sourceRef.value === "external") {
@@ -836,7 +839,11 @@ const chartSeries = computed(() => {
       selectedMode.value === "all"
         ? all
         : all.filter((s) => s.key === selectedMode.value);
-    base.push(...visible.filter((s) => s.history.length > 0));
+    base.push(
+      ...visible
+        .filter((s) => s.history.length > 0)
+        .map((s) => ({ ...s, restarts: true })),
+    );
   }
 
   // Comparison overlay — a dimmed cyan line for the pinned player.
@@ -1251,7 +1258,7 @@ function rankIcon(rank: number | null | undefined): string | null {
             :series="chartSeries"
             :rank-type="chartRankType"
             :loading="loading"
-            :season-breaks="seasonBreaks ?? []"
+            :season-breaks="sourceRef === '5stack' ? (seasonBreaks ?? []) : []"
           />
         </div>
       </FadeSwap>

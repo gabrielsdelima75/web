@@ -1,7 +1,10 @@
 // @vitest-environment node
 import { describe, expect, it } from "vitest";
 import {
+  pendingSeason,
+  ratingRestarts,
   seasonAt,
+  seasonLadderStarts,
   seasonBefore,
   seasonRecap,
   seasonPace,
@@ -159,5 +162,56 @@ describe("withSeasonBreaks", () => {
   it("adds nothing without seasons", () => {
     const rows = withSeasonBreaks([{ at: "2026-10-02T04:00:00Z" }, { at: "2025-01-01T00:00:00Z" }], [], at);
     expect(rows.every((r) => r.kind === "match")).toBe(true);
+  });
+});
+
+describe("season resets in a player's line", () => {
+  const S1 = { id: "s1", at: "2026-01-01T00:00:00Z", label: "S1" };
+  const S2 = { id: "s2", at: "2026-09-30T00:00:00Z", label: "S2" };
+  const row = (
+    at: string,
+    from: number,
+    to: number,
+    season: string | null = null,
+  ): SeasonEloEntry => ({
+    type: "Competitive",
+    season_id: season,
+    current_elo: from,
+    updated_elo: to,
+    match_created_at: at,
+  });
+
+  // alex on alpenscene: tournament matches, then his first Season 1 match.
+  const alex = [
+    row("2026-04-17T12:00:00Z", 5000, 5243),
+    row("2026-09-19T12:00:00Z", 5243, 7773),
+    row("2026-10-23T12:00:00Z", 5000, 5258, "s1"),
+  ];
+
+  it("marks a season's first rating that starts over", () => {
+    expect(ratingRestarts(alex)).toEqual([false, false, true]);
+    expect(seasonLadderStarts(alex, [S1])).toEqual([
+      { id: "s1", at: "2026-10-23T12:00:00Z", label: "S1" },
+    ]);
+  });
+
+  it("marks each season once, and only where the rating started over", () => {
+    const line = [
+      row("2026-05-01T12:00:00Z", 5000, 5200, "s1"),
+      row("2026-05-02T12:00:00Z", 5200, 5450, "s1"),
+      row("2026-10-02T12:00:00Z", 5000, 4887, "s2"),
+      row("2026-10-03T12:00:00Z", 4887, 5040, "s2"),
+    ];
+    expect(seasonLadderStarts(line, [S1, S2]).map((s) => s.label)).toEqual([
+      "S2",
+    ]);
+  });
+
+  it("marks the season under way when the player has no rating in it", () => {
+    const now = Date.parse("2026-10-25T00:00:00Z");
+    expect(pendingSeason(alex.slice(0, 2), [S1], now)?.label).toBe("S1");
+    expect(pendingSeason(alex, [S1], now)).toBeNull();
+    expect(pendingSeason(alex, [S1, S2], now)?.label).toBe("S2");
+    expect(pendingSeason([], [S1], now)).toBeNull();
   });
 });

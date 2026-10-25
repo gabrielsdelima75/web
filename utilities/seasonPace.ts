@@ -200,3 +200,52 @@ export function withSeasonBreaks<T>(
   });
   return rows;
 }
+
+export interface SeasonBreak {
+  id: string;
+  at: string;
+  label: string;
+}
+
+// For each rating, whether it starts over rather than carrying on from the one
+// before it: a new season's ladder, or a season match after tournament matches.
+export function ratingRestarts(entries: SeasonEloEntry[]): boolean[] {
+  return entries.map((e, i) => {
+    const before = i > 0 ? rating(entries[i - 1]) : null;
+    return before !== null && e.current_elo !== null && before !== e.current_elo;
+  });
+}
+
+// Where each season's ladder starts over in the player's line, so the chart
+// marks the drop as that season's reset rather than as a loss.
+export function seasonLadderStarts(
+  entries: SeasonEloEntry[],
+  seasons: SeasonBreak[],
+): SeasonBreak[] {
+  const restarts = ratingRestarts(entries);
+  const seen = new Set<string>();
+  const starts: SeasonBreak[] = [];
+  entries.forEach((e, i) => {
+    if (!e.season_id || seen.has(e.season_id)) return;
+    seen.add(e.season_id);
+    const season = seasons.find((s) => s.id === e.season_id);
+    if (season && restarts[i]) {
+      starts.push({ ...season, at: e.match_created_at });
+    }
+  });
+  return starts;
+}
+
+// The season under way that the player has no rating in yet: their next match
+// starts from its reset, so the chart marks it after their last match.
+export function pendingSeason(
+  entries: SeasonEloEntry[],
+  seasons: SeasonBreak[],
+  now = Date.now(),
+): SeasonBreak | null {
+  const current = seasons
+    .filter((s) => time(s.at) <= now)
+    .sort((a, b) => time(b.at) - time(a.at))[0];
+  if (!current || entries.length === 0) return null;
+  return entries.some((e) => e.season_id === current.id) ? null : current;
+}

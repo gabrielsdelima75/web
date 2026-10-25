@@ -1500,8 +1500,8 @@ onMounted(() => loadAnyMatches());
 
 const noCareerData = computed(() => playerHasAnyMatches.value === false);
 
-const modeFilteredWindowed = computed<WindowedEloEntry[]>(
-  () => eloHistory.value,
+const modeFilteredWindowed = computed<WindowedEloEntry[]>(() =>
+  eloHistory.value.filter((e) => e.type === "Competitive"),
 );
 
 const windowedStats = computed(() => {
@@ -1514,7 +1514,6 @@ const windowedStats = computed(() => {
     : performanceHistory.value;
   if (list.length === 0 && perfList.length === 0) {
     return {
-      current: null as number | null,
       peak: null as number | null,
       lowest: null as number | null,
       total: 0,
@@ -1577,14 +1576,11 @@ const windowedStats = computed(() => {
     assists += e.assists ?? 0;
   }
 
-  const last = headlineList[headlineList.length - 1];
-  const current = last?.updated_elo ?? last?.current_elo ?? null;
   const decided = wins + losses;
   const kd = deaths > 0 ? kills / deaths : kills;
   const kdPct = Math.min((kd / 2) * 100, 100);
 
   return {
-    current,
     peak: peak === -Infinity ? null : peak,
     lowest: lowest === Infinity ? null : lowest,
     total: perfList.length,
@@ -1742,7 +1738,11 @@ const previousSeasonTooltip = computed(() => {
 
 const seasonChartBreaks = computed(() =>
   seasonsEnabled.value
-    ? seasons.value.map((s) => ({ at: s.starts_at, label: seasonTag(s) }))
+    ? seasons.value.map((s) => ({
+        id: s.id,
+        at: s.starts_at,
+        label: seasonTag(s),
+      }))
     : [],
 );
 
@@ -1890,7 +1890,11 @@ function bucketHistory(
         (sum, e) => sum + (e.elo_change ?? 0),
         0,
       );
-      return { ...last, elo_change: netChange };
+      return {
+        ...last,
+        current_elo: entries[0].current_elo,
+        elo_change: netChange,
+      };
     })
     .sort(
       (a, b) =>
@@ -1899,25 +1903,15 @@ function bucketHistory(
     );
 }
 
-const windowedChartSeries = computed(() => {
-  const size = bucketSize.value;
-
-  const groupBy = (m: "Competitive" | "Wingman" | "Duel" | "Rush") =>
-    bucketHistory(
-      eloHistory.value.filter((e) => e.type === m),
-      size,
-    );
-
-  const allModes = ["Competitive", "Wingman", "Duel", "Rush"] as const;
-  return allModes
-    .map((m) => ({
-      key: m,
-      label: m,
-      history: groupBy(m),
-      focus: m === "Competitive",
-    }))
-    .filter((s) => s.history.length > 0);
-});
+const windowedChartSeries = computed(() => [
+  {
+    key: "Competitive",
+    label: t("pages.leaderboard.match_types.competitive"),
+    history: bucketHistory(modeFilteredWindowed.value, bucketSize.value),
+    focus: true,
+    restarts: true,
+  },
+]);
 
 const bucketLabel = computed(() => {
   switch (bucketSize.value) {
@@ -2395,15 +2389,15 @@ const AwardComposer = defineAsyncComponent(
                 </div>
                 <div class="mt-1 flex items-center gap-2">
                   <img
-                    v-if="isSkillGroupMode && rankBadge(windowedStats.current)"
-                    :src="rankBadge(windowedStats.current)!"
-                    :alt="fmtRangeStat(windowedStats.current)"
-                    :title="fmtRangeStat(windowedStats.current)"
+                    v-if="isSkillGroupMode && rankBadge(player?.elo?.competitive)"
+                    :src="rankBadge(player?.elo?.competitive)!"
+                    :alt="fmtRangeStat(player?.elo?.competitive)"
+                    :title="fmtRangeStat(player?.elo?.competitive)"
                     class="h-10 w-auto sm:h-12"
                   />
                   <AnimatedStat
                     v-else
-                    :value="fmtRangeStat(windowedStats.current)"
+                    :value="fmtRangeStat(player?.elo?.competitive)"
                     :class="[
                       'text-3xl font-bold leading-none tabular-nums tracking-tight',
                       seasonPaceData ? '' : 'sm:text-4xl',

@@ -40,7 +40,10 @@ const rowTransition = computed(() =>
 </script>
 
 <template>
-  <div ref="listRoot" class="flex min-h-full flex-1 flex-col gap-3 p-2">
+  <!-- Grows with its rows rather than flex-1: the visibility check watches
+       this box, and one held to the panel's height leaves the screen as soon
+       as you scroll past it. -->
+  <div ref="listRoot" class="flex min-h-full shrink-0 grow flex-col gap-3 p-2">
     <div class="flex items-center gap-2">
       <div class="relative flex-1">
         <Search class="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />

@@ -2,6 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useApolloClient } from "@vue/apollo-composable";
 import { useI18n } from "vue-i18n";
+import { onBeforeRouteLeave } from "vue-router";
 import { PictureInPicture } from "lucide-vue-next";
 import { $, order_by } from "~/generated/zeus";
 import { generateSubscription } from "~/graphql/graphqlGen";
@@ -12,6 +13,10 @@ import StreamMatchCard from "~/components/match/StreamMatchCard.vue";
 import StreamStatusPanel from "~/components/match/StreamStatusPanel.vue";
 import StreamLiveTag from "~/components/match/StreamLiveTag.vue";
 import StreamControls from "~/components/match/StreamControls.vue";
+import {
+  streamControlButtonClasses,
+  streamControlIconClasses,
+} from "~/components/match/streamControlClasses";
 import StreamThumbnail from "~/components/watch/StreamThumbnail.vue";
 import { Button } from "~/components/ui/button";
 import { useWatchStage } from "~/composables/useWatchStage";
@@ -251,10 +256,36 @@ const canSetVolume = computed(
 );
 
 const stageRef = ref<HTMLElement | null>(null);
-const canFullscreen =
+const elementFullscreen =
   typeof document !== "undefined" && !!document.fullscreenEnabled;
+// iPhone has no element fullscreen, so the game stream goes to the native
+// player, as it does on the match page.
+const isIphone =
+  typeof navigator !== "undefined" && /iPhone|iPod/.test(navigator.userAgent);
+const videoFullscreen =
+  typeof HTMLVideoElement !== "undefined" &&
+  "webkitEnterFullscreen" in HTMLVideoElement.prototype;
+const nativeFullscreen = computed(
+  () =>
+    mode.value === "game" &&
+    videoFullscreen &&
+    (isIphone || !elementFullscreen),
+);
+const canFullscreen = computed(
+  () => elementFullscreen || nativeFullscreen.value,
+);
 const isFullscreen = ref(false);
 function fullscreen() {
+  if (nativeFullscreen.value) {
+    const video = stageRef.value?.querySelector("video") as
+      (HTMLVideoElement & { webkitEnterFullscreen?: () => void }) | null;
+    try {
+      video?.webkitEnterFullscreen?.();
+    } catch {
+      // Nothing to show before the first frame.
+    }
+    return;
+  }
   if (document.fullscreenElement) {
     void document.exitFullscreen?.();
     return;
@@ -317,16 +348,39 @@ function login() {
   )}`;
 }
 
-function watchInPlayer() {
+function floatStream() {
   if (!stream.value || !current.value) return;
-  if (needsLogin.value) {
-    login();
-    return;
-  }
   const floated = { ...stream.value, match_id: current.value.id };
   usePressedStreams().press(embedStreamKey(floated));
   settings.setGlobalStream(floated as any);
 }
+
+function watchInPlayer() {
+  if (needsLogin.value) {
+    login();
+    return;
+  }
+  floatStream();
+}
+
+const canFloat = computed(
+  () => mode.value === "game" || mode.value === "embed",
+);
+
+// Opening the match that is playing here keeps it playing, in the floating
+// player.
+onBeforeRouteLeave((to) => {
+  const playing =
+    mode.value === "game" ||
+    (mode.value === "embed" && !!embedRef.value && !embedRef.value.waiting);
+  if (
+    playing &&
+    to.name === "matches-id" &&
+    String(to.params.id) === current.value?.id
+  ) {
+    floatStream();
+  }
+});
 
 function returnHere() {
   settings.setGlobalStream();
@@ -493,7 +547,19 @@ const waitingCopy = computed(() => copyFor("waiting"));
           @toggle-fullscreen="fullscreen"
           @toggle-mute="toggleMute"
           @update:volume="setVolume"
-        />
+        >
+          <template v-if="canFloat" #default>
+            <button
+              type="button"
+              :title="$t('ui.pin_overlay')"
+              :aria-label="$t('ui.pin_overlay')"
+              :class="streamControlButtonClasses"
+              @click="watchInPlayer"
+            >
+              <PictureInPicture :class="streamControlIconClasses" />
+            </button>
+          </template>
+        </StreamControls>
       </div>
 
       <div

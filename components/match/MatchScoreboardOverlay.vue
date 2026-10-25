@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
 import { useApolloClient } from "@vue/apollo-composable";
+import { createReusableTemplate } from "@vueuse/core";
 import { ChevronDown, Trophy } from "lucide-vue-next";
+import { Drawer, DrawerContent, DrawerTitle } from "~/components/ui/drawer";
 import { order_by } from "~/generated/zeus";
 import { generateSubscription } from "~/graphql/graphqlGen";
 import MatchLineupScoreDisplay from "~/components/match/MatchLineupScoreDisplay.vue";
@@ -50,6 +52,12 @@ const isFullscreen = ref(false);
 function onFullscreenChange() {
   isFullscreen.value = !!document.fullscreenElement;
 }
+
+// On a phone the player is too small to read the panel in, so it opens in a
+// drawer instead. Fullscreen keeps it in the player: nothing else shows there.
+const touch = ref(false);
+const inDrawer = computed(() => touch.value && !isFullscreen.value);
+const [DefineBoard, ReuseBoard] = createReusableTemplate();
 
 const { client: apolloClient } = useApolloClient();
 const match = ref<any | null>(null);
@@ -166,6 +174,7 @@ function ensureSubscribed() {
 }
 
 onMounted(() => {
+  touch.value = window.matchMedia?.("(pointer: coarse)").matches ?? false;
   document.addEventListener("fullscreenchange", onFullscreenChange);
   onFullscreenChange();
   // Non-fullscreen surfaces (StreamGlobal PiP, popout window) render
@@ -293,6 +302,190 @@ function statCell(lp: any, key: "kills" | "deaths" | "assists" | "damage") {
 </script>
 
 <template>
+  <DefineBoard>
+    <div
+      v-if="!hasMaps"
+      class="rounded border border-border/60 bg-background/40 px-3 py-3 text-center font-mono text-[0.6rem] uppercase tracking-[0.22em] text-muted-foreground"
+    >
+      {{ $t("match.maps_not_picked") }}
+    </div>
+    <template v-else-if="currentMap">
+      <div
+        class="rounded border border-[hsl(var(--tac-amber)/0.55)] bg-[hsl(var(--tac-amber)/0.08)] px-3 py-2"
+      >
+        <div class="flex items-center justify-between gap-3">
+          <div class="flex min-w-0 items-center gap-2">
+            <span
+              class="font-mono text-[0.55rem] uppercase tracking-[0.22em] text-[hsl(var(--tac-amber))]"
+            >
+              {{
+                currentMap.winning_lineup_id
+                  ? $t("match.scoreboard_overlay.final")
+                  : $t("match.scoreboard_overlay.live")
+              }}
+            </span>
+            <span class="truncate text-sm font-semibold">{{
+              match.lineup_1.name
+            }}</span>
+            <MatchLineupScoreDisplay
+              :match="match"
+              :lineup="match.lineup_1"
+              :match-map="currentMap"
+            />
+          </div>
+          <span
+            class="font-mono text-[0.6rem] uppercase tracking-[0.22em] text-muted-foreground"
+          >
+            {{ mapLabel(currentMap.map) }}
+          </span>
+          <div class="flex min-w-0 items-center justify-end gap-2">
+            <MatchLineupScoreDisplay
+              :match="match"
+              :lineup="match.lineup_2"
+              :match-map="currentMap"
+            />
+            <span class="truncate text-sm font-semibold">{{
+              match.lineup_2.name
+            }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Per-map player stats for the current/highlighted map. -->
+      <div class="mt-2 grid grid-cols-1 gap-2 md:grid-cols-2">
+        <div
+          v-for="(team, idx) in [
+            { name: match.lineup_1.name, players: lineup1Players },
+            { name: match.lineup_2.name, players: lineup2Players },
+          ]"
+          :key="idx"
+          class="overflow-hidden rounded border border-border/50 bg-background/40"
+        >
+          <div
+            class="flex items-center justify-between border-b border-border/40 bg-card/40 px-2 py-1"
+          >
+            <span
+              class="truncate font-mono text-[0.6rem] uppercase tracking-[0.22em] text-muted-foreground"
+            >
+              {{ team.name }}
+            </span>
+          </div>
+          <table class="w-full text-[0.65rem]">
+            <thead
+              class="font-mono uppercase tracking-[0.12em] text-muted-foreground/70"
+            >
+              <tr class="border-b border-border/30">
+                <th class="px-2 py-1 text-left font-normal">
+                  {{ $t("common.player") }}
+                </th>
+                <th class="px-1 py-1 text-center font-normal">
+                  <StatLabel stat="k" label="K" />
+                </th>
+                <th class="px-1 py-1 text-center font-normal">
+                  <StatLabel stat="d" label="D" />
+                </th>
+                <th class="px-1 py-1 text-center font-normal">
+                  <StatLabel stat="a" label="A" />
+                </th>
+                <th class="px-1 py-1 text-center font-normal">
+                  <StatLabel stat="kd" label="K/D" />
+                </th>
+                <th class="px-1 py-1 text-center font-normal">
+                  <StatLabel stat="hs" label="HS%" />
+                </th>
+                <th class="px-1 py-1 text-center font-normal">
+                  <StatLabel stat="total_damage" label="DMG" />
+                </th>
+                <th class="px-1 py-1 text-center font-normal">
+                  <StatLabel stat="adr" label="ADR" />
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="lp in team.players"
+                :key="lp.steam_id ?? lp.placeholder_name"
+                class="border-t border-border/20"
+              >
+                <td
+                  class="max-w-[140px] truncate px-2 py-0.5 text-left"
+                  :title="playerName(lp)"
+                >
+                  <span
+                    v-if="lp.captain"
+                    class="mr-1 font-mono text-[0.55rem] text-[hsl(var(--tac-amber))]"
+                    >★</span
+                  >{{ playerName(lp) }}
+                </td>
+                <td class="px-1 py-0.5 text-center tabular-nums">
+                  {{ statCell(lp, "kills") }}
+                </td>
+                <td class="px-1 py-0.5 text-center tabular-nums">
+                  {{ statCell(lp, "deaths") }}
+                </td>
+                <td class="px-1 py-0.5 text-center tabular-nums">
+                  {{ statCell(lp, "assists") }}
+                </td>
+                <td class="px-1 py-0.5 text-center tabular-nums">
+                  <span
+                    :style="
+                      statsForCurrentMap(lp)
+                        ? { color: kdColor(playerKDNum(lp)) }
+                        : undefined
+                    "
+                  >
+                    {{ playerKDLabel(lp) }}
+                  </span>
+                </td>
+                <td class="px-1 py-0.5 text-center tabular-nums">
+                  {{ playerHS(lp) }}
+                </td>
+                <td class="px-1 py-0.5 text-center tabular-nums">
+                  {{ statCell(lp, "damage") }}
+                </td>
+                <td class="px-1 py-0.5 text-center tabular-nums">
+                  {{ playerADR(lp) }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </template>
+
+    <div v-if="showOtherMaps" class="mt-2 flex flex-col gap-1">
+      <div
+        v-for="mm in otherMaps"
+        :key="mm.id"
+        class="flex items-center justify-between gap-3 rounded border border-border/50 bg-background/40 px-3 py-1.5"
+      >
+        <div class="flex min-w-0 items-center gap-2">
+          <span class="truncate text-xs">{{ match.lineup_1.name }}</span>
+          <MatchLineupScoreDisplay
+            :match="match"
+            :lineup="match.lineup_1"
+            :match-map="mm"
+            :halves="false"
+          />
+        </div>
+        <span
+          class="font-mono text-[0.55rem] uppercase tracking-[0.22em] text-muted-foreground"
+        >
+          {{ mapLabel(mm.map) }}
+        </span>
+        <div class="flex min-w-0 items-center justify-end gap-2">
+          <MatchLineupScoreDisplay
+            :match="match"
+            :lineup="match.lineup_2"
+            :match-map="mm"
+            :halves="false"
+          />
+          <span class="truncate text-xs">{{ match.lineup_2.name }}</span>
+        </div>
+      </div>
+    </div>
+  </DefineBoard>
+
   <button
     v-if="canShow && !hideToggle"
     type="button"
@@ -313,7 +506,15 @@ function statCell(lp: any, key: "kills" | "deaths" | "assists" | "damage") {
     />
   </button>
 
-  <Transition name="scoreboard-slide">
+  <Drawer v-if="inDrawer" :open="open && canShow" @update:open="open = $event">
+    <DrawerContent class="max-h-[85dvh]">
+      <DrawerTitle class="sr-only">{{ $t("match.scoreboard") }}</DrawerTitle>
+      <div class="overflow-y-auto px-4 pb-6 pt-4">
+        <ReuseBoard />
+      </div>
+    </DrawerContent>
+  </Drawer>
+  <Transition v-else name="scoreboard-slide">
     <div
       v-if="open && canShow"
       class="absolute inset-x-0 top-0 z-20 overflow-auto border-b border-[hsl(var(--tac-amber)/0.5)] bg-card/95 backdrop-blur-sm shadow-[0_10px_30px_-10px_rgba(0,0,0,0.7)]"
@@ -323,187 +524,7 @@ function statCell(lp: any, key: "kills" | "deaths" | "assists" | "damage") {
         class="px-4 pb-3"
         :class="hideToggle && !compact ? 'pt-4' : 'pt-11'"
       >
-        <div
-          v-if="!hasMaps"
-          class="rounded border border-border/60 bg-background/40 px-3 py-3 text-center font-mono text-[0.6rem] uppercase tracking-[0.22em] text-muted-foreground"
-        >
-          {{ $t("match.maps_not_picked") }}
-        </div>
-        <template v-else-if="currentMap">
-          <div
-            class="rounded border border-[hsl(var(--tac-amber)/0.55)] bg-[hsl(var(--tac-amber)/0.08)] px-3 py-2"
-          >
-            <div class="flex items-center justify-between gap-3">
-              <div class="flex min-w-0 items-center gap-2">
-                <span
-                  class="font-mono text-[0.55rem] uppercase tracking-[0.22em] text-[hsl(var(--tac-amber))]"
-                >
-                  {{
-                    currentMap.winning_lineup_id
-                      ? $t("match.scoreboard_overlay.final")
-                      : $t("match.scoreboard_overlay.live")
-                  }}
-                </span>
-                <span class="truncate text-sm font-semibold">{{
-                  match.lineup_1.name
-                }}</span>
-                <MatchLineupScoreDisplay
-                  :match="match"
-                  :lineup="match.lineup_1"
-                  :match-map="currentMap"
-                />
-              </div>
-              <span
-                class="font-mono text-[0.6rem] uppercase tracking-[0.22em] text-muted-foreground"
-              >
-                {{ mapLabel(currentMap.map) }}
-              </span>
-              <div class="flex min-w-0 items-center justify-end gap-2">
-                <MatchLineupScoreDisplay
-                  :match="match"
-                  :lineup="match.lineup_2"
-                  :match-map="currentMap"
-                />
-                <span class="truncate text-sm font-semibold">{{
-                  match.lineup_2.name
-                }}</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Per-map player stats for the current/highlighted map. -->
-          <div class="mt-2 grid grid-cols-1 gap-2 md:grid-cols-2">
-            <div
-              v-for="(team, idx) in [
-                { name: match.lineup_1.name, players: lineup1Players },
-                { name: match.lineup_2.name, players: lineup2Players },
-              ]"
-              :key="idx"
-              class="overflow-hidden rounded border border-border/50 bg-background/40"
-            >
-              <div
-                class="flex items-center justify-between border-b border-border/40 bg-card/40 px-2 py-1"
-              >
-                <span
-                  class="truncate font-mono text-[0.6rem] uppercase tracking-[0.22em] text-muted-foreground"
-                >
-                  {{ team.name }}
-                </span>
-              </div>
-              <table class="w-full text-[0.65rem]">
-                <thead
-                  class="font-mono uppercase tracking-[0.12em] text-muted-foreground/70"
-                >
-                  <tr class="border-b border-border/30">
-                    <th class="px-2 py-1 text-left font-normal">
-                      {{ $t("common.player") }}
-                    </th>
-                    <th class="px-1 py-1 text-center font-normal">
-                      <StatLabel stat="k" label="K" />
-                    </th>
-                    <th class="px-1 py-1 text-center font-normal">
-                      <StatLabel stat="d" label="D" />
-                    </th>
-                    <th class="px-1 py-1 text-center font-normal">
-                      <StatLabel stat="a" label="A" />
-                    </th>
-                    <th class="px-1 py-1 text-center font-normal">
-                      <StatLabel stat="kd" label="K/D" />
-                    </th>
-                    <th class="px-1 py-1 text-center font-normal">
-                      <StatLabel stat="hs" label="HS%" />
-                    </th>
-                    <th class="px-1 py-1 text-center font-normal">
-                      <StatLabel stat="total_damage" label="DMG" />
-                    </th>
-                    <th class="px-1 py-1 text-center font-normal">
-                      <StatLabel stat="adr" label="ADR" />
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    v-for="lp in team.players"
-                    :key="lp.steam_id ?? lp.placeholder_name"
-                    class="border-t border-border/20"
-                  >
-                    <td
-                      class="max-w-[140px] truncate px-2 py-0.5 text-left"
-                      :title="playerName(lp)"
-                    >
-                      <span
-                        v-if="lp.captain"
-                        class="mr-1 font-mono text-[0.55rem] text-[hsl(var(--tac-amber))]"
-                        >★</span
-                      >{{ playerName(lp) }}
-                    </td>
-                    <td class="px-1 py-0.5 text-center tabular-nums">
-                      {{ statCell(lp, "kills") }}
-                    </td>
-                    <td class="px-1 py-0.5 text-center tabular-nums">
-                      {{ statCell(lp, "deaths") }}
-                    </td>
-                    <td class="px-1 py-0.5 text-center tabular-nums">
-                      {{ statCell(lp, "assists") }}
-                    </td>
-                    <td class="px-1 py-0.5 text-center tabular-nums">
-                      <span
-                        :style="
-                          statsForCurrentMap(lp)
-                            ? { color: kdColor(playerKDNum(lp)) }
-                            : undefined
-                        "
-                      >
-                        {{ playerKDLabel(lp) }}
-                      </span>
-                    </td>
-                    <td class="px-1 py-0.5 text-center tabular-nums">
-                      {{ playerHS(lp) }}
-                    </td>
-                    <td class="px-1 py-0.5 text-center tabular-nums">
-                      {{ statCell(lp, "damage") }}
-                    </td>
-                    <td class="px-1 py-0.5 text-center tabular-nums">
-                      {{ playerADR(lp) }}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </template>
-
-        <div v-if="showOtherMaps" class="mt-2 flex flex-col gap-1">
-          <div
-            v-for="mm in otherMaps"
-            :key="mm.id"
-            class="flex items-center justify-between gap-3 rounded border border-border/50 bg-background/40 px-3 py-1.5"
-          >
-            <div class="flex min-w-0 items-center gap-2">
-              <span class="truncate text-xs">{{ match.lineup_1.name }}</span>
-              <MatchLineupScoreDisplay
-                :match="match"
-                :lineup="match.lineup_1"
-                :match-map="mm"
-                :halves="false"
-              />
-            </div>
-            <span
-              class="font-mono text-[0.55rem] uppercase tracking-[0.22em] text-muted-foreground"
-            >
-              {{ mapLabel(mm.map) }}
-            </span>
-            <div class="flex min-w-0 items-center justify-end gap-2">
-              <MatchLineupScoreDisplay
-                :match="match"
-                :lineup="match.lineup_2"
-                :match-map="mm"
-                :halves="false"
-              />
-              <span class="truncate text-xs">{{ match.lineup_2.name }}</span>
-            </div>
-          </div>
-        </div>
+        <ReuseBoard />
       </div>
     </div>
   </Transition>

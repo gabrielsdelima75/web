@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onBeforeUnmount, watch } from "vue";
 import { useApolloClient } from "@vue/apollo-composable";
+import { Cross2Icon } from "@radix-icons/vue";
 import {
   ChevronDown,
   ExternalLink,
@@ -19,6 +20,7 @@ import StreamStatusPanel from "~/components/match/StreamStatusPanel.vue";
 import StreamBootStatus from "~/components/match/StreamBootStatus.vue";
 import StreamStoppedBar from "~/components/match/StreamStoppedBar.vue";
 import {
+  streamControlBarClasses,
   streamControlButtonClasses,
   streamControlDividerClasses,
   streamControlIconClasses,
@@ -31,6 +33,7 @@ import { useApplicationSettingsStore } from "~/stores/ApplicationSettings";
 import { useAuthStore } from "~/stores/AuthStore";
 import { useStreamerStore } from "~/stores/StreamerStore";
 import { useMatchPopout } from "~/composables/useMatchPopout";
+import { countOwnViewing } from "~/composables/useStreamViewers";
 import {
   liveStreamKey,
   useStoppedStreams,
@@ -337,6 +340,27 @@ const { copyFor } = useWhepStatusCopy();
 const whepPhase = ref<WhepPhase | null>(null);
 watch(whepPhase, (next) => emit("phase", next));
 
+const watching = computed(
+  () =>
+    hasStream.value &&
+    canViewStream.value &&
+    !isPoppedOut.value &&
+    !isStopped.value &&
+    !streamEnded.value &&
+    isLive.value &&
+    whepPhase.value === null,
+);
+let stopCounting: (() => void) | null = null;
+watch(
+  watching,
+  (on) => {
+    stopCounting?.();
+    stopCounting = on ? countOwnViewing(props.matchId) : null;
+  },
+  { immediate: true },
+);
+onBeforeUnmount(() => stopCounting?.());
+
 function promoteToPip() {
   if (!stream.value) return;
   applicationSettings.setGlobalStream({
@@ -465,6 +489,24 @@ const hasHostControls = computed(
         :dim="!!whepPhase"
         class="absolute left-3 top-3 z-10"
       />
+
+      <!-- Phones have no pop-out window to close, so the page's player
+           gets its own close. -->
+      <div
+        v-if="canStop && coarsePointer"
+        class="absolute right-3 top-3 z-10 [--stream-control-icon:18px] [--stream-control:40px]"
+        :class="streamControlBarClasses"
+      >
+        <button
+          type="button"
+          :title="$t('common.close')"
+          :aria-label="$t('common.close')"
+          :class="streamControlButtonClasses"
+          @click="stopStream"
+        >
+          <Cross2Icon :class="streamControlIconClasses" />
+        </button>
+      </div>
 
       <MatchScoreboardOverlay
         v-if="!bare"

@@ -59,9 +59,9 @@ useTwitchPovGuard(
       <StreamEmbed v-else :streams="[stream]" :global="true" />
     </div>
     <div
-      class="absolute left-0 top-0 z-40 grid size-[22px] cursor-nwse-resize place-items-center rounded-br-lg bg-background/55 opacity-0 shadow-[inset_-1px_-1px_0_rgb(255_255_255/0.2)] backdrop-blur-[14px] backdrop-saturate-[1.4] transition-opacity duration-150 group-hover:opacity-100 [@media(pointer:coarse)]:opacity-100"
+      class="absolute left-0 top-0 z-40 grid size-[22px] cursor-nwse-resize touch-none place-items-center rounded-br-lg bg-background/55 opacity-0 shadow-[inset_-1px_-1px_0_rgb(255_255_255/0.2)] backdrop-blur-[14px] backdrop-saturate-[1.4] transition-opacity duration-150 group-hover:opacity-100 [@media(pointer:coarse)]:size-8 [@media(pointer:coarse)]:opacity-100"
       :class="{ 'opacity-100': isResizing }"
-      @mousedown="startResize"
+      @pointerdown="startResize"
     >
       <div
         class="mb-0.5 mr-0.5 size-[7px] border-l-2 border-t-2 border-white/75"
@@ -102,7 +102,7 @@ export default {
       isResizing: false,
       resizeStart: { x: 0, y: 0, width: 0, height: 0 },
       maxWidth: 400,
-      // Latest mouse position captured by mousemove; consumed by the
+      // Latest pointer position captured by pointermove; consumed by the
       // rAF loop. Decouples DOM writes from input events so width/height
       // update at most once per frame instead of per-pixel — fewer
       // reflows on the <video> child, fewer involuntary WebRTC pauses.
@@ -133,8 +133,12 @@ export default {
     },
   },
   methods: {
+    // 400px, except on a phone, where it can shrink to 60% of the screen.
+    minWidth() {
+      return Math.min(400, Math.round(window.innerWidth * 0.6));
+    },
     updateMaxWidth() {
-      this.maxWidth = Math.max(400, window.innerWidth - 32);
+      this.maxWidth = Math.max(this.minWidth(), window.innerWidth - 32);
     },
     calculateInitialSize() {
       const minWidth = 400;
@@ -176,7 +180,7 @@ export default {
       }
       useApplicationSettingsStore().setGlobalStream();
     },
-    startResize(e: MouseEvent) {
+    startResize(e: PointerEvent) {
       this.isResizing = true;
       this.resizeStart = {
         x: e.clientX,
@@ -187,7 +191,7 @@ export default {
       e.preventDefault();
       e.stopPropagation();
     },
-    handleResize(e: MouseEvent) {
+    handleResize(e: PointerEvent) {
       if (!this.isResizing) {
         return;
       }
@@ -204,7 +208,7 @@ export default {
       const deltaX = this.resizeStart.x - mouse.x;
       const deltaY = this.resizeStart.y - mouse.y;
 
-      const minWidth = 400;
+      const minWidth = this.minWidth();
       const aspectRatio = 16 / 9;
 
       if (Math.abs(deltaX) > Math.abs(deltaY)) {
@@ -226,7 +230,7 @@ export default {
     handleWindowResize() {
       this.updateMaxWidth();
 
-      const minWidth = 400;
+      const minWidth = this.minWidth();
       const aspectRatio = 16 / 9;
 
       if (this.width > this.maxWidth) {
@@ -258,8 +262,9 @@ export default {
 
     this.calculateInitialSize();
 
-    document.addEventListener("mousemove", this.handleResize);
-    document.addEventListener("mouseup", this.stopResize);
+    document.addEventListener("pointermove", this.handleResize);
+    document.addEventListener("pointerup", this.stopResize);
+    document.addEventListener("pointercancel", this.stopResize);
     window.addEventListener("resize", this.handleWindowResize);
 
     this.$nextTick(() => {
@@ -267,8 +272,9 @@ export default {
     });
   },
   beforeUnmount() {
-    document.removeEventListener("mousemove", this.handleResize);
-    document.removeEventListener("mouseup", this.stopResize);
+    document.removeEventListener("pointermove", this.handleResize);
+    document.removeEventListener("pointerup", this.stopResize);
+    document.removeEventListener("pointercancel", this.stopResize);
     window.removeEventListener("resize", this.handleWindowResize);
     if (this.resizeRaf) {
       cancelAnimationFrame(this.resizeRaf);

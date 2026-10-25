@@ -15,10 +15,16 @@ import { useAuthStore } from "~/stores/AuthStore";
 import { useApplicationSettingsStore } from "~/stores/ApplicationSettings";
 import { useWatchStage } from "~/composables/useWatchStage";
 
-const { pushes, clients, myRoles } = vi.hoisted(() => ({
+const { pushes, clients, myRoles, leaveGuards } = vi.hoisted(() => ({
   pushes: [] as Array<(result: any) => void>,
   clients: [] as Array<string>,
   myRoles: { state: null as any },
+  leaveGuards: [] as Array<(to: any) => void>,
+}));
+
+vi.mock("vue-router", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("vue-router")>()),
+  onBeforeRouteLeave: (guard: (to: any) => void) => leaveGuards.push(guard),
 }));
 
 vi.mock("@vue/apollo-composable", async (importOriginal) => ({
@@ -122,12 +128,15 @@ async function mountStage(
   streamEmbed: Record<string, unknown> = {
     template: '<div class="stream-embed" />',
   },
+  livePlayer: Record<string, unknown> = {
+    template: '<div class="live-player" />',
+  },
 ) {
   const wrapper = await mountSuspended(WatchStreamStage, {
     global: {
       stubs: {
         StreamEmbed: streamEmbed,
-        LiveStreamPlayer: { template: '<div class="live-player" />' },
+        LiveStreamPlayer: livePlayer,
         StreamMatchCard: true,
         StreamViewerBadge: true,
         StreamThumbnail: true,
@@ -416,5 +425,77 @@ describe("WatchStreamStage press to play", () => {
     expect(wrapper.get(".stream-embed").attributes("data-started")).toBe(
       "yes",
     );
+  });
+});
+
+describe("WatchStreamStage like the match page's player", () => {
+  const settings = () => useApplicationSettingsStore();
+
+  beforeEach(() => {
+    resetStage();
+    leaveGuards.length = 0;
+    settings().settings = [];
+    settings().setGlobalStream();
+    useAuthStore().me = { steam_id: "1", role: "user" } as any;
+  });
+
+  afterEach(() => {
+    settings().setGlobalStream();
+    vi.restoreAllMocks();
+  });
+
+  it("pins the stream to the floating player from its bar", async () => {
+    const wrapper = await mountStage([liveMatch({ streams: [gameStreamer] })]);
+
+    await wrapper
+      .get('.stream-controls button[aria-label="Pin as floating overlay"]')
+      .trigger("click");
+
+    expect(settings().globalStream).toMatchObject({
+      id: "g1",
+      match_id: "m1",
+      is_game_streamer: true,
+    });
+  });
+
+  it("opens the game stream in the native player on an iPhone", async () => {
+    const enter = vi.fn();
+    vi.spyOn(navigator, "userAgent", "get").mockReturnValue(
+      "Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X)",
+    );
+    (HTMLVideoElement.prototype as any).webkitEnterFullscreen = enter;
+
+    try {
+      const wrapper = await mountStage(
+        [liveMatch({ streams: [gameStreamer] })],
+        undefined,
+        { template: '<div class="live-player"><video /></div>' },
+      );
+
+      await wrapper
+        .get('.stream-controls button[aria-label="Fullscreen"]')
+        .trigger("click");
+
+      expect(enter).toHaveBeenCalledOnce();
+    } finally {
+      delete (HTMLVideoElement.prototype as any).webkitEnterFullscreen;
+    }
+  });
+
+  it("keeps the stream playing, floating, when its match is opened", async () => {
+    await mountStage([liveMatch({ streams: [gameStreamer] })]);
+
+    leaveGuards.at(-1)!({ name: "matches-id", params: { id: "m1" } });
+
+    expect(settings().globalStream).toMatchObject({ id: "g1", match_id: "m1" });
+  });
+
+  it("lets the stream go when another page is opened", async () => {
+    await mountStage([liveMatch({ streams: [gameStreamer] })]);
+
+    leaveGuards.at(-1)!({ name: "matches-id", params: { id: "m2" } });
+    leaveGuards.at(-1)!({ name: "index", params: {} });
+
+    expect(settings().globalStream).toBeNull();
   });
 });

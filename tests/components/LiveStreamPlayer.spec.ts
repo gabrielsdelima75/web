@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { defineComponent, h } from "vue";
+import { defineComponent, effectScope, h } from "vue";
 import { flushPromises } from "@vue/test-utils";
 import { mountSuspended } from "@nuxt/test-utils/runtime";
 import { print } from "graphql";
@@ -10,6 +10,7 @@ import {
   liveStreamKey,
   useStoppedStreams,
 } from "~/composables/useStoppedStreams";
+import { useStreamViewers } from "~/composables/useStreamViewers";
 
 const { subscriptions } = vi.hoisted(() => ({
   subscriptions: [] as Array<{ query: string; next: (result: any) => void }>,
@@ -194,6 +195,47 @@ describe("LiveStreamPlayer on the match page", () => {
     await buttons[0].trigger("click");
 
     expect(buttons[0].attributes("aria-expanded")).toBe("true");
+  });
+
+  it("gives a phone a close that stops the page's own player", async () => {
+    vi.stubGlobal("matchMedia", (query: string) => ({
+      matches: query === "(pointer: coarse)",
+    }));
+    const wrapper = await mountPlayer({});
+    await pushStream(streamRow);
+    vi.unstubAllGlobals();
+
+    await wrapper.find('button[aria-label="Close"]').trigger("click");
+
+    expect(wrapper.find(".stream-canvas").exists()).toBe(false);
+    expect(wrapper.text()).toContain("Stream stopped");
+  });
+
+  it("has no close over the stream on desktop", async () => {
+    const wrapper = await mountPlayer({});
+    await pushStream(streamRow);
+
+    expect(wrapper.find('button[aria-label="Close"]').exists()).toBe(false);
+  });
+
+  it("counts the viewer as watching while it plays", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => Promise.resolve({ ok: false })),
+    );
+    const scope = effectScope();
+    const count = scope.run(() => useStreamViewers().getCount("match-own"))!;
+    await mountPlayer({ matchId: "match-own" });
+    await pushStream(streamRow);
+
+    expect(count.value).toBe(1);
+
+    useStoppedStreams().stop(liveStreamKey("match-own"));
+    await flushPromises();
+
+    expect(count.value).toBeNull();
+    scope.stop();
+    vi.unstubAllGlobals();
   });
 
   it("plays here again from Return here, even after being stopped", async () => {

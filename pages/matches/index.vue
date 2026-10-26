@@ -572,6 +572,7 @@ import { typedGql } from "~/generated/zeus/typedDocumentNode";
 import { matchRowFields } from "~/graphql/simpleMatchFields";
 import { $, e_match_status_enum, order_by } from "~/generated/zeus";
 import { validate as validateUUID } from "uuid";
+import { playedByAny, playedByAnyTeam } from "~/utilities/matchLineups";
 import { useAuthStore } from "~/stores/AuthStore";
 import {
   RESULT_MATCHES_WHERE,
@@ -901,22 +902,12 @@ export default {
 
       if (teams?.length) {
         const teamIds = teams.map((t) => t.id);
-        ands.push({
-          _or: [
-            { lineup_1: { team_id: { _in: teamIds } } },
-            { lineup_2: { team_id: { _in: teamIds } } },
-          ],
-        });
+        ands.push(playedByAnyTeam(teamIds));
       }
 
       if (players?.length) {
         const steamIds = players.map((p) => p.steam_id);
-        ands.push({
-          _or: [
-            { lineup_1: { lineup_players: { steam_id: { _in: steamIds } } } },
-            { lineup_2: { lineup_players: { steam_id: { _in: steamIds } } } },
-          ],
-        });
+        ands.push(playedByAny(steamIds));
       }
 
       if (this.activePresetName === "finished") {

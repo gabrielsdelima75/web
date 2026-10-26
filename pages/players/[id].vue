@@ -54,6 +54,7 @@ import AnimatedFilters from "~/components/common/AnimatedFilters.vue";
 import formatStatValue from "~/utilities/formatStatValue";
 import { resolveWeapon } from "~/utilities/weaponIcon";
 import { csRankIcon } from "~/utilities/csRank";
+import { playedBy } from "~/utilities/matchLineups";
 import SanctionStatusBadge from "~/components/SanctionStatusBadge.vue";
 import PlayerSearch from "~/components/PlayerSearch.vue";
 import { usePlayerCompareTarget } from "~/composables/usePlayerCompareTarget";
@@ -1236,25 +1237,7 @@ const faceitByMatch = ref<
 >({});
 
 function scopeToPlayer(filters: Record<string, any>) {
-  return {
-    _and: [
-      filters,
-      {
-        _or: [
-          {
-            lineup_1: {
-              lineup_players: { steam_id: { _eq: playerIdRef.value } },
-            },
-          },
-          {
-            lineup_2: {
-              lineup_players: { steam_id: { _eq: playerIdRef.value } },
-            },
-          },
-        ],
-      },
-    ],
-  };
+  return { _and: [filters, playedBy(playerIdRef.value)] };
 }
 
 const matchesWhere = computed(() => {

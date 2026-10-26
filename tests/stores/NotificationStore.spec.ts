@@ -5,10 +5,18 @@ import { useNotificationStore } from "~/stores/NotificationStore";
 
 const ME = "76561198000000001";
 
-let observers: Array<{ root: string; observer: any }> = [];
+let observers: Array<{ root: string; variables: any; observer: any }> = [];
 
-function serve() {
+function serve({ preferences = Promise.resolve({ preferences: [] }) } = {}) {
+  vi.stubGlobal(
+    "$fetch",
+    vi.fn(() => preferences),
+  );
   const client = useApollo().clients!.default;
+  // schemaHasType: every table the store asks after is served.
+  vi.spyOn(client, "query").mockResolvedValue({
+    data: { __type: { name: "player_dismissals" } },
+  } as any);
   vi.spyOn(client, "subscribe").mockImplementation(
     (options: any) =>
       ({
@@ -16,12 +24,21 @@ function serve() {
           observers.push({
             root: options.query.definitions[0].selectionSet.selections[0].name
               .value,
+            variables: options.variables,
             observer,
           });
           return { unsubscribe() {}, closed: false };
         },
       }) as any,
   );
+}
+
+function feed(root: string, data: any, prefix?: string) {
+  const entry = observers.find(
+    (o) => o.root === root && (!prefix || o.variables?.prefix === prefix),
+  );
+  expect(entry, `${root} subscription`).toBeDefined();
+  entry!.observer.next({ data });
 }
 
 function row(id: string, type: string, created_at: string) {
@@ -42,9 +59,120 @@ function row(id: string, type: string, created_at: string) {
 
 afterEach(async () => {
   useAuthStore().me = undefined;
+  useApplicationSettingsStore().settings = [];
   await flushPromises();
   observers = [];
   vi.restoreAllMocks();
+  vi.unstubAllGlobals();
+});
+
+describe("NotificationStore counts only what has loaded", () => {
+  it("leaves out a roster need until the player's dismissals say it stands", async () => {
+    serve();
+    const store = useNotificationStore();
+    useAuthStore().me = { steam_id: ME } as any;
+    await flushPromises();
+
+    feed("my_teams", {
+      my_teams: [
+        {
+          id: "team-1",
+          name: "5Stack Devs",
+          can_invite: true,
+          roster: [{ status: "Starter" }, { status: "Starter" }],
+        },
+      ],
+    });
+    await flushPromises();
+    expect(store.rosterNeeds).toEqual([]);
+    expect(store.unreadNotificationCount).toBe(0);
+
+    feed(
+      "player_dismissals",
+      {
+        player_dismissals: [
+          { key: "team_roster_need:team-1", value: { starters: 2 } },
+        ],
+      },
+      "team_roster_need:%",
+    );
+    await flushPromises();
+    expect(store.rosterNeeds).toEqual([]);
+    expect(store.unreadNotificationCount).toBe(0);
+
+    feed("player_dismissals", { player_dismissals: [] }, "team_roster_need:%");
+    await flushPromises();
+    expect(store.rosterNeeds).toHaveLength(1);
+    expect(store.unreadNotificationCount).toBe(1);
+  });
+
+  it("holds the latest article until the player's read mark has landed", async () => {
+    serve();
+    useApplicationSettingsStore().settings = [
+      { name: "public.news_enabled", value: "true" },
+    ];
+    const store = useNotificationStore();
+    useAuthStore().me = { steam_id: ME } as any;
+    await flushPromises();
+
+    feed("news_articles", {
+      news_articles: [
+        {
+          id: "news-1",
+          slug: "news-1",
+          title: "Patch",
+          teaser: null,
+          cover_image_url: null,
+          published_at: "2026-10-20T12:00:00Z",
+        },
+      ],
+    });
+    await flushPromises();
+    expect(store.unreadNewsArticle).toBeNull();
+    expect(store.unreadNotificationCount).toBe(0);
+
+    feed("players_by_pk", {
+      players_by_pk: { last_read_news_at: "2026-10-21T12:00:00Z" },
+    });
+    await flushPromises();
+    expect(store.unreadNewsArticle).toBeNull();
+
+    feed("players_by_pk", { players_by_pk: { last_read_news_at: null } });
+    await flushPromises();
+    expect(store.unreadNewsArticle).toEqual(
+      expect.objectContaining({ id: "news-1" }),
+    );
+    expect(store.unreadNotificationCount).toBe(1);
+  });
+
+  it("holds notifications until the muted types are known", async () => {
+    let answer!: (value: any) => void;
+    serve({ preferences: new Promise((resolve) => (answer = resolve)) });
+    const store = useNotificationStore();
+    useAuthStore().me = { steam_id: ME } as any;
+    await flushPromises();
+
+    feed("notifications", {
+      notifications: [
+        row("muted", "MatchStarted", "2026-10-20T12:00:00Z"),
+        row("shown", "NameChangeApproved", "2026-10-19T12:00:00Z"),
+      ],
+    });
+    await flushPromises();
+    expect(store.notifications).toEqual([]);
+    expect(store.unreadNotificationCount).toBe(0);
+    expect(store.notificationsLoaded).toBe(false);
+
+    answer({
+      preferences: [
+        { key: "MatchStarted", enabled: false, defaultEnabled: true },
+      ],
+    });
+    await flushPromises();
+    expect(store.notifications.map((n) => n.id)).toEqual(["shown"]);
+    expect(store.unreadNotificationCount).toBe(1);
+    expect(store.notificationsLoaded).toBe(true);
+  });
 });
 
 describe("NotificationStore stacking", () => {

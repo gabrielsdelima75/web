@@ -185,6 +185,7 @@ const seasons = ref<
     ends_at: string | null;
   }>
 >([]);
+const seasonsLoaded = ref(false);
 const selectedSeasonId = ref<string | null>(null);
 const selectedSeason = computed(
   () => seasons.value.find((s) => s.id === selectedSeasonId.value) || null,
@@ -253,6 +254,7 @@ function seasonRange(s: {
 
 onMounted(async () => {
   if (!seasonsEnabled.value) {
+    seasonsLoaded.value = true;
     return;
   }
   try {
@@ -290,6 +292,8 @@ onMounted(async () => {
     selectedSeasonId.value = active?.id ?? seasons.value[0]?.id ?? null;
   } catch {
     seasons.value = [];
+  } finally {
+    seasonsLoaded.value = true;
   }
 });
 
@@ -1671,7 +1675,10 @@ const PREVIOUS_SEASON_FINISH_QUERY = gql`
     }
   }
 `;
-const previousSeasonFinish = ref<{ rank: number; total: number } | null>(null);
+// undefined while it is being asked; null when the season has no rank for them.
+const previousSeasonFinish = ref<
+  { rank: number; total: number } | null | undefined
+>(undefined);
 let previousSeasonFinishGen = 0;
 watch(
   () =>
@@ -1682,7 +1689,7 @@ watch(
     ] as const,
   async ([playerId, seasonId, type]) => {
     const gen = ++previousSeasonFinishGen;
-    previousSeasonFinish.value = null;
+    previousSeasonFinish.value = undefined;
     if (!playerId || !seasonId || !type) return;
     try {
       const { data } = await apolloClient.query({
@@ -1697,9 +1704,30 @@ watch(
       if (gen !== previousSeasonFinishGen) return;
       previousSeasonFinish.value =
         (data as any)?.get_player_leaderboard_rank?.[0] ?? null;
-    } catch {}
+    } catch {
+      if (gen === previousSeasonFinishGen) previousSeasonFinish.value = null;
+    }
   },
   { immediate: true },
+);
+
+// The ELO history, the seasons and then where the last season finished each
+// land on their own, and each one redrew the card (Peak / Lowest, then the
+// peak's date, then "Finished #4 of 19"). The card waits for what it shows.
+const eloSeasonsSettled = computed(
+  () =>
+    !seasonsEnabled.value ||
+    (seasonsLoaded.value &&
+      (eloHistory.value.length > 0 || !eloHistoryLoading.value)),
+);
+const eloStripSettled = computed(
+  () =>
+    eloSeasonsSettled.value &&
+    (!seasonPaceData.value || previousSeasonFinish.value !== undefined),
+);
+// Until then the strip holds the comparison's shape.
+const eloStripPace = computed(
+  () => !!seasonPaceData.value || !eloSeasonsSettled.value,
 );
 const previousSeasonTooltip = computed(() => {
   const pace = seasonPaceData.value;
@@ -2349,9 +2377,10 @@ const AwardComposer = defineAsyncComponent(
             <div
               :class="[
                 'grid divide-border/40 overflow-hidden rounded-md border border-border/60 sm:divide-x sm:divide-y-0',
-                seasonPaceData
+                eloStripPace
                   ? 'grid-cols-2 sm:grid-cols-3'
                   : 'grid-cols-1 divide-y sm:grid-cols-2',
+                !eloStripSettled && 'invisible',
               ]"
             >
               <!-- Phones with a season to compare: current ELO across the top,
@@ -2359,7 +2388,7 @@ const AwardComposer = defineAsyncComponent(
               <div
                 class="relative min-h-[64px] px-3 py-2.5"
                 :class="
-                  seasonPaceData &&
+                  eloStripPace &&
                   'max-sm:col-span-2 max-sm:border-b max-sm:border-border/40'
                 "
               >
@@ -2383,7 +2412,7 @@ const AwardComposer = defineAsyncComponent(
                     :value="fmtRangeStat(player?.elo?.competitive)"
                     :class="[
                       'text-3xl font-bold leading-none tabular-nums tracking-tight',
-                      seasonPaceData ? '' : 'sm:text-4xl',
+                      eloStripPace ? '' : 'sm:text-4xl',
                     ]"
                   />
                 </div>
@@ -2473,7 +2502,10 @@ const AwardComposer = defineAsyncComponent(
                 </div>
               </template>
 
-              <div v-else class="relative min-h-[64px] px-3 py-2.5 sm:pl-4">
+              <div
+                v-else-if="eloSeasonsSettled"
+                class="relative min-h-[64px] px-3 py-2.5 sm:pl-4"
+              >
                 <span
                   class="pointer-events-none absolute left-0 top-3 bottom-3 hidden w-[2px] bg-[hsl(var(--tac-amber))] sm:block"
                   aria-hidden="true"
@@ -2532,6 +2564,12 @@ const AwardComposer = defineAsyncComponent(
                   <template v-else>&nbsp;</template>
                 </div>
               </div>
+
+              <div
+                v-else
+                class="min-h-[64px] max-sm:col-span-2"
+                aria-hidden="true"
+              ></div>
             </div>
 
             <div
@@ -2595,7 +2633,10 @@ const AwardComposer = defineAsyncComponent(
               />
 
               <div
-                v-else-if="eloHistoryLoading && !hasWindowedEloData"
+                v-else-if="
+                  !eloSeasonsSettled ||
+                  (eloHistoryLoading && !hasWindowedEloData)
+                "
                 class="elo-skeleton relative flex flex-1 flex-col items-center justify-center gap-3 px-6"
                 aria-busy="true"
               >

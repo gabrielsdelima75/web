@@ -35,6 +35,9 @@ const preferences = ref<Record<NotificationChannel, NotificationPreference[]>>({
 });
 const loaded = ref(false);
 const loading = ref(false);
+// Set once a load has answered either way, so the bell can wait for it rather
+// than count a muted notification and take it back.
+const settled = ref(false);
 
 export type QuietHours = {
   start: string | null;
@@ -71,6 +74,7 @@ export function useNotificationPreferences() {
       // defaults to showing everything.
     } finally {
       loading.value = false;
+      settled.value = true;
     }
   }
 
@@ -145,6 +149,7 @@ export function useNotificationPreferences() {
   function reset() {
     preferences.value = { push: [], in_app: [] };
     loaded.value = false;
+    settled.value = false;
   }
 
   return {
@@ -154,6 +159,7 @@ export function useNotificationPreferences() {
     setQuietHours,
     loaded,
     loading,
+    settled,
     load,
     set,
     isAlertTypeEnabled,

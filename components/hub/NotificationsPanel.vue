@@ -252,6 +252,7 @@ import TeamRosterNeedNotification from "~/components/notification/TeamRosterNeed
             <Button
               size="sm"
               variant="outline"
+              :disabled="!canDismissAll"
               @click="dismissAllNotifications"
               class="flex-1 justify-center gap-1.5"
             >
@@ -261,6 +262,7 @@ import TeamRosterNeedNotification from "~/components/notification/TeamRosterNeed
             <Button
               size="sm"
               variant="ghost"
+              :disabled="!canDeleteRead"
               @click="deleteAllReadNotifications"
               class="flex-1 justify-center gap-1.5 text-destructive hover:bg-destructive hover:text-white"
             >
@@ -334,6 +336,17 @@ export default {
     },
     featureSpotlight() {
       return useNotificationStore().featureSpotlight;
+    },
+    // Match what the footer's mutations would touch.
+    canDismissAll(): boolean {
+      return this.notifications.some(
+        (n: any) => !n.is_read && n.deletable !== false,
+      );
+    },
+    canDeleteRead(): boolean {
+      return this.notifications.some(
+        (n: any) => n.is_read && n.deletable !== false,
+      );
     },
     hasAnyNotifications(): boolean {
       return (

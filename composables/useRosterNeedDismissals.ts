@@ -59,6 +59,11 @@ const local = ref<Record<string, number>>(readLocal());
 // while unknown or unsupported, which falls back to `local`.
 const server = ref<Record<string, number> | null>(null);
 
+// False until the player's dismissals are known, or known to live only in this
+// browser. Unknown reads as dismissed: a reminder they already ignored must not
+// flash in and fold away on every load.
+const settled = ref(false);
+
 watch(
   local,
   (value) => {
@@ -88,6 +93,7 @@ function upsert(teamId: string, starters: number) {
 }
 
 export function isRosterNeedDismissed(teamId: string, starters: number) {
+  if (!settled.value) return true;
   const at = server.value
     ? server.value[teamId]
     : local.value[localKey(teamId)];
@@ -107,7 +113,10 @@ export function dismissRosterNeed(teamId: string, starters: number) {
 // dismissals live, then moves any this browser kept on to their account.
 export async function syncRosterNeedDismissals(steamId: string) {
   const client = getGraphqlClient();
-  if (!(await schemaHasType(client, "player_dismissals"))) return;
+  if (!(await schemaHasType(client, "player_dismissals"))) {
+    settled.value = true;
+    return;
+  }
   if (String(useAuthStore().me?.steam_id ?? "") !== String(steamId)) return;
 
   useSubscriptionManager().subscribe(
@@ -129,6 +138,10 @@ export async function syncRosterNeedDismissals(steamId: string) {
             }
           }
           server.value = byTeam;
+          settled.value = true;
+        },
+        error: () => {
+          settled.value = true;
         },
       }),
   );
@@ -154,4 +167,5 @@ export async function syncRosterNeedDismissals(steamId: string) {
 export function resetRosterNeedDismissals() {
   useSubscriptionManager().unsubscribe(SUBSCRIPTION_KEY);
   server.value = null;
+  settled.value = false;
 }

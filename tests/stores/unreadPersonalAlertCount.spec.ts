@@ -8,6 +8,11 @@ const ME = "76561198000000001";
 let observers: Array<{ root: string; observer: any }> = [];
 
 function serve() {
+  // The muted types answer at once; the store holds rows until they do.
+  vi.stubGlobal(
+    "$fetch",
+    vi.fn(() => Promise.resolve({ preferences: [] })),
+  );
   const client = useApollo().clients!.default;
   vi.spyOn(client, "subscribe").mockImplementation(
     (options: any) =>
@@ -45,6 +50,7 @@ afterEach(async () => {
   await flushPromises();
   observers = [];
   vi.restoreAllMocks();
+  vi.unstubAllGlobals();
 });
 
 describe("NotificationStore unreadPersonalAlertCount", () => {

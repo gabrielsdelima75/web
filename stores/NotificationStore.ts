@@ -266,9 +266,13 @@ export const useNotificationStore = defineStore("notifaicationStore", () => {
 
   // Muted types are filtered here rather than where the subscription assigns
   // rows, so preferences that load in after the subscription has already
-  // delivered still apply without a refetch.
+  // delivered still apply without a refetch. Nothing shows until they have
+  // answered, or a muted one would count and vanish on every load.
   const visibleNotifications = computed<Notification[]>(() => {
-    const { isAlertTypeEnabled } = useNotificationPreferences();
+    const { settled, isAlertTypeEnabled } = useNotificationPreferences();
+    if (!settled.value) {
+      return [];
+    }
     return allNotifications.value.filter((notification) =>
       isAlertTypeEnabled(notification.type),
     );
@@ -279,9 +283,16 @@ export const useNotificationStore = defineStore("notifaicationStore", () => {
   );
   const latestNewsArticle = ref<NewsArticle | null>(null);
   const lastReadNewsAt = ref<string | null>(null);
+  // The article and the player's read mark are separate subscriptions; until
+  // the mark lands, an article they already read would count as unread.
+  const newsReadStateLoaded = ref(false);
 
   const unreadNewsArticle = computed(() => {
     if (!useApplicationSettingsStore().newsEnabled) {
+      return null;
+    }
+
+    if (!newsReadStateLoaded.value) {
       return null;
     }
 
@@ -753,6 +764,7 @@ export const useNotificationStore = defineStore("notifaicationStore", () => {
           next: ({ data }) => {
             lastReadNewsAt.value =
               data.players_by_pk?.last_read_news_at ?? null;
+            newsReadStateLoaded.value = true;
           },
         }),
     );
@@ -763,6 +775,7 @@ export const useNotificationStore = defineStore("notifaicationStore", () => {
     (steamId) => {
       draftInvitesLoaded.value = false;
       notificationsLoaded.value = false;
+      newsReadStateLoaded.value = false;
       if (steamId) {
         subscribeToAll(steamId);
         void syncRosterNeedDismissals(steamId);
@@ -830,7 +843,12 @@ export const useNotificationStore = defineStore("notifaicationStore", () => {
     stackedNotifications,
     unreadNotificationCount,
     unreadPersonalAlertCount,
-    notificationsLoaded,
+    // The tab flash takes its baseline here, so it waits for the preferences
+    // too: rows held back until then would read as new on arrival.
+    notificationsLoaded: computed(
+      () =>
+        notificationsLoaded.value && useNotificationPreferences().settled.value,
+    ),
     hasNotifications,
     hasPersonalNotifications,
     hasAdminNotifications,

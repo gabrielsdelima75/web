@@ -11712,8 +11712,10 @@
         "restart_map_description": "0–0 ile ısınmaya dönülür. Oynanan rauntlar, sonraki raunt bitene kadar geri yüklenebilir.",
         "restart_title": "Maçın tamamı yeniden oynanmalı",
         "restart_description": "Bu denemeyi iptal eder ve iki takım için check-in'i yeniden açar.",
-        "reopen_title": "Maçın hâlâ oynanması gerekiyor",
-        "reopen_description": "İptal edilen maçın oynanabilmesi için check-in'i yeniden açar.",
+        "resume_title": "Maçı kaldığı yerden sürdür",
+        "resume_description": "Veto, bitmiş haritalar ve oynanan rauntlar korunur. Yeni bir sunucu atanır ve son rauntu geri yüklemeyi önerir.",
+        "reopen_title": "Maçın baştan başlaması gerekiyor",
+        "reopen_description": "Vetoyu ve tüm haritaların rauntlarını siler, ardından check-in'i yeniden açar.",
         "replay_title": "Maçın yeniden oynanması gerekiyor",
         "replay_description": "Sonucu siler ve check-in'i yeniden açar. Turnuva sıralaması güncellenir.",
         "winner_title": "Galibiyet yanlış takıma verildi",
@@ -11741,7 +11743,7 @@
         "reopen_canceled": "Maçın oynanabilmesi için check-in'i yeniden açar.",
         "reopen_live": "Bu denemeyi iptal eder ve iki takım için check-in'i yeniden açar.",
         "reopen_veto": "İki takım yeniden veto yapar, bu yüzden oynanmış haritalar silinir.",
-        "reopen_fixed_maps": "Bitmiş haritalar sonuçlarını korur. Oynanan harita baştan başlar.",
+        "reopen_fixed_maps": "Bitmiş olanlar dahil her harita baştan başlar.",
         "replay_title": "Maçı yeniden oyna",
         "replay_description": "Sonuç silinir ve check-in iki takım için yeniden açılır.",
         "swap_title": "Galibiyeti {team} takımına ver",
@@ -11758,6 +11760,10 @@
         "restarted": "Maç yeniden başlatıldı",
         "result_changed": "Kazanan değiştirildi",
         "failed": "Maç yeniden başlatılamadı"
+      },
+      "resume": {
+        "resumed": "Maç sürdürüldü",
+        "failed": "Maç sürdürülemedi"
       },
       "restart_map": {
         "title": "Haritayı Yeniden Başlat",

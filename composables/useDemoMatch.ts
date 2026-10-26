@@ -38,6 +38,7 @@ const ALLOWED = {
   canSetWinner: true,
   canReboot: true,
   canReparse: true,
+  canRestart: true,
 };
 
 // The demo's Fix a Problem, built from its match the way a real match's is.

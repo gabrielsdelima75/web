@@ -11712,8 +11712,10 @@
         "restart_map_description": "Tillbaka till uppvärmning vid 0–0. De spelade ronderna går att återställa tills nästa rond slutar.",
         "restart_title": "Hela matchen måste spelas om",
         "restart_description": "Avbryter det här försöket och öppnar incheckningen igen för båda lagen.",
-        "reopen_title": "Matchen behöver fortfarande spelas",
-        "reopen_description": "Öppnar incheckningen igen så att den avbrutna matchen kan spelas.",
+        "resume_title": "Fortsätt matchen där den stannade",
+        "resume_description": "Behåller vetot, färdiga banor och spelade ronder. En ny server tilldelas och erbjuder att återställa den senaste ronden.",
+        "reopen_title": "Matchen måste börja om",
+        "reopen_description": "Rensar vetot och alla banors ronder och öppnar sedan incheckningen igen.",
         "replay_title": "Matchen måste spelas igen",
         "replay_description": "Rensar resultatet och öppnar incheckningen igen. Turneringens tabell uppdateras.",
         "winner_title": "Fel lag fick vinsten",
@@ -11741,7 +11743,7 @@
         "reopen_canceled": "Öppnar incheckningen igen så att matchen kan spelas.",
         "reopen_live": "Avbryter det här försöket och öppnar incheckningen igen för båda lagen.",
         "reopen_veto": "Båda lagen gör veto igen, så banor som redan spelats rensas.",
-        "reopen_fixed_maps": "Banor som redan är klara behåller sitt resultat. Banan som spelas börjar om.",
+        "reopen_fixed_maps": "Varje bana börjar om, även de som redan är klara.",
         "replay_title": "Spela om matchen",
         "replay_description": "Resultatet rensas och incheckningen öppnas igen för båda lagen.",
         "swap_title": "Ge vinsten till {team}",
@@ -11758,6 +11760,10 @@
         "restarted": "Matchen startades om",
         "result_changed": "Vinnaren ändrad",
         "failed": "Kunde inte starta om matchen"
+      },
+      "resume": {
+        "resumed": "Matchen återupptogs",
+        "failed": "Kunde inte återuppta matchen"
       },
       "restart_map": {
         "title": "Starta om bana",

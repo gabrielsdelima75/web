@@ -22,6 +22,7 @@ function menu(overrides: Partial<FixProblemState> = {}) {
     canSetWinner: true,
     canReboot: true,
     canReparse: true,
+    canRestart: true,
     ...overrides,
   });
 }
@@ -91,10 +92,24 @@ describe("Fix a Problem", () => {
     expect(keys(started.now)).not.toContain("mispick");
   });
 
-  it("offers to reopen a canceled match", () => {
+  it("offers to resume a canceled match where it stopped, or start it over", () => {
     const canceled = menu({ status: "Canceled", currentMapStatus: null });
-    expect(keys(canceled.now)).toEqual(["restart", "winner"]);
+    expect(keys(canceled.now)).toEqual(["resume", "restart", "winner"]);
     expect(canceled.anytime).toEqual([]);
+  });
+
+  // The api only lets match organizers and above resume or restart a match.
+  it("leaves resuming and restarting to match organizers and above", () => {
+    const canceled = menu({
+      status: "Canceled",
+      currentMapStatus: null,
+      canRestart: false,
+    });
+    expect(keys(canceled.now)).toEqual(["winner"]);
+    expect(keys(menu({ canRestart: false }).anytime)).toEqual([
+      "reboot",
+      "forfeit",
+    ]);
   });
 
   it("only replays a finished match that belongs to a tournament", () => {

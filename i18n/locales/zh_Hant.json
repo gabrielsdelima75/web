@@ -11712,8 +11712,10 @@
         "restart_map_description": "回到 0–0 的熱身。在下一回合結束前，已打過的回合仍可恢復。",
         "restart_title": "整場比賽需要重打",
         "restart_description": "取消這次比賽，並為雙方重新開放報到。",
-        "reopen_title": "比賽仍需進行",
-        "reopen_description": "重新開放報到，讓已取消的比賽可以進行。",
+        "resume_title": "從中斷處繼續比賽",
+        "resume_description": "保留地圖選擇、已結束的地圖和已進行的回合。會分配新的伺服器，並提議還原最後一個回合。",
+        "reopen_title": "比賽需要從頭開始",
+        "reopen_description": "清除地圖選擇和所有地圖的回合，然後重新開放報到。",
         "replay_title": "比賽需要重新進行",
         "replay_description": "清除結果並重新開放報到。賽事積分榜會更新。",
         "winner_title": "勝者記錄錯了",
@@ -11741,7 +11743,7 @@
         "reopen_canceled": "重新開放報到，讓比賽可以進行。",
         "reopen_live": "取消這次比賽，並為雙方重新開放報到。",
         "reopen_veto": "雙方會重新進行地圖選擇，已打過的地圖會被清除。",
-        "reopen_fixed_maps": "已結束的地圖保留結果。正在進行的地圖會從頭開始。",
+        "reopen_fixed_maps": "每張地圖都會從頭開始，包括已經結束的地圖。",
         "replay_title": "重新進行比賽",
         "replay_description": "清除結果，並為雙方重新開放報到。",
         "swap_title": "將勝利判給 {team}",
@@ -11758,6 +11760,10 @@
         "restarted": "比賽已重新開始",
         "result_changed": "勝者已變更",
         "failed": "無法重新開始比賽"
+      },
+      "resume": {
+        "resumed": "比賽已繼續",
+        "failed": "無法繼續比賽"
       },
       "restart_map": {
         "title": "重新開始地圖",

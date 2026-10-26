@@ -11712,8 +11712,10 @@
         "restart_map_description": "Volta ao aquecimento em 0–0. Os rounds jogados continuam restauráveis até o próximo round terminar.",
         "restart_title": "A partida inteira precisa ser repetida",
         "restart_description": "Cancela esta tentativa e reabre o check-in para os dois times.",
-        "reopen_title": "A partida ainda precisa ser jogada",
-        "reopen_description": "Reabre o check-in para que a partida cancelada possa ser jogada.",
+        "resume_title": "Retomar a partida de onde parou",
+        "resume_description": "Mantém o veto, os mapas terminados e os rounds jogados. Um novo servidor é atribuído e oferece restaurar o último round.",
+        "reopen_title": "A partida precisa recomeçar do início",
+        "reopen_description": "Apaga o veto e os rounds de todos os mapas e reabre o check-in.",
         "replay_title": "A partida precisa ser jogada de novo",
         "replay_description": "Apaga o resultado e reabre o check-in. A classificação do torneio é atualizada.",
         "winner_title": "O time errado ficou com a vitória",
@@ -11741,7 +11743,7 @@
         "reopen_canceled": "Reabre o check-in para que a partida possa ser jogada.",
         "reopen_live": "Cancela esta tentativa e reabre o check-in para os dois times.",
         "reopen_veto": "Os dois times fazem o veto de novo, então os mapas já jogados são apagados.",
-        "reopen_fixed_maps": "Mapas já terminados mantêm o resultado. O mapa em andamento recomeça do início.",
+        "reopen_fixed_maps": "Todos os mapas recomeçam do início, inclusive os já terminados.",
         "replay_title": "Jogar a partida de novo",
         "replay_description": "O resultado é apagado e o check-in reabre para os dois times.",
         "swap_title": "Dar a vitória para {team}",
@@ -11758,6 +11760,10 @@
         "restarted": "Partida reiniciada",
         "result_changed": "Vencedor alterado",
         "failed": "Não foi possível reiniciar a partida"
+      },
+      "resume": {
+        "resumed": "Partida retomada",
+        "failed": "Não foi possível retomar a partida"
       },
       "restart_map": {
         "title": "Reiniciar mapa",

@@ -5,6 +5,7 @@ import {
   Flag,
   Hand,
   History,
+  Play,
   Power,
   RefreshCw,
   RotateCcw,
@@ -19,6 +20,7 @@ import mapLabel from "~/utilities/mapLabel";
 export type FixProblemKey =
   | "restore"
   | "restart_map"
+  | "resume"
   | "restart"
   | "winner"
   | "forfeit"
@@ -63,6 +65,7 @@ export type FixProblemState = {
   canSetWinner: boolean;
   canReboot: boolean;
   canReparse: boolean;
+  canRestart: boolean;
 };
 
 type Translate = (key: string, values?: Record<string, unknown>) => string;
@@ -227,12 +230,22 @@ export function fixProblemItems(
   }
 
   if (canceled) {
-    now.push({
-      key: "restart",
-      icon: RefreshCw,
-      title: t("match.recovery.fix.reopen_title"),
-      description: t("match.recovery.fix.reopen_description"),
-    });
+    if (state.canRestart) {
+      now.push(
+        {
+          key: "resume",
+          icon: Play,
+          title: t("match.recovery.fix.resume_title"),
+          description: t("match.recovery.fix.resume_description"),
+        },
+        {
+          key: "restart",
+          icon: RefreshCw,
+          title: t("match.recovery.fix.reopen_title"),
+          description: t("match.recovery.fix.reopen_description"),
+        },
+      );
+    }
     if (state.canSetWinner) {
       now.push({
         key: "winner",
@@ -252,12 +265,14 @@ export function fixProblemItems(
         description: t("match.recovery.fix.reboot_description"),
       });
     }
-    anytime.push({
-      key: "restart",
-      icon: RefreshCw,
-      title: t("match.recovery.fix.restart_title"),
-      description: t("match.recovery.fix.restart_description"),
-    });
+    if (state.canRestart) {
+      anytime.push({
+        key: "restart",
+        icon: RefreshCw,
+        title: t("match.recovery.fix.restart_title"),
+        description: t("match.recovery.fix.restart_description"),
+      });
+    }
     if (state.canSetWinner) {
       anytime.push({
         key: "forfeit",
@@ -290,6 +305,7 @@ export function matchFixMenu(
     canSetWinner: boolean;
     canReboot: boolean;
     canReparse: boolean;
+    canRestart: boolean;
   },
 ): FixProblemMenu {
   const currentMap = match.match_maps?.find((map: any) => map.is_current_map);
@@ -336,5 +352,6 @@ export function matchFixMenu(
     canSetWinner: allowed.canSetWinner,
     canReboot: allowed.canReboot,
     canReparse: allowed.canReparse,
+    canRestart: allowed.canRestart,
   });
 }

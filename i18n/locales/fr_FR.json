@@ -11712,8 +11712,10 @@
         "restart_map_description": "Retour à l'échauffement à 0–0. Les rounds joués restent restaurables jusqu'à la fin du prochain round.",
         "restart_title": "Le match entier doit être rejoué",
         "restart_description": "Annule cette tentative et rouvre le check-in pour les deux équipes.",
-        "reopen_title": "Le match doit encore être joué",
-        "reopen_description": "Rouvre le check-in pour que le match annulé puisse être joué.",
+        "resume_title": "Reprendre le match là où il s'est arrêté",
+        "resume_description": "Conserve le veto, les maps terminées et les manches jouées. Un nouveau serveur est attribué et propose de restaurer la dernière manche.",
+        "reopen_title": "Le match doit recommencer depuis le début",
+        "reopen_description": "Efface le veto et les manches de toutes les maps, puis rouvre le check-in.",
         "replay_title": "Le match doit être rejoué",
         "replay_description": "Efface le résultat et rouvre le check-in. Le classement du tournoi est mis à jour.",
         "winner_title": "La mauvaise équipe a gagné",
@@ -11741,7 +11743,7 @@
         "reopen_canceled": "Rouvre le check-in pour que le match puisse être joué.",
         "reopen_live": "Annule cette tentative et rouvre le check-in pour les deux équipes.",
         "reopen_veto": "Les deux équipes refont le veto, les maps déjà jouées sont donc effacées.",
-        "reopen_fixed_maps": "Les maps déjà terminées gardent leur résultat. La map en cours recommence depuis le début.",
+        "reopen_fixed_maps": "Chaque map recommence depuis le début, y compris celles déjà terminées.",
         "replay_title": "Rejouer le match",
         "replay_description": "Le résultat est effacé et le check-in rouvre pour les deux équipes.",
         "swap_title": "Donner la victoire à {team}",
@@ -11758,6 +11760,10 @@
         "restarted": "Match redémarré",
         "result_changed": "Vainqueur modifié",
         "failed": "Impossible de redémarrer le match"
+      },
+      "resume": {
+        "resumed": "Match repris",
+        "failed": "Impossible de reprendre le match"
       },
       "restart_map": {
         "title": "Redémarrer la map",

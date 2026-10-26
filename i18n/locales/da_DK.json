@@ -11712,8 +11712,10 @@
         "restart_map_description": "Tilbage til opvarmning ved 0–0. De spillede runder kan gendannes, indtil næste runde slutter.",
         "restart_title": "Hele kampen skal spilles om",
         "restart_description": "Annullerer dette forsøg og åbner check-in igen for begge hold.",
-        "reopen_title": "Kampen mangler stadig at blive spillet",
-        "reopen_description": "Åbner check-in igen, så den aflyste kamp kan spilles.",
+        "resume_title": "Fortsæt kampen, hvor den stoppede",
+        "resume_description": "Beholder veto, færdige baner og spillede runder. En ny server tildeles og tilbyder at gendanne den sidste runde.",
+        "reopen_title": "Kampen skal starte forfra",
+        "reopen_description": "Rydder veto og alle baners runder og åbner derefter check-in igen.",
         "replay_title": "Kampen skal spilles igen",
         "replay_description": "Rydder resultatet og åbner check-in igen. Turneringens stilling opdateres.",
         "winner_title": "Det forkerte hold fik sejren",
@@ -11741,7 +11743,7 @@
         "reopen_canceled": "Åbner check-in igen, så kampen kan spilles.",
         "reopen_live": "Annullerer dette forsøg og åbner check-in igen for begge hold.",
         "reopen_veto": "Begge hold laver veto igen, så baner, der allerede er spillet, ryddes.",
-        "reopen_fixed_maps": "Baner, der allerede er færdige, beholder deres resultat. Banen, der spilles, starter forfra.",
+        "reopen_fixed_maps": "Hver bane starter forfra, også dem, der allerede er færdige.",
         "replay_title": "Spil kampen igen",
         "replay_description": "Resultatet ryddes, og check-in åbner igen for begge hold.",
         "swap_title": "Giv sejren til {team}",
@@ -11758,6 +11760,10 @@
         "restarted": "Kampen genstartet",
         "result_changed": "Vinderen ændret",
         "failed": "Kunne ikke genstarte kampen"
+      },
+      "resume": {
+        "resumed": "Kampen fortsat",
+        "failed": "Kunne ikke fortsætte kampen"
       },
       "restart_map": {
         "title": "Genstart bane",

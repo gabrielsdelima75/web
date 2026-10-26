@@ -11712,8 +11712,10 @@
         "restart_map_description": "0–0 워밍업으로 돌아가요. 다음 라운드가 끝날 때까지 진행한 라운드는 복원할 수 있어요.",
         "restart_title": "매치 전체를 다시 해야 해요",
         "restart_description": "이번 시도를 취소하고 두 팀의 체크인을 다시 열어요.",
-        "reopen_title": "매치를 아직 진행해야 해요",
-        "reopen_description": "취소된 매치를 진행할 수 있도록 체크인을 다시 열어요.",
+        "resume_title": "멈춘 지점부터 매치를 이어서 진행",
+        "resume_description": "밴픽, 끝난 맵, 진행한 라운드는 그대로 남아요. 새 서버가 배정되고 마지막 라운드 복원을 제안해요.",
+        "reopen_title": "매치를 처음부터 다시 시작해야 해요",
+        "reopen_description": "밴픽과 모든 맵의 라운드를 지우고 체크인을 다시 열어요.",
         "replay_title": "매치를 다시 진행해야 해요",
         "replay_description": "결과를 지우고 체크인을 다시 열어요. 토너먼트 순위가 갱신돼요.",
         "winner_title": "다른 팀이 승리로 기록됐어요",
@@ -11741,7 +11743,7 @@
         "reopen_canceled": "매치를 진행할 수 있도록 체크인을 다시 열어요.",
         "reopen_live": "이번 시도를 취소하고 두 팀의 체크인을 다시 열어요.",
         "reopen_veto": "두 팀이 다시 밴픽을 하므로 이미 플레이한 맵은 지워져요.",
-        "reopen_fixed_maps": "이미 끝난 맵은 결과가 그대로 남아요. 진행 중이던 맵은 처음부터 다시 시작해요.",
+        "reopen_fixed_maps": "이미 끝난 맵을 포함해 모든 맵이 처음부터 다시 시작해요.",
         "replay_title": "매치 다시 진행",
         "replay_description": "결과가 지워지고 두 팀의 체크인이 다시 열려요.",
         "swap_title": "{team}에게 승리 주기",
@@ -11758,6 +11760,10 @@
         "restarted": "매치를 다시 시작했어요",
         "result_changed": "승자를 변경했어요",
         "failed": "매치를 다시 시작하지 못했어요"
+      },
+      "resume": {
+        "resumed": "매치를 재개했어요",
+        "failed": "매치를 재개하지 못했어요"
       },
       "restart_map": {
         "title": "맵 다시 시작",

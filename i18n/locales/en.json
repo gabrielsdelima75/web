@@ -11712,8 +11712,10 @@
         "restart_map_description": "Back to warmup at 0–0. The rounds played stay restorable until the next round ends.",
         "restart_title": "The whole match needs a replay",
         "restart_description": "Cancels this attempt and reopens check-in for both teams.",
-        "reopen_title": "The match still needs to be played",
-        "reopen_description": "Reopens check-in so the canceled match can be played.",
+        "resume_title": "Pick the match up where it stopped",
+        "resume_description": "Keeps the veto, the finished maps and the rounds played. A new server is assigned and offers to restore the last round.",
+        "reopen_title": "The match needs to start over",
+        "reopen_description": "Clears the veto and every map's rounds, then reopens check-in.",
         "replay_title": "The match needs to be played again",
         "replay_description": "Clears the result and reopens check-in. Tournament standings update.",
         "winner_title": "The wrong team got the win",
@@ -11741,7 +11743,7 @@
         "reopen_canceled": "Reopens check-in so the match can be played.",
         "reopen_live": "Cancels this attempt and reopens check-in for both teams.",
         "reopen_veto": "Both teams veto again, so maps already played are cleared.",
-        "reopen_fixed_maps": "Maps that already finished keep their result. The map in progress starts over.",
+        "reopen_fixed_maps": "Every map starts over, including the ones that already finished.",
         "replay_title": "Replay the match",
         "replay_description": "The result is cleared and check-in opens again for both teams.",
         "swap_title": "Give the win to {team}",
@@ -11758,6 +11760,10 @@
         "restarted": "Match restarted",
         "result_changed": "Winner changed",
         "failed": "Couldn't restart the match"
+      },
+      "resume": {
+        "resumed": "Match resumed",
+        "failed": "Couldn't resume the match"
       },
       "restart_map": {
         "title": "Restart Map",

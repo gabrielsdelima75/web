@@ -558,6 +558,14 @@ const RESTART_MATCH_MAP = gql`
   }
 `;
 
+const RESUME_MATCH = gql`
+  mutation ResumeMatch($matchId: uuid!) {
+    resumeMatch(match_id: $matchId) {
+      success
+    }
+  }
+`;
+
 const PAUSE_APPLY_TIMEOUT_MS = 8_000;
 
 const SET_MATCH_PAUSED = gql`
@@ -766,6 +774,9 @@ export default {
         case "restart_map":
           this.confirmRestartMap();
           break;
+        case "resume":
+          await this.resumeMatch();
+          break;
         case "restart":
           this.restartOpen = true;
           break;
@@ -832,6 +843,25 @@ export default {
 
       toast({
         title: this.$t("match.recovery.restart_map.restarted"),
+      });
+    },
+    async resumeMatch() {
+      try {
+        await this.$apollo.mutate({
+          mutation: RESUME_MATCH,
+          variables: { matchId: this.match.id },
+        });
+      } catch (error) {
+        toast({
+          title: this.$t("match.recovery.resume.failed"),
+          description: (error as Error)?.message,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      toast({
+        title: this.$t("match.recovery.resume.resumed"),
       });
     },
     openWinnerDialog() {
@@ -1425,6 +1455,9 @@ export default {
         canSetWinner: this.canSetMatchWinner,
         canReboot: this.canRebootServer,
         canReparse: this.canReparseDemos,
+        canRestart: useAuthStore().isRoleAbove(
+          e_player_roles_enum.match_organizer,
+        ),
       });
     },
     renderSummaryScope() {

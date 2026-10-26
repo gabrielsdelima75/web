@@ -249,20 +249,6 @@ export function leaderboardFieldColor(
   return undefined;
 }
 
-// Must match get_player_leaderboard_rank's RANK() order in the api, or a
-// player's rank opens the wrong page.
-export function leaderboardOrderBy(category: string) {
-  if (category === "awards") {
-    return [
-      { matches_played: "desc" },
-      { value: "desc" },
-      { secondary_value: "desc" },
-      { tertiary_value: "desc" },
-    ];
-  }
-  return [{ value: "desc" }];
-}
-
 export function leaderboardFieldTier(
   category: string,
   field: LeaderboardField,

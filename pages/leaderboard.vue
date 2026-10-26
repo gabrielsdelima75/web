@@ -52,7 +52,6 @@ import {
   EXTERNAL_RANK_SOURCES,
   LEADERBOARD_CATEGORIES,
   ROLE_CATEGORIES,
-  leaderboardOrderBy,
   type LeaderboardEntry,
 } from "~/utilities/leaderboard";
 
@@ -65,6 +64,8 @@ const GUTTER_MIN_WIDTH = 1664;
 // The panel column's leave, so its content stays until the column is shut.
 const PANEL_CLOSE_MS = 260;
 
+// Boards come from the api, which works each one out once a minute at most
+// and keeps it, whoever asks.
 const LEADERBOARD_QUERY = gql`
   query GetLeaderboard(
     $category: String!
@@ -76,48 +77,30 @@ const LEADERBOARD_QUERY = gql`
     $source: String
     $limit: Int
     $offset: Int
-    $order_by: [leaderboard_entries_order_by!]
   ) {
-    get_leaderboard(
-      args: {
-        _category: $category
-        _window_days: $window_days
-        _match_type: $match_type
-        _exclude_tournaments: $exclude_tournaments
-        _role: $role
-        _season_id: $season_id
-        _source: $source
-      }
+    leaderboardPage(
+      category: $category
+      window_days: $window_days
+      match_type: $match_type
+      exclude_tournaments: $exclude_tournaments
+      role: $role
+      season_id: $season_id
+      source: $source
       limit: $limit
       offset: $offset
-      order_by: $order_by
     ) {
-      player_steam_id
-      player_name
-      player_avatar_url
-      player_custom_avatar_url
-      player_country
-      value
-      secondary_value
-      tertiary_value
-      matches_played
-    }
-    get_leaderboard_aggregate(
-      args: {
-        _category: $category
-        _window_days: $window_days
-        _match_type: $match_type
-        _exclude_tournaments: $exclude_tournaments
-        _role: $role
-        _season_id: $season_id
-        _source: $source
-      }
-    ) {
-      aggregate {
-        count
-        max {
-          value
-        }
+      total
+      max_value
+      entries {
+        player_steam_id
+        player_name
+        player_avatar_url
+        player_custom_avatar_url
+        player_country
+        value
+        secondary_value
+        tertiary_value
+        matches_played
       }
     }
   }
@@ -133,16 +116,14 @@ const PLAYER_RANK_QUERY = gql`
     $source: String
     $player_steam_id: String!
   ) {
-    get_player_leaderboard_rank(
-      args: {
-        _category: $category
-        _window_days: $window_days
-        _match_type: $match_type
-        _exclude_tournaments: $exclude_tournaments
-        _season_id: $season_id
-        _source: $source
-        _player_steam_id: $player_steam_id
-      }
+    leaderboardRanks(
+      categories: [$category]
+      window_days: $window_days
+      match_type: $match_type
+      exclude_tournaments: $exclude_tournaments
+      season_id: $season_id
+      source: $source
+      player_steam_id: $player_steam_id
     ) {
       rank
       total
@@ -371,7 +352,6 @@ const queryVariables = computed(() => ({
   ...filters.value,
   limit: perPage.value,
   offset: offset.value,
-  order_by: leaderboardOrderBy(category.value),
 }));
 
 // Set by a jump to someone's rank on another board; the filter change that
@@ -428,7 +408,7 @@ async function alignPageToHighlightedPlayer(): Promise<boolean> {
       variables: { ...rankVariables.value, player_steam_id: sid },
       fetchPolicy: "network-only",
     });
-    const row = (data as any)?.get_player_leaderboard_rank?.[0];
+    const row = (data as any)?.leaderboardRanks?.[0];
     pageAlignedForSteamId = sid;
     const rank = Number(row?.rank);
     if (!Number.isFinite(rank) || rank <= 0) return true;
@@ -467,7 +447,8 @@ async function fetchLeaderboard() {
       fetchPolicy: "network-only",
     });
     if (gen !== fetchGeneration) return;
-    const rows = data?.get_leaderboard || [];
+    const board = (data as any)?.leaderboardPage;
+    const rows = board?.entries || [];
     entries.value = rows.map((row: any, index: number): LeaderboardEntry => ({
       ...row,
       rank: offset.value + index + 1,
@@ -479,10 +460,9 @@ async function fetchLeaderboard() {
       matches_played:
         row.matches_played != null ? Number(row.matches_played) : null,
     }));
-    const aggregate = data?.get_leaderboard_aggregate?.aggregate;
-    total.value = Number(aggregate?.count) || 0;
+    total.value = Number(board?.total) || 0;
     leaderValue.value =
-      aggregate?.max?.value != null ? Number(aggregate.max.value) : null;
+      board?.max_value != null ? Number(board.max_value) : null;
     void fetchMyRank(gen);
   } catch (error) {
     if (gen !== fetchGeneration) return;
@@ -520,7 +500,7 @@ async function fetchMyRank(gen: number) {
       fetchPolicy: "network-only",
     });
     if (gen !== fetchGeneration || key !== myRankKey) return;
-    const rank = Number((data as any)?.get_player_leaderboard_rank?.[0]?.rank);
+    const rank = Number((data as any)?.leaderboardRanks?.[0]?.rank);
     myRank.value = Number.isFinite(rank) && rank > 0 ? rank : null;
   } catch {
     if (key === myRankKey) myRankKey = "";

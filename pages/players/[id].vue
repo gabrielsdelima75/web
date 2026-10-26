@@ -1660,15 +1660,13 @@ const PREVIOUS_SEASON_FINISH_QUERY = gql`
     $match_type: String
     $season_id: uuid
   ) {
-    get_player_leaderboard_rank(
-      args: {
-        _category: "elo"
-        _window_days: 0
-        _match_type: $match_type
-        _exclude_tournaments: false
-        _player_steam_id: $player_steam_id
-        _season_id: $season_id
-      }
+    leaderboardRanks(
+      categories: ["elo"]
+      window_days: 0
+      match_type: $match_type
+      exclude_tournaments: false
+      player_steam_id: $player_steam_id
+      season_id: $season_id
     ) {
       rank
       total
@@ -1703,7 +1701,7 @@ watch(
       });
       if (gen !== previousSeasonFinishGen) return;
       previousSeasonFinish.value =
-        (data as any)?.get_player_leaderboard_rank?.[0] ?? null;
+        (data as any)?.leaderboardRanks?.[0] ?? null;
     } catch {
       if (gen === previousSeasonFinishGen) previousSeasonFinish.value = null;
     }

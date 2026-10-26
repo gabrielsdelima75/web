@@ -17,7 +17,6 @@ import {
   formatLeaderboardValue,
   leaderboardFieldColor,
   leaderboardFieldTier,
-  leaderboardOrderBy,
   type LeaderboardEntry,
   type LeaderboardField,
 } from "~/utilities/leaderboard";
@@ -65,7 +64,32 @@ const { client: apolloClient } = useApolloClient();
 
 type BoardRank = { rank: number; total: number; value: number };
 
-const RANK_FIELDS = "rank total value";
+const BOARD_RANKS_QUERY = gql`
+  query LeaderboardPlayerBoards(
+    $categories: [String!]!
+    $window_days: Int!
+    $match_type: String
+    $exclude_tournaments: Boolean!
+    $season_id: uuid
+    $source: String
+    $player_steam_id: String!
+  ) {
+    leaderboardRanks(
+      categories: $categories
+      window_days: $window_days
+      match_type: $match_type
+      exclude_tournaments: $exclude_tournaments
+      season_id: $season_id
+      source: $source
+      player_steam_id: $player_steam_id
+    ) {
+      category
+      rank
+      total
+      value
+    }
+  }
+`;
 
 // One request for the player's rank on every board. The rank lookup has no
 // role argument, so these are role-less ranks.
@@ -85,37 +109,12 @@ async function fetchBoardRanks() {
   const gen = ++boardRanksGen;
   boardRanksLoading.value = true;
   const cats = props.categories;
-  const query = gql`
-    query LeaderboardPlayerBoards(
-      $window_days: Int!
-      $match_type: String
-      $exclude_tournaments: Boolean!
-      $season_id: uuid
-      $source: String
-      $player_steam_id: String!
-    ) {
-      ${cats
-        .map(
-          (cat) => `${cat}: get_player_leaderboard_rank(
-        args: {
-          _category: "${cat}"
-          _window_days: $window_days
-          _match_type: $match_type
-          _exclude_tournaments: $exclude_tournaments
-          _season_id: $season_id
-          _source: $source
-          _player_steam_id: $player_steam_id
-        }
-      ) { ${RANK_FIELDS} }`,
-        )
-        .join("\n")}
-    }
-  `;
   try {
     const { data } = await apolloClient.query({
-      query,
+      query: BOARD_RANKS_QUERY,
       variables: {
         ...rankFilters.value,
+        categories: cats,
         player_steam_id: props.player.steam_id,
       },
       fetchPolicy: "cache-first",
@@ -123,7 +122,9 @@ async function fetchBoardRanks() {
     if (gen !== boardRanksGen) return;
     const next: Record<string, BoardRank | null> = {};
     for (const cat of cats) {
-      const row = (data as any)?.[cat]?.[0];
+      const row = (data as any)?.leaderboardRanks?.find(
+        (rank: { category: string }) => rank.category === cat,
+      );
       next[cat] = row
         ? {
             rank: Number(row.rank),
@@ -211,25 +212,23 @@ const NEIGHBOR_QUERY = gql`
     $season_id: uuid
     $source: String
     $offset: Int
-    $order_by: [leaderboard_entries_order_by!]
   ) {
-    get_leaderboard(
-      args: {
-        _category: $category
-        _window_days: $window_days
-        _match_type: $match_type
-        _exclude_tournaments: $exclude_tournaments
-        _role: $role
-        _season_id: $season_id
-        _source: $source
-      }
+    leaderboardPage(
+      category: $category
+      window_days: $window_days
+      match_type: $match_type
+      exclude_tournaments: $exclude_tournaments
+      role: $role
+      season_id: $season_id
+      source: $source
       limit: 1
       offset: $offset
-      order_by: $order_by
     ) {
-      player_steam_id
-      player_name
-      value
+      entries {
+        player_steam_id
+        player_name
+        value
+      }
     }
   }
 `;
@@ -252,12 +251,11 @@ watch(
           category: props.category,
           ...props.filters,
           offset: rank - 1,
-          order_by: leaderboardOrderBy(props.category),
         },
         fetchPolicy: "cache-first",
       });
       if (gen !== neighborGen) return;
-      const row = (data as any)?.get_leaderboard?.[0];
+      const row = (data as any)?.leaderboardPage?.entries?.[0];
       fetchedNeighbor.value = row
         ? {
             key,

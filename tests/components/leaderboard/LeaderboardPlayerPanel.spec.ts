@@ -32,7 +32,11 @@ const filters = {
   source: "overall",
 };
 
-let queries: Array<{ name: string; variables: Record<string, unknown> }> = [];
+let queries: Array<{
+  name: string;
+  root: string;
+  variables: Record<string, unknown>;
+}> = [];
 
 beforeEach(() => {
   queries = [];
@@ -40,15 +44,29 @@ beforeEach(() => {
   provideApolloClient(client);
   vi.spyOn(client, "query").mockImplementation(async (options: any) => {
     const operation = options.query.definitions[0] as OperationDefinitionNode;
+    const root = (operation.selectionSet.selections[0] as any).name.value;
     queries.push({
       name: operation.name?.value ?? "",
+      root,
       variables: options.variables,
     });
+    if (root === "leaderboardPage") {
+      return {
+        data: {
+          leaderboardPage: {
+            entries: [
+              { player_steam_id: "rawr", player_name: "rawr", value: 5527 },
+            ],
+          },
+        },
+      } as any;
+    }
     return {
       data: {
-        elo: [{ rank: 5, total: 15, value: 5492 }],
-        best_kdr: [{ rank: 3, total: 15, value: 1.2 }],
-        awards: [],
+        leaderboardRanks: [
+          { category: "elo", rank: 5, total: 15, value: 5492 },
+          { category: "best_kdr", rank: 3, total: 15, value: 1.2 },
+        ],
       },
     } as any;
   });
@@ -81,8 +99,11 @@ describe("LeaderboardPlayerPanel", () => {
     const wrapper = await mountPanel();
     await flushPromises();
 
-    expect(queries.map((q) => q.name)).toEqual(["LeaderboardPlayerBoards"]);
+    expect(queries.map((q) => [q.name, q.root])).toEqual([
+      ["LeaderboardPlayerBoards", "leaderboardRanks"],
+    ]);
     expect(queries[0].variables).toMatchObject({
+      categories: ["elo", "best_kdr", "awards"],
       player_steam_id: "hazmat",
       match_type: "Competitive",
     });
@@ -99,6 +120,22 @@ describe("LeaderboardPlayerPanel", () => {
 
     expect(wrapper.text()).toContain("35 ELO behind #4 rawr");
     expect(wrapper.text()).toContain("of 15 on ELO");
+  });
+
+  it("asks for the player one place up when that row is on another page", async () => {
+    const wrapper = await mountPanel({
+      entries: [entry(5, "hazmat", 5492)],
+    });
+    await flushPromises();
+
+    const neighbor = queries.find((q) => q.name === "LeaderboardNeighbor");
+    expect(neighbor?.root).toBe("leaderboardPage");
+    expect(neighbor?.variables).toMatchObject({
+      category: "elo",
+      offset: 3,
+      match_type: "Competitive",
+    });
+    expect(wrapper.text()).toContain("35 ELO behind #4 rawr");
   });
 
   it("hands a board pick back with the player's rank there", async () => {

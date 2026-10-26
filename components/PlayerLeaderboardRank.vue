@@ -17,14 +17,12 @@ const RANK_QUERY = gql`
     $exclude_tournaments: Boolean!
     $player_steam_id: String!
   ) {
-    get_player_leaderboard_rank(
-      args: {
-        _category: $category
-        _window_days: $window_days
-        _match_type: $match_type
-        _exclude_tournaments: $exclude_tournaments
-        _player_steam_id: $player_steam_id
-      }
+    leaderboardRanks(
+      categories: [$category]
+      window_days: $window_days
+      match_type: $match_type
+      exclude_tournaments: $exclude_tournaments
+      player_steam_id: $player_steam_id
     ) {
       rank
       total
@@ -57,7 +55,7 @@ async function fetchRank() {
     });
     if (gen !== fetchGen) return;
 
-    const row = (res.data as any)?.get_player_leaderboard_rank?.[0];
+    const row = (res.data as any)?.leaderboardRanks?.[0];
     if (!row) return;
     rank.value = row.rank;
     total.value = row.total;

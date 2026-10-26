@@ -333,6 +333,7 @@ export default {
               connection_string: true,
               tv_connection_link: true,
               tv_connection_string: true,
+              plugin_runtime: true,
               max_players: true,
               game_mode: {
                 slug: true,

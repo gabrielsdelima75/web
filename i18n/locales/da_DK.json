@@ -12864,6 +12864,8 @@
   "server": {
     "join_server": "Join server",
     "watch_gotv": "Se med på GOTV",
+    "simulated": "Simuleret",
+    "simulated_description": "En simuleret spilserver: den spiller kampe uden CS2, så ingen kan tilslutte sig den.",
     "copy_gotv": "Kopiér GOTV connect-kommando",
     "form": {
       "where_it_runs": "Hvor den kører",

@@ -359839,6 +359839,7 @@ export enum e_plugin_runtimes_constraint {
 }
 export enum e_plugin_runtimes_enum {
 	counterstrikesharp = "counterstrikesharp",
+	simulator = "simulator",
 	swiftlys2 = "swiftlys2"
 }
 /** select columns of table "e_plugin_runtimes" */

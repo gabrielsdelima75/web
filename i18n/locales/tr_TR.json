@@ -12864,6 +12864,8 @@
   "server": {
     "join_server": "Sunucuya katıl",
     "watch_gotv": "GOTV ile izle",
+    "simulated": "Simüle",
+    "simulated_description": "Simüle edilmiş bir oyun sunucusu: maçları CS2 olmadan oynar, bu yüzden kimse katılamaz.",
     "copy_gotv": "GOTV bağlantı komutunu kopyala",
     "form": {
       "where_it_runs": "Nerede Çalışır",

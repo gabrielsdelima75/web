@@ -334,4 +334,12 @@ describe("dedicated server header", () => {
     expect(wrapper.find("header").text()).not.toContain("Online");
     expect(wrapper.find("header").text()).not.toContain("Player Management");
   });
+
+  it("marks a simulated server in its header", async () => {
+    const wrapper = await mountAs("administrator", {
+      server: { plugin_runtime: "simulator" },
+    });
+
+    expect(wrapper.find("[data-simulated-server]").text()).toBe("Simulated");
+  });
 });

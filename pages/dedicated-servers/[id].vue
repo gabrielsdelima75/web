@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import SimulatedServerBadge from "~/components/servers/SimulatedServerBadge.vue";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -148,6 +149,7 @@ const runtimeOptions = [
             >
               {{ server.label }}
             </h1>
+            <SimulatedServerBadge :runtime="server.plugin_runtime" />
           </div>
 
           <div class="flex min-w-0 flex-wrap items-center gap-2">

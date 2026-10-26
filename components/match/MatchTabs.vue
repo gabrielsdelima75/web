@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import SimulatedServerBadge from "~/components/servers/SimulatedServerBadge.vue";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { Card, CardContent } from "~/components/ui/card";
 import LineupOverview from "~/components/match/LineupOverview.vue";
@@ -790,8 +791,9 @@ const MatchLiveStreams = lazyPanel(
           <dl class="server-info-panel__list">
             <div class="server-info-row">
               <dt class="server-info-row__label">{{ $t("match.tabs.type") }}</dt>
-              <dd class="server-info-row__value">
+              <dd class="server-info-row__value flex items-center gap-2">
                 {{ match.server_type || $t("common.tbd") }}
+                <SimulatedServerBadge :runtime="match.server_plugin_runtime" />
               </dd>
             </div>
             <div class="server-info-row">

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import cleanMapName from "~/utilities/cleanMapName";
+import SimulatedServerBadge from "~/components/servers/SimulatedServerBadge.vue";
 import PublicServerActions from "~/components/public-servers/PublicServerActions.vue";
 import PublicServerMap from "~/components/public-servers/PublicServerMap.vue";
 import PublicServerPing from "~/components/public-servers/PublicServerPing.vue";
@@ -78,12 +79,15 @@ const fillPercent = computed(() =>
 
     <div class="flex flex-col gap-3 p-3.5">
       <div class="flex min-w-0 flex-col gap-1">
-        <NuxtLink
-          :to="`/dedicated-servers/${server.id}`"
-          class="truncate text-[0.92rem] font-semibold after:absolute after:inset-0 after:z-[1] after:rounded-xl after:content-[''] focus-visible:outline-none focus-visible:after:ring-2 focus-visible:after:ring-inset focus-visible:after:ring-[hsl(var(--tac-amber))]"
-        >
-          {{ server.label }}
-        </NuxtLink>
+        <span class="flex min-w-0 items-center gap-2">
+          <NuxtLink
+            :to="`/dedicated-servers/${server.id}`"
+            class="truncate text-[0.92rem] font-semibold after:absolute after:inset-0 after:z-[1] after:rounded-xl after:content-[''] focus-visible:outline-none focus-visible:after:ring-2 focus-visible:after:ring-inset focus-visible:after:ring-[hsl(var(--tac-amber))]"
+          >
+            {{ server.label }}
+          </NuxtLink>
+          <SimulatedServerBadge :runtime="server.plugin_runtime" />
+        </span>
         <span class="truncate font-mono text-[0.7rem] text-muted-foreground">
           <template v-if="server.game_mode"
             >{{ server.game_mode.name }} ·

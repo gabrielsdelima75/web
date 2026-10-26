@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import SimulatedServerBadge from "~/components/servers/SimulatedServerBadge.vue";
 import { computed } from "vue";
 import cleanMapName from "~/utilities/cleanMapName";
 import PublicServerActions from "~/components/public-servers/PublicServerActions.vue";
@@ -89,16 +90,19 @@ const fillPercent = computed(() =>
       <div :class="['flex flex-col gap-4', solo ? 'md:max-w-xl' : '']">
         <div class="flex min-w-0 flex-col gap-1.5">
           <!-- Stretched over the card; the action row sits above it. -->
-          <NuxtLink
-            :to="`/dedicated-servers/${server.id}`"
-            :class="[
-              'truncate font-bold leading-tight max-md:line-clamp-2 max-md:whitespace-normal max-md:break-words',
-              solo ? 'text-3xl md:text-[2.6rem]' : 'text-2xl sm:text-[1.7rem]',
-            ]"
-            class="after:absolute after:inset-0 after:z-[1] after:rounded-2xl after:content-[''] focus-visible:outline-none focus-visible:after:ring-2 focus-visible:after:ring-inset focus-visible:after:ring-[hsl(var(--tac-amber))]"
-          >
-            {{ server.label }}
-          </NuxtLink>
+          <span class="flex min-w-0 items-center gap-3">
+            <NuxtLink
+              :to="`/dedicated-servers/${server.id}`"
+              :class="[
+                'truncate font-bold leading-tight max-md:line-clamp-2 max-md:whitespace-normal max-md:break-words',
+                solo ? 'text-3xl md:text-[2.6rem]' : 'text-2xl sm:text-[1.7rem]',
+              ]"
+              class="after:absolute after:inset-0 after:z-[1] after:rounded-2xl after:content-[''] focus-visible:outline-none focus-visible:after:ring-2 focus-visible:after:ring-inset focus-visible:after:ring-[hsl(var(--tac-amber))]"
+            >
+              {{ server.label }}
+            </NuxtLink>
+            <SimulatedServerBadge :runtime="server.plugin_runtime" />
+          </span>
           <span class="truncate font-mono text-xs text-muted-foreground">
             {{ cleanMapName(server.map) }}
             <template v-if="server.game_mode">

@@ -13,6 +13,7 @@ export interface PublicServerView extends RankableServer {
   tv_connection_string?: string | null;
   game_mode?: { slug: string; name: string } | null;
   server_region?: { is_lan: boolean } | null;
+  plugin_runtime?: string | null;
   // Raw map name (de_mirage), or "default" before the server reports one.
   map: string;
   isFull: boolean;

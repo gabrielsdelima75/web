@@ -12864,6 +12864,8 @@
   "server": {
     "join_server": "انضم للسيرفر",
     "watch_gotv": "شاهد عبر GOTV",
+    "simulated": "محاكى",
+    "simulated_description": "خادم لعبة محاكى: يلعب المباريات بدون CS2، لذلك لا يمكن لأحد الانضمام إليه.",
     "copy_gotv": "نسخ أمر اتصال GOTV",
     "form": {
       "where_it_runs": "مكان التشغيل",

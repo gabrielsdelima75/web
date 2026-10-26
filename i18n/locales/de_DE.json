@@ -12864,6 +12864,8 @@
   "server": {
     "join_server": "Server beitreten",
     "watch_gotv": "Über GOTV zuschauen",
+    "simulated": "Simuliert",
+    "simulated_description": "Ein simulierter Spielserver: Er spielt Matches ohne CS2, daher kann niemand beitreten.",
     "copy_gotv": "GOTV-Connect-Befehl kopieren",
     "form": {
       "where_it_runs": "Wo er läuft",

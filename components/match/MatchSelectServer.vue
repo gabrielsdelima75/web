@@ -92,6 +92,7 @@ export default {
               host: true,
               port: true,
               label: true,
+              plugin_runtime: true,
             },
           ],
         }),
@@ -187,7 +188,10 @@ export default {
       return this.servers.map((server) => {
         return {
           value: server.id,
-          display: `${server.label} (${server.host}:${server.port})`,
+          display:
+            server.plugin_runtime === "simulator"
+              ? `${server.label} (${server.host}:${server.port}) · ${this.$t("server.simulated")}`
+              : `${server.label} (${server.host}:${server.port})`,
         };
       });
     },

@@ -12864,6 +12864,8 @@
   "server": {
     "join_server": "서버 참가",
     "watch_gotv": "GOTV로 관전",
+    "simulated": "시뮬레이션",
+    "simulated_description": "시뮬레이션 게임 서버입니다. CS2 없이 경기를 진행하므로 아무도 접속할 수 없습니다.",
     "copy_gotv": "GOTV 접속 명령어 복사",
     "form": {
       "where_it_runs": "실행 위치",

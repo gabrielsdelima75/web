@@ -50,6 +50,20 @@ describe("QuickMatchConnect", () => {
     expect(wrapper.find(".qmc-boot").exists()).toBe(false);
   });
 
+  it("tells a player the server they would join is simulated", async () => {
+    const wrapper = await mountSuspended(QuickMatchConnect, {
+      props: {
+        match: match({
+          is_server_online: true,
+          connection_link: "steam://connect/1.2.3.4",
+          server_plugin_runtime: "simulator",
+        }),
+      },
+    });
+
+    expect(wrapper.find("[data-simulated-server]").text()).toBe("Simulated");
+  });
+
   it("waits while the page shows the server starting elsewhere", async () => {
     const wrapper = await mountSuspended(QuickMatchConnect, {
       props: {
@@ -74,6 +88,17 @@ describe("QuickMatchConnect as the match header's bar", () => {
       is_server_online: true,
       connection_link: "steam://connect/1.2.3.4",
     });
+
+  it("tells a player the server they would join is simulated", async () => {
+    const wrapper = await mountSuspended(QuickMatchConnect, {
+      props: {
+        match: { ...ready(), server_plugin_runtime: "simulator" },
+        variant: "bar",
+      },
+    });
+
+    expect(wrapper.find("[data-simulated-server]").text()).toBe("Simulated");
+  });
 
   it("keeps the server's address out of the page until it is asked for", async () => {
     const wrapper = await mountSuspended(QuickMatchConnect, {

@@ -20,6 +20,7 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import StatusDot from "~/components/admin/StatusDot.vue";
+import SimulatedServerBadge from "~/components/servers/SimulatedServerBadge.vue";
 import { TONE_TEXT } from "~/components/admin/tone";
 import {
   hostLabel,
@@ -98,13 +99,16 @@ function go() {
   >
     <td class="px-3 py-2 md:min-w-[240px]">
       <div class="grid min-w-0 gap-0.5">
-        <NuxtLink
-          :to="to"
-          class="line-clamp-2 max-w-[320px] break-words font-semibold transition-colors duration-150 hover:text-[hsl(var(--tac-amber))]"
-          :class="server.enabled ? 'text-foreground' : 'text-muted-foreground'"
-        >
-          {{ server.label || address }}
-        </NuxtLink>
+        <span class="flex min-w-0 items-center gap-2">
+          <NuxtLink
+            :to="to"
+            class="line-clamp-2 max-w-[320px] break-words font-semibold transition-colors duration-150 hover:text-[hsl(var(--tac-amber))]"
+            :class="server.enabled ? 'text-foreground' : 'text-muted-foreground'"
+          >
+            {{ server.label || address }}
+          </NuxtLink>
+          <SimulatedServerBadge :runtime="server.plugin_runtime" />
+        </span>
         <span
           class="inline-flex min-w-0 items-center gap-1 font-mono text-[0.72rem] text-muted-foreground/80"
         >

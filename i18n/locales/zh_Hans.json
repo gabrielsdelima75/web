@@ -12864,6 +12864,8 @@
   "server": {
     "join_server": "加入服务器",
     "watch_gotv": "通过 GOTV 观战",
+    "simulated": "模拟",
+    "simulated_description": "模拟游戏服务器：它在没有 CS2 的情况下进行比赛，因此无法加入。",
     "copy_gotv": "复制 GOTV 连接命令",
     "form": {
       "where_it_runs": "运行位置",

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { e_match_status_enum } from "~/generated/zeus";
 import HeightSwap from "~/components/ui/transitions/HeightSwap.vue";
+import SimulatedServerBadge from "~/components/servers/SimulatedServerBadge.vue";
 </script>
 
 <template>
@@ -190,6 +191,7 @@ import HeightSwap from "~/components/ui/transitions/HeightSwap.vue";
                 {{ $t("match.server.join_tv_stream") }}
               </Button>
               <template v-if="showPlayerJoin">
+                <SimulatedServerBadge :runtime="match.server_plugin_runtime" />
                 <Button
                   variant="outline"
                   class="qmc-join h-10 px-5 max-sm:flex-1"
@@ -337,6 +339,7 @@ import HeightSwap from "~/components/ui/transitions/HeightSwap.vue";
               </Button>
             </a>
           </template>
+          <SimulatedServerBadge :runtime="match.server_plugin_runtime" />
         </div>
       </div>
     </HeightSwap>

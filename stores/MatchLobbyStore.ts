@@ -11,6 +11,7 @@ import {
 } from "~/generated/zeus";
 import { useAuthStore } from "~/stores/AuthStore";
 import getGraphqlClient from "~/graphql/getGraphqlClient";
+import getPublicGraphqlClient from "~/graphql/getPublicGraphqlClient";
 import {
   fromActiveMatches,
   fromMyActiveMatches,
@@ -158,8 +159,11 @@ export const useMatchLobbyStore = defineStore("matchLobby", () => {
     );
   };
 
+  // The same for every viewer (a signed-in one only adds Setup tournaments
+  // they organize), so read as a guest: everyone shares one Hasura poll
+  // rather than each polling a copy that reads every tournament.
   const subscribeToLiveTournaments = async () => {
-    const subscription = getGraphqlClient().subscribe({
+    const subscription = getPublicGraphqlClient().subscribe({
       query: generateSubscription({
         tournaments_aggregate: [
           {
@@ -195,7 +199,7 @@ export const useMatchLobbyStore = defineStore("matchLobby", () => {
   };
 
   const subscribeToOpenRegistrationTournaments = async () => {
-    const subscription = getGraphqlClient().subscribe({
+    const subscription = getPublicGraphqlClient().subscribe({
       query: generateSubscription({
         tournaments_aggregate: [
           {

@@ -55,7 +55,7 @@ function serve() {
 
 async function deliver(rows: unknown[]) {
   await useMatchLobbyStore().subscribeToChatTournaments();
-  subscriptions.at(-1)!.observer.next({ data: { tournaments: rows } });
+  subscriptions.at(-1)!.observer.next({ data: { my_tournaments: rows } });
   await nextTick();
 }
 
@@ -94,6 +94,18 @@ describe("chat tournaments", () => {
     expect(query).toContain("finished_at");
     expect(query).toMatch(/Finished/);
     expect(Object.values(options.variables ?? {})).toContain(ago(7 * DAY));
+  });
+
+  // Every signed-in page keeps this open, so it reads the player's own
+  // tournaments rather than checking every tournament on the site for them.
+  it("reads the player's own tournaments", async () => {
+    await useMatchLobbyStore().subscribeToChatTournaments();
+
+    const query = print(subscriptions.at(-1)!.options.query);
+
+    expect(query).toMatch(/^\s*my_tournaments\(/m);
+    expect(query).not.toMatch(/joined_tournament: \{_eq/);
+    expect(query).not.toMatch(/is_organizer: \{_eq/);
   });
 
   it("keeps a finished tournament for seven days and no longer", async () => {
@@ -144,7 +156,7 @@ describe("chat tournaments", () => {
     );
 
     subscriptions.at(-1)!.observer.next({
-      data: { tournaments: [tournament("cup", "Finished", ago(0))] },
+      data: { my_tournaments: [tournament("cup", "Finished", ago(0))] },
     });
     await nextTick();
     expect(useChatTabs().tabs.value.map(({ id }) => id)).toContain(

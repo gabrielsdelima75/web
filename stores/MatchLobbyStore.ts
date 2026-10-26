@@ -237,14 +237,12 @@ export const useMatchLobbyStore = defineStore("matchLobby", () => {
     startClock();
 
     const subscription = getGraphqlClient().subscribe({
+      // The player's own tournaments, joined or organized, found from their
+      // own rows rather than checked tournament by tournament.
       query: generateSubscription({
-        tournaments: [
+        my_tournaments: [
           {
             where: {
-              _or: [
-                { joined_tournament: { _eq: true } },
-                { is_organizer: { _eq: true } },
-              ],
               _and: [
                 NOT_LEAGUE_TOURNAMENT,
                 {
@@ -297,7 +295,7 @@ export const useMatchLobbyStore = defineStore("matchLobby", () => {
       "matchLobby:chatTournaments",
       subscription.subscribe({
         next: ({ data }) => {
-          chatTournamentRows.value = data?.tournaments || [];
+          chatTournamentRows.value = data?.my_tournaments || [];
         },
         error: (error) => {
           console.error("Error in chat tournaments subscription:", error);

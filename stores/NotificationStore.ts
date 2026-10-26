@@ -664,20 +664,11 @@ export const useNotificationStore = defineStore("notifaicationStore", () => {
       "notifications:team_roster_needs",
       getGraphqlClient()
         .subscribe({
+          // The teams the player owns or plays on, found from their own rows
+          // rather than checked team by team.
           query: typedGql("subscription")({
-            teams: [
-              {
-                where: {
-                  _or: [
-                    { owner_steam_id: { _eq: $("steamId", "bigint!") } },
-                    {
-                      roster: {
-                        player_steam_id: { _eq: $("steamId", "bigint!") },
-                      },
-                    },
-                  ],
-                },
-              },
+            my_teams: [
+              {},
               {
                 id: true,
                 name: true,
@@ -686,11 +677,10 @@ export const useNotificationStore = defineStore("notifaicationStore", () => {
               },
             ],
           }),
-          variables: { steamId: steam_id },
         })
         .subscribe({
           next: ({ data }) => {
-            rosterTeams.value = data?.teams ?? [];
+            rosterTeams.value = data?.my_teams ?? [];
           },
           error: () => {
             rosterTeams.value = [];

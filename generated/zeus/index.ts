@@ -54951,6 +54951,30 @@ my_active_matches_aggregate?: [{	/** distinct select on columns */
 	offset?: number | undefined | null | Variable<any, string>,	/** sort the rows by one or more columns */
 	order_by?: Array<ValueTypes["matches_order_by"]> | undefined | null | Variable<any, string>,	/** filter the rows returned */
 	where?: ValueTypes["matches_bool_exp"] | undefined | null | Variable<any, string>},ValueTypes["matches_aggregate"]],
+my_teams?: [{	/** distinct select on columns */
+	distinct_on?: Array<ValueTypes["teams_select_column"]> | undefined | null | Variable<any, string>,	/** limit the number of rows returned */
+	limit?: number | undefined | null | Variable<any, string>,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null | Variable<any, string>,	/** sort the rows by one or more columns */
+	order_by?: Array<ValueTypes["teams_order_by"]> | undefined | null | Variable<any, string>,	/** filter the rows returned */
+	where?: ValueTypes["teams_bool_exp"] | undefined | null | Variable<any, string>},ValueTypes["teams"]],
+my_teams_aggregate?: [{	/** distinct select on columns */
+	distinct_on?: Array<ValueTypes["teams_select_column"]> | undefined | null | Variable<any, string>,	/** limit the number of rows returned */
+	limit?: number | undefined | null | Variable<any, string>,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null | Variable<any, string>,	/** sort the rows by one or more columns */
+	order_by?: Array<ValueTypes["teams_order_by"]> | undefined | null | Variable<any, string>,	/** filter the rows returned */
+	where?: ValueTypes["teams_bool_exp"] | undefined | null | Variable<any, string>},ValueTypes["teams_aggregate"]],
+my_tournaments?: [{	/** distinct select on columns */
+	distinct_on?: Array<ValueTypes["tournaments_select_column"]> | undefined | null | Variable<any, string>,	/** limit the number of rows returned */
+	limit?: number | undefined | null | Variable<any, string>,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null | Variable<any, string>,	/** sort the rows by one or more columns */
+	order_by?: Array<ValueTypes["tournaments_order_by"]> | undefined | null | Variable<any, string>,	/** filter the rows returned */
+	where?: ValueTypes["tournaments_bool_exp"] | undefined | null | Variable<any, string>},ValueTypes["tournaments"]],
+my_tournaments_aggregate?: [{	/** distinct select on columns */
+	distinct_on?: Array<ValueTypes["tournaments_select_column"]> | undefined | null | Variable<any, string>,	/** limit the number of rows returned */
+	limit?: number | undefined | null | Variable<any, string>,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null | Variable<any, string>,	/** sort the rows by one or more columns */
+	order_by?: Array<ValueTypes["tournaments_order_by"]> | undefined | null | Variable<any, string>,	/** filter the rows returned */
+	where?: ValueTypes["tournaments_bool_exp"] | undefined | null | Variable<any, string>},ValueTypes["tournaments_aggregate"]],
 my_friends?: [{	/** distinct select on columns */
 	distinct_on?: Array<ValueTypes["my_friends_select_column"]> | undefined | null | Variable<any, string>,	/** limit the number of rows returned */
 	limit?: number | undefined | null | Variable<any, string>,	/** skip the first n rows. Use only with order_by */
@@ -63533,6 +63557,30 @@ my_active_matches_aggregate?: [{	/** distinct select on columns */
 	offset?: number | undefined | null | Variable<any, string>,	/** sort the rows by one or more columns */
 	order_by?: Array<ValueTypes["matches_order_by"]> | undefined | null | Variable<any, string>,	/** filter the rows returned */
 	where?: ValueTypes["matches_bool_exp"] | undefined | null | Variable<any, string>},ValueTypes["matches_aggregate"]],
+my_teams?: [{	/** distinct select on columns */
+	distinct_on?: Array<ValueTypes["teams_select_column"]> | undefined | null | Variable<any, string>,	/** limit the number of rows returned */
+	limit?: number | undefined | null | Variable<any, string>,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null | Variable<any, string>,	/** sort the rows by one or more columns */
+	order_by?: Array<ValueTypes["teams_order_by"]> | undefined | null | Variable<any, string>,	/** filter the rows returned */
+	where?: ValueTypes["teams_bool_exp"] | undefined | null | Variable<any, string>},ValueTypes["teams"]],
+my_teams_aggregate?: [{	/** distinct select on columns */
+	distinct_on?: Array<ValueTypes["teams_select_column"]> | undefined | null | Variable<any, string>,	/** limit the number of rows returned */
+	limit?: number | undefined | null | Variable<any, string>,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null | Variable<any, string>,	/** sort the rows by one or more columns */
+	order_by?: Array<ValueTypes["teams_order_by"]> | undefined | null | Variable<any, string>,	/** filter the rows returned */
+	where?: ValueTypes["teams_bool_exp"] | undefined | null | Variable<any, string>},ValueTypes["teams_aggregate"]],
+my_tournaments?: [{	/** distinct select on columns */
+	distinct_on?: Array<ValueTypes["tournaments_select_column"]> | undefined | null | Variable<any, string>,	/** limit the number of rows returned */
+	limit?: number | undefined | null | Variable<any, string>,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null | Variable<any, string>,	/** sort the rows by one or more columns */
+	order_by?: Array<ValueTypes["tournaments_order_by"]> | undefined | null | Variable<any, string>,	/** filter the rows returned */
+	where?: ValueTypes["tournaments_bool_exp"] | undefined | null | Variable<any, string>},ValueTypes["tournaments"]],
+my_tournaments_aggregate?: [{	/** distinct select on columns */
+	distinct_on?: Array<ValueTypes["tournaments_select_column"]> | undefined | null | Variable<any, string>,	/** limit the number of rows returned */
+	limit?: number | undefined | null | Variable<any, string>,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null | Variable<any, string>,	/** sort the rows by one or more columns */
+	order_by?: Array<ValueTypes["tournaments_order_by"]> | undefined | null | Variable<any, string>,	/** filter the rows returned */
+	where?: ValueTypes["tournaments_bool_exp"] | undefined | null | Variable<any, string>},ValueTypes["tournaments_aggregate"]],
 my_friends?: [{	/** distinct select on columns */
 	distinct_on?: Array<ValueTypes["my_friends_select_column"]> | undefined | null | Variable<any, string>,	/** limit the number of rows returned */
 	limit?: number | undefined | null | Variable<any, string>,	/** skip the first n rows. Use only with order_by */
@@ -148892,6 +148940,30 @@ my_active_matches_aggregate?: [{	/** distinct select on columns */
 	offset?: number | undefined | null,	/** sort the rows by one or more columns */
 	order_by?: Array<ResolverInputTypes["matches_order_by"]> | undefined | null,	/** filter the rows returned */
 	where?: ResolverInputTypes["matches_bool_exp"] | undefined | null},ResolverInputTypes["matches_aggregate"]],
+my_teams?: [{	/** distinct select on columns */
+	distinct_on?: Array<ResolverInputTypes["teams_select_column"]> | undefined | null,	/** limit the number of rows returned */
+	limit?: number | undefined | null,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null,	/** sort the rows by one or more columns */
+	order_by?: Array<ResolverInputTypes["teams_order_by"]> | undefined | null,	/** filter the rows returned */
+	where?: ResolverInputTypes["teams_bool_exp"] | undefined | null},ResolverInputTypes["teams"]],
+my_teams_aggregate?: [{	/** distinct select on columns */
+	distinct_on?: Array<ResolverInputTypes["teams_select_column"]> | undefined | null,	/** limit the number of rows returned */
+	limit?: number | undefined | null,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null,	/** sort the rows by one or more columns */
+	order_by?: Array<ResolverInputTypes["teams_order_by"]> | undefined | null,	/** filter the rows returned */
+	where?: ResolverInputTypes["teams_bool_exp"] | undefined | null},ResolverInputTypes["teams_aggregate"]],
+my_tournaments?: [{	/** distinct select on columns */
+	distinct_on?: Array<ResolverInputTypes["tournaments_select_column"]> | undefined | null,	/** limit the number of rows returned */
+	limit?: number | undefined | null,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null,	/** sort the rows by one or more columns */
+	order_by?: Array<ResolverInputTypes["tournaments_order_by"]> | undefined | null,	/** filter the rows returned */
+	where?: ResolverInputTypes["tournaments_bool_exp"] | undefined | null},ResolverInputTypes["tournaments"]],
+my_tournaments_aggregate?: [{	/** distinct select on columns */
+	distinct_on?: Array<ResolverInputTypes["tournaments_select_column"]> | undefined | null,	/** limit the number of rows returned */
+	limit?: number | undefined | null,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null,	/** sort the rows by one or more columns */
+	order_by?: Array<ResolverInputTypes["tournaments_order_by"]> | undefined | null,	/** filter the rows returned */
+	where?: ResolverInputTypes["tournaments_bool_exp"] | undefined | null},ResolverInputTypes["tournaments_aggregate"]],
 my_friends?: [{	/** distinct select on columns */
 	distinct_on?: Array<ResolverInputTypes["my_friends_select_column"]> | undefined | null,	/** limit the number of rows returned */
 	limit?: number | undefined | null,	/** skip the first n rows. Use only with order_by */
@@ -157474,6 +157546,30 @@ my_active_matches_aggregate?: [{	/** distinct select on columns */
 	offset?: number | undefined | null,	/** sort the rows by one or more columns */
 	order_by?: Array<ResolverInputTypes["matches_order_by"]> | undefined | null,	/** filter the rows returned */
 	where?: ResolverInputTypes["matches_bool_exp"] | undefined | null},ResolverInputTypes["matches_aggregate"]],
+my_teams?: [{	/** distinct select on columns */
+	distinct_on?: Array<ResolverInputTypes["teams_select_column"]> | undefined | null,	/** limit the number of rows returned */
+	limit?: number | undefined | null,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null,	/** sort the rows by one or more columns */
+	order_by?: Array<ResolverInputTypes["teams_order_by"]> | undefined | null,	/** filter the rows returned */
+	where?: ResolverInputTypes["teams_bool_exp"] | undefined | null},ResolverInputTypes["teams"]],
+my_teams_aggregate?: [{	/** distinct select on columns */
+	distinct_on?: Array<ResolverInputTypes["teams_select_column"]> | undefined | null,	/** limit the number of rows returned */
+	limit?: number | undefined | null,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null,	/** sort the rows by one or more columns */
+	order_by?: Array<ResolverInputTypes["teams_order_by"]> | undefined | null,	/** filter the rows returned */
+	where?: ResolverInputTypes["teams_bool_exp"] | undefined | null},ResolverInputTypes["teams_aggregate"]],
+my_tournaments?: [{	/** distinct select on columns */
+	distinct_on?: Array<ResolverInputTypes["tournaments_select_column"]> | undefined | null,	/** limit the number of rows returned */
+	limit?: number | undefined | null,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null,	/** sort the rows by one or more columns */
+	order_by?: Array<ResolverInputTypes["tournaments_order_by"]> | undefined | null,	/** filter the rows returned */
+	where?: ResolverInputTypes["tournaments_bool_exp"] | undefined | null},ResolverInputTypes["tournaments"]],
+my_tournaments_aggregate?: [{	/** distinct select on columns */
+	distinct_on?: Array<ResolverInputTypes["tournaments_select_column"]> | undefined | null,	/** limit the number of rows returned */
+	limit?: number | undefined | null,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null,	/** sort the rows by one or more columns */
+	order_by?: Array<ResolverInputTypes["tournaments_order_by"]> | undefined | null,	/** filter the rows returned */
+	where?: ResolverInputTypes["tournaments_bool_exp"] | undefined | null},ResolverInputTypes["tournaments_aggregate"]],
 my_friends?: [{	/** distinct select on columns */
 	distinct_on?: Array<ResolverInputTypes["my_friends_select_column"]> | undefined | null,	/** limit the number of rows returned */
 	limit?: number | undefined | null,	/** skip the first n rows. Use only with order_by */
@@ -237295,6 +237391,14 @@ export type ModelTypes = {
 	my_active_matches: Array<ModelTypes["matches"]>,
 	/** execute function "my_active_matches" and query aggregates on result of table type "matches" */
 	my_active_matches_aggregate: ModelTypes["matches_aggregate"],
+	/** execute function "my_teams" which returns "teams" */
+	my_teams: Array<ModelTypes["teams"]>,
+	/** execute function "my_teams" and query aggregates on result of table type "teams" */
+	my_teams_aggregate: ModelTypes["teams_aggregate"],
+	/** execute function "my_tournaments" which returns "tournaments" */
+	my_tournaments: Array<ModelTypes["tournaments"]>,
+	/** execute function "my_tournaments" and query aggregates on result of table type "tournaments" */
+	my_tournaments_aggregate: ModelTypes["tournaments_aggregate"],
 	/** fetch data from the table: "v_my_friends" */
 	my_friends: Array<ModelTypes["my_friends"]>,
 	/** fetch aggregated fields from the table: "v_my_friends" */
@@ -243300,6 +243404,14 @@ export type ModelTypes = {
 	my_active_matches: Array<ModelTypes["matches"]>,
 	/** execute function "my_active_matches" and query aggregates on result of table type "matches" */
 	my_active_matches_aggregate: ModelTypes["matches_aggregate"],
+	/** execute function "my_teams" which returns "teams" */
+	my_teams: Array<ModelTypes["teams"]>,
+	/** execute function "my_teams" and query aggregates on result of table type "teams" */
+	my_teams_aggregate: ModelTypes["teams_aggregate"],
+	/** execute function "my_tournaments" which returns "tournaments" */
+	my_tournaments: Array<ModelTypes["tournaments"]>,
+	/** execute function "my_tournaments" and query aggregates on result of table type "tournaments" */
+	my_tournaments_aggregate: ModelTypes["tournaments_aggregate"],
 	/** fetch data from the table: "v_my_friends" */
 	my_friends: Array<ModelTypes["my_friends"]>,
 	/** fetch aggregated fields from the table: "v_my_friends" */
@@ -322456,6 +322568,14 @@ export type GraphQLTypes = {
 	my_active_matches: Array<GraphQLTypes["matches"]>,
 	/** execute function "my_active_matches" and query aggregates on result of table type "matches" */
 	my_active_matches_aggregate: GraphQLTypes["matches_aggregate"],
+	/** execute function "my_teams" which returns "teams" */
+	my_teams: Array<GraphQLTypes["teams"]>,
+	/** execute function "my_teams" and query aggregates on result of table type "teams" */
+	my_teams_aggregate: GraphQLTypes["teams_aggregate"],
+	/** execute function "my_tournaments" which returns "tournaments" */
+	my_tournaments: Array<GraphQLTypes["tournaments"]>,
+	/** execute function "my_tournaments" and query aggregates on result of table type "tournaments" */
+	my_tournaments_aggregate: GraphQLTypes["tournaments_aggregate"],
 	/** fetch data from the table: "v_my_friends" */
 	my_friends: Array<GraphQLTypes["my_friends"]>,
 	/** fetch aggregated fields from the table: "v_my_friends" */
@@ -328694,6 +328814,14 @@ export type GraphQLTypes = {
 	my_active_matches: Array<GraphQLTypes["matches"]>,
 	/** execute function "my_active_matches" and query aggregates on result of table type "matches" */
 	my_active_matches_aggregate: GraphQLTypes["matches_aggregate"],
+	/** execute function "my_teams" which returns "teams" */
+	my_teams: Array<GraphQLTypes["teams"]>,
+	/** execute function "my_teams" and query aggregates on result of table type "teams" */
+	my_teams_aggregate: GraphQLTypes["teams_aggregate"],
+	/** execute function "my_tournaments" which returns "tournaments" */
+	my_tournaments: Array<GraphQLTypes["tournaments"]>,
+	/** execute function "my_tournaments" and query aggregates on result of table type "tournaments" */
+	my_tournaments_aggregate: GraphQLTypes["tournaments_aggregate"],
 	/** fetch data from the table: "v_my_friends" */
 	my_friends: Array<GraphQLTypes["my_friends"]>,
 	/** fetch aggregated fields from the table: "v_my_friends" */

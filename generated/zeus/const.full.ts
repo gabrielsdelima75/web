@@ -31336,6 +31336,26 @@ export const AllTypesProps: Record<string,any> = {
 			order_by:"matches_order_by",
 			where:"matches_bool_exp"
 		},
+		my_teams:{
+			distinct_on:"teams_select_column",
+			order_by:"teams_order_by",
+			where:"teams_bool_exp"
+		},
+		my_teams_aggregate:{
+			distinct_on:"teams_select_column",
+			order_by:"teams_order_by",
+			where:"teams_bool_exp"
+		},
+		my_tournaments:{
+			distinct_on:"tournaments_select_column",
+			order_by:"tournaments_order_by",
+			where:"tournaments_bool_exp"
+		},
+		my_tournaments_aggregate:{
+			distinct_on:"tournaments_select_column",
+			order_by:"tournaments_order_by",
+			where:"tournaments_bool_exp"
+		},
 		my_friends:{
 			distinct_on:"my_friends_select_column",
 			order_by:"my_friends_order_by",
@@ -37568,6 +37588,26 @@ export const AllTypesProps: Record<string,any> = {
 			distinct_on:"matches_select_column",
 			order_by:"matches_order_by",
 			where:"matches_bool_exp"
+		},
+		my_teams:{
+			distinct_on:"teams_select_column",
+			order_by:"teams_order_by",
+			where:"teams_bool_exp"
+		},
+		my_teams_aggregate:{
+			distinct_on:"teams_select_column",
+			order_by:"teams_order_by",
+			where:"teams_bool_exp"
+		},
+		my_tournaments:{
+			distinct_on:"tournaments_select_column",
+			order_by:"tournaments_order_by",
+			where:"tournaments_bool_exp"
+		},
+		my_tournaments_aggregate:{
+			distinct_on:"tournaments_select_column",
+			order_by:"tournaments_order_by",
+			where:"tournaments_bool_exp"
 		},
 		my_friends:{
 			distinct_on:"my_friends_select_column",
@@ -71076,6 +71116,10 @@ export const ReturnTypes: Record<string,any> = {
 		migration_hashes_hashes_by_pk:"migration_hashes_hashes",
 		my_active_matches:"matches",
 		my_active_matches_aggregate:"matches_aggregate",
+		my_teams:"teams",
+		my_teams_aggregate:"teams_aggregate",
+		my_tournaments:"tournaments",
+		my_tournaments_aggregate:"tournaments_aggregate",
 		my_friends:"my_friends",
 		my_friends_aggregate:"my_friends_aggregate",
 		newsPostAdmin:"NewsPost",
@@ -73293,6 +73337,10 @@ export const ReturnTypes: Record<string,any> = {
 		migration_hashes_hashes_stream:"migration_hashes_hashes",
 		my_active_matches:"matches",
 		my_active_matches_aggregate:"matches_aggregate",
+		my_teams:"teams",
+		my_teams_aggregate:"teams_aggregate",
+		my_tournaments:"tournaments",
+		my_tournaments_aggregate:"tournaments_aggregate",
 		my_friends:"my_friends",
 		my_friends_aggregate:"my_friends_aggregate",
 		my_friends_stream:"my_friends",

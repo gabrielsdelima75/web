@@ -13,6 +13,7 @@ type Live = {
   root: string;
   fields: string[];
   query: any;
+  variables: Record<string, unknown>;
   observer: Observer;
 };
 
@@ -62,6 +63,7 @@ function spySubscriptions(name: "default" | "public") {
           root: field,
           fields: names(root(options.query)),
           query: options.query,
+          variables: options.variables,
           observer,
         });
       }
@@ -107,7 +109,11 @@ const sharedTournament = (overrides: Record<string, unknown> = {}) => ({
     { id: "b", name: "Bravo", roster: [] },
   ],
   stages: [
-    { id: "s-1", order: 1, brackets: [{ id: "x", round: 1, team_1: null }] },
+    {
+      id: "s-1",
+      order: 1,
+      brackets: [{ id: "x", round: 1, team_1: null, match: null }],
+    },
   ],
   ...overrides,
 });
@@ -147,7 +153,7 @@ const personalTournament = (overrides: Record<string, unknown> = {}) => ({
 // Everyone watching a tournament reads the same teams, rosters and brackets,
 // so a signed-in player reads them as a guest and shares one Hasura poll with
 // every other viewer. Their own permissions, and the bracket matches a guest
-// sees fewer of, come from a small subscription on their session.
+// isn't shown, come from a small subscription on their session.
 describe("the tournament page for a signed-in player", () => {
   it("reads the tournament as a guest and only the viewer's own fields on their session", async () => {
     await mountDetail("user");
@@ -166,9 +172,7 @@ describe("the tournament page for a signed-in player", () => {
       expect(names(guest)).not.toContain(field);
     }
     expect(names(child(guest, "teams"))).not.toContain("can_manage");
-    expect(names(child(child(guest, "stages"), "brackets"))).not.toContain(
-      "match",
-    );
+    expect(names(child(child(guest, "stages"), "brackets"))).toContain("match");
 
     const mine = root(personal()[0].query);
     expect(names(mine)).toEqual([
@@ -191,6 +195,24 @@ describe("the tournament page for a signed-in player", () => {
       "can_recruit",
       "can_manage",
     ]);
+    expect(personal()[0].variables).toMatchObject({ viewer: [ME] });
+  });
+
+  // Not every team and bracket again for each viewer: only the entries they
+  // could manage and the brackets with a match a guest isn't shown.
+  it("asks the viewer's session only for the rows that can differ from a guest's", async () => {
+    await mountDetail("user");
+
+    const mine = print(personal()[0].query);
+    expect(mine).toMatch(
+      /teams\(\s*where: \{_or: \[\{owner_steam_id: \{_in: \$viewer\}\}/,
+    );
+    expect(mine).toMatch(
+      /brackets\(\s*where: \{_or: \[\{match: \{status: \{_in: \[PickingPlayers, Canceled\]\}\}\}/,
+    );
+    expect(
+      names(child(child(root(personal()[0].query), "stages"), "brackets")),
+    ).toEqual(["id", "match", "parent_bracket", "loser_bracket"]);
   });
 
   it("shows the tournament once both halves are in, with the viewer's own fields on it", async () => {
@@ -317,6 +339,7 @@ describe("the tournament page for a signed-out visitor", () => {
     expect(full()).toHaveLength(0);
     expect(shared().map((l) => l.client)).toEqual(["public"]);
     expect(personal().map((l) => l.client)).toEqual(["default"]);
+    expect(personal()[0].variables).toMatchObject({ viewer: [] });
   });
 });
 

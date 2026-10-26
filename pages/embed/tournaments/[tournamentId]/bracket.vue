@@ -396,7 +396,8 @@ export default {
     distinctGroups(stage: any): number[] {
       const set = new Set<number>();
       for (const b of stage.brackets || []) {
-        if (typeof b.group === "number") set.add(b.group);
+        // The column is numeric, which the api serves as a string.
+        if (b.group != null) set.add(Number(b.group));
       }
       return [...set].sort((a, b) => a - b);
     },

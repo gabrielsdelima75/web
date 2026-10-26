@@ -34,9 +34,10 @@ const groups = computed(() => {
   const brackets = props.stage.brackets || [];
   const out = [];
   for (let division = 1; division <= divisions.value; division++) {
-    // A lower bracket's group is its division + groups.
+    // A lower bracket's group is its division + groups. The column is numeric,
+    // which the api serves as a string.
     const own = brackets.filter((bracket: any) => {
-      const group = bracket.group || 1;
+      const group = Number(bracket.group) || 1;
       return group === division || group === division + divisions.value;
     });
     if (!own.length) continue;
@@ -75,9 +76,9 @@ const bracketTab = computed(() => ({
 }));
 
 function roundLabel(bracket: any) {
-  const group = bracket.group || 1;
+  const group = Number(bracket.group) || 1;
   const siblings = (props.stage.brackets || []).filter(
-    (other: any) => (other.group || 1) === group,
+    (other: any) => (Number(other.group) || 1) === group,
   );
   const label = getRoundLabel(
     bracket.round,

@@ -1,4 +1,6 @@
 import type { Plugin } from "vite";
+import { existsSync } from "fs";
+import { join } from "path";
 import { defineVitestConfig } from "@nuxt/test-utils/config";
 
 // generated/zeus is ~20MB of codegen, and its inline sourcemap comes to ~29MB
@@ -69,8 +71,36 @@ const dropUnreadPageMeta: Plugin = {
   },
 };
 
+// A template's `<img src="/topo.svg">` compiles to an import of public/topo.svg,
+// which Nuxt turns into an id the test server refuses to serve, so a component
+// showing one can't mount. In a test the URL is all it needs.
+const publicAssetsAsUrls: Plugin = {
+  name: "test:public-assets-as-urls",
+  enforce: "pre",
+  resolveId(id) {
+    const path = id.split("?")[0];
+    if (
+      path.startsWith("/") &&
+      !path.startsWith("//") &&
+      existsSync(join(__dirname, "public", path))
+    ) {
+      return `\0public-url:${path}`;
+    }
+  },
+  load(id) {
+    if (id.startsWith("\0public-url:")) {
+      return `export default ${JSON.stringify(id.slice("\0public-url:".length))}`;
+    }
+  },
+};
+
 export default defineVitestConfig({
-  plugins: [dropZeusSourcemaps, compileLocalesForProduction, dropUnreadPageMeta],
+  plugins: [
+    dropZeusSourcemaps,
+    compileLocalesForProduction,
+    dropUnreadPageMeta,
+    publicAssetsAsUrls,
+  ],
   test: {
     include: ["tests/**/*.spec.ts"],
     setupFiles: ["tests/setup.ts"],

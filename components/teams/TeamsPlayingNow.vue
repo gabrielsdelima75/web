@@ -38,7 +38,7 @@ function rank(match: any) {
   if (mine) return 0;
   const tournament = match.tournament_brackets?.[0]?.stage?.tournament;
   if (!tournament) return 3;
-  return tournament.is_league ? 2 : 1;
+  return tournament.league_season_division ? 2 : 1;
 }
 
 const ordered = computed(() =>

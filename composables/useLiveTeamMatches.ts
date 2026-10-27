@@ -35,7 +35,15 @@ const liveTeamMatchesQuery = generateSubscription({
       lineup_2: liveLineupFields,
       tournament_brackets: [
         { limit: 1 },
-        { stage: { tournament: { id: true, name: true, is_league: true } } },
+        {
+          stage: {
+            tournament: {
+              id: true,
+              name: true,
+              league_season_division: { id: true },
+            },
+          },
+        },
       ],
     },
   ],

@@ -1,11 +1,7 @@
 import { ref, computed } from "vue";
 import { defineStore, acceptHMRUpdate } from "pinia";
 import { useI18n } from "vue-i18n";
-import {
-  generateQuery,
-  generateMutation,
-  generateSubscription,
-} from "~/graphql/graphqlGen";
+import { generateQuery, generateMutation } from "~/graphql/graphqlGen";
 import getGraphqlClient from "~/graphql/getGraphqlClient";
 import type { GraphQLTypes } from "~/generated/zeus";
 
@@ -74,8 +70,6 @@ export const useFileManagerStore = defineStore("fileManager", () => {
     Map<string, { content: string; originalContent: string; isDirty: boolean }>
   >(new Map());
   const activeFilePath = ref<string | null>(null);
-
-  let fileOperationsSubscription: { unsubscribe: () => void } | null = null;
 
   // Bumped on every reset(). In-flight requests capture it and drop their
   // results if the node/server changed while they were awaiting.
@@ -180,7 +174,6 @@ export const useFileManagerStore = defineStore("fileManager", () => {
     expandedPaths.value.add("");
 
     await loadDirectory("");
-    subscribeToFileOperations();
 
     if (openPath) {
       await openTo(openPath);
@@ -250,9 +243,6 @@ export const useFileManagerStore = defineStore("fileManager", () => {
 
   function reset() {
     contextEpoch++;
-
-    fileOperationsSubscription?.unsubscribe();
-    fileOperationsSubscription = null;
 
     nodeId.value = null;
     serverId.value = null;
@@ -950,70 +940,6 @@ export const useFileManagerStore = defineStore("fileManager", () => {
       : fileName;
 
     return await saveFile(filePath, content);
-  }
-
-  function subscribeToFileOperations() {
-    if (!nodeId.value) return;
-
-    const whereClause: any = {
-      node_id: { _eq: nodeId.value },
-    };
-
-    if (serverId.value) {
-      whereClause.server_id = { _eq: serverId.value };
-    } else {
-      whereClause.server_id = { _is_null: true };
-    }
-
-    const subscription = getGraphqlClient().subscribe({
-      query: generateSubscription({
-        file_operations_log: [
-          {
-            where: whereClause,
-            order_by: [{ created_at: "desc" as const }],
-            limit: 50,
-          },
-          {
-            id: true,
-            operation: true,
-            path: true,
-            details: true,
-            created_at: true,
-          },
-        ],
-      }),
-    });
-
-    fileOperationsSubscription = subscription.subscribe({
-      next: ({ data }) => {
-        if (data?.file_operations_log && data.file_operations_log.length > 0) {
-          const operation = data.file_operations_log[0];
-          handleFileOperation(operation);
-        }
-      },
-      error: (err) => {
-        console.error("Subscription error:", err);
-      },
-    });
-  }
-
-  function handleFileOperation(operation: any) {
-    // Reload the affected directory
-    const pathParts = operation.path.split("/");
-    pathParts.pop(); // Remove filename
-    const dirPath = pathParts.join("/");
-
-    if (fileTree.value.has(dirPath)) {
-      void loadDirectory(dirPath);
-    }
-
-    // Also reload current directory if it matches
-    if (
-      dirPath === currentPath.value ||
-      operation.path.startsWith(currentPath.value)
-    ) {
-      void loadDirectory(currentPath.value);
-    }
   }
 
   function toggleExpand(path: string) {

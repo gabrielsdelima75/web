@@ -1,16 +1,24 @@
-// The whole 5Stack network's match and player counts, for 5stack.gg's welcome
-// page. The fleet totals are admin-only, so they are read here with the admin
-// secret and only these two numbers go out. Every other panel answers null.
+import {
+  networkStatsFrom,
+  type NetworkStats,
+} from "~/server/utils/networkStats";
+
+// The whole 5Stack network's match and player counts, and its panels by
+// country, for 5stack.gg's welcome page. The fleet totals are admin-only, so
+// they are read here with the admin secret and only these numbers go out.
+// Every other panel answers null.
 const QUERY = `query NetworkStats {
   telemetryStats(includeSelf: true) {
     totals {
       matches
       playersRegistered
     }
+    countries {
+      country
+      installs
+    }
   }
 }`;
-
-type NetworkStats = { matches: number; players: number } | null;
 
 export default defineCachedEventHandler(
   async (): Promise<NetworkStats> => {
@@ -27,11 +35,7 @@ export default defineCachedEventHandler(
 
     try {
       const res = await $fetch<{
-        data?: {
-          telemetryStats?: {
-            totals?: { matches?: number; playersRegistered?: number };
-          };
-        };
+        data?: { telemetryStats?: Parameters<typeof networkStatsFrom>[0] };
       }>(`https://${apiDomain}/v1/graphql`, {
         method: "POST",
         headers: {
@@ -40,14 +44,7 @@ export default defineCachedEventHandler(
         },
         body: { query: QUERY },
       });
-      const totals = res?.data?.telemetryStats?.totals;
-      if (!totals?.matches) {
-        return null;
-      }
-      return {
-        matches: Number(totals.matches),
-        players: Number(totals.playersRegistered ?? 0),
-      };
+      return networkStatsFrom(res?.data?.telemetryStats);
     } catch (err) {
       console.error("[network-stats] telemetry fetch failed:", err);
       return null;

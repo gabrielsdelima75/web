@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { Check, ArrowRight } from "lucide-vue-next";
 import type { RouteLocationRaw } from "vue-router";
+import LandingBand from "~/components/landing/LandingBand.vue";
+import type { LandingBand as Band } from "~/utilities/landing/bands";
 
 defineProps<{
   id: string;
-  eyebrow: string;
   title: string;
   lede: string;
   points: { title: string; body: string }[];
@@ -15,30 +16,38 @@ defineProps<{
   wide?: boolean;
   // The visual takes two thirds of the row instead of seven twelfths.
   broad?: boolean;
+  // The copy and the visual split the row evenly.
+  half?: boolean;
+  band?: Band | null;
 }>();
 </script>
 
 <template>
   <section
     :id="id"
-    class="scroll-mt-20 border-t border-border/70 py-24 max-sm:py-16"
+    class="relative isolate scroll-mt-20 py-24 max-sm:py-16"
+    :class="band === 'panel' && 'my-6'"
   >
+    <LandingBand :band="band" />
     <div
-      class="mx-auto grid max-w-[1320px] px-8 max-sm:px-4"
-      :class="
+      class="mx-auto grid max-w-[1320px]"
+      :class="[
+        band === 'panel' ? 'px-16 max-sm:px-6' : 'px-8 max-sm:px-4',
         wide
           ? 'gap-10'
           : [
               'items-start gap-16 max-lg:gap-10',
-              flip
-                ? broad
-                  ? 'lg:grid-cols-[minmax(0,8fr)_minmax(0,4fr)]'
-                  : 'lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]'
-                : broad
-                  ? 'lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)]'
-                  : 'lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]',
-            ]
-      "
+              half
+                ? 'lg:grid-cols-2'
+                : flip
+                  ? broad
+                    ? 'lg:grid-cols-[minmax(0,8fr)_minmax(0,4fr)]'
+                    : 'lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]'
+                  : broad
+                    ? 'lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)]'
+                    : 'lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]',
+            ],
+      ]"
     >
       <div
         class="min-w-0"
@@ -49,17 +58,8 @@ defineProps<{
         ]"
       >
         <div class="min-w-0">
-          <span
-            class="inline-flex items-center gap-2 text-[13px] font-semibold text-[hsl(var(--tac-amber))]"
-          >
-            <span
-              class="inline-block h-[2px] w-[10px] bg-[hsl(var(--tac-amber))]"
-              aria-hidden="true"
-            ></span>
-            {{ eyebrow }}
-          </span>
           <h2
-            class="mt-3.5 text-[38px] font-bold leading-[1.1] tracking-[-0.01em] [text-wrap:balance] max-sm:text-3xl"
+            class="text-[38px] font-bold leading-[1.1] tracking-[-0.01em] [text-wrap:balance] max-sm:text-3xl"
           >
             {{ title }}
           </h2>
@@ -70,6 +70,7 @@ defineProps<{
           </p>
         </div>
         <ul
+          v-if="points.length"
           class="mt-6 grid gap-3.5"
           :class="wide && 'lg:row-span-2 lg:mt-12 lg:grid-cols-2 lg:gap-x-8'"
         >
@@ -96,6 +97,7 @@ defineProps<{
           {{ link.label }}
           <ArrowRight class="size-3.5" />
         </NuxtLink>
+        <slot name="details" />
       </div>
       <div class="min-w-0">
         <slot />

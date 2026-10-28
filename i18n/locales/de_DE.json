@@ -8465,6 +8465,11 @@
       "cta": {
         "title": "Dein nächstes Match ist nur einen Klick entfernt."
       },
+      "world": {
+        "title": "5Stack läuft in {count} Land. | 5Stack läuft in {count} Ländern.",
+        "lede": "Communities überall betreiben ihr eigenes 5Stack. Das ist das {count} Panel, das sich in den letzten 30 Tagen gemeldet hat. | Communities überall betreiben ihr eigenes 5Stack. Das sind die {count} Panels, die sich in den letzten 30 Tagen gemeldet haben.",
+        "panels": "{count} Panel | {count} Panels"
+      },
       "footer": {
         "run_own": "Willst du ein eigenes betreiben?",
         "contact": "Kontakt",

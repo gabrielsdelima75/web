@@ -8465,6 +8465,11 @@
       "cta": {
         "title": "Din nästa match är bara ett klick bort."
       },
+      "world": {
+        "title": "5Stack körs i {count} land. | 5Stack körs i {count} länder.",
+        "lede": "Communities överallt kör sin egen 5Stack. Här är den {count} panel som hört av sig de senaste 30 dagarna. | Communities överallt kör sin egen 5Stack. Här är de {count} paneler som hört av sig de senaste 30 dagarna.",
+        "panels": "{count} panel | {count} paneler"
+      },
       "footer": {
         "run_own": "Vill du köra din egen?",
         "contact": "Kontakt",

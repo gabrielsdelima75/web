@@ -8465,6 +8465,11 @@
       "cta": {
         "title": "Tu próxima partida está a un clic."
       },
+      "world": {
+        "title": "5Stack funciona en {count} país. | 5Stack funciona en {count} países.",
+        "lede": "Comunidades de todas partes alojan su propio 5Stack. Este es el {count} panel que se conectó en los últimos 30 días. | Comunidades de todas partes alojan su propio 5Stack. Estos son los {count} paneles que se conectaron en los últimos 30 días.",
+        "panels": "{count} panel | {count} paneles"
+      },
       "footer": {
         "run_own": "¿Quieres montar el tuyo?",
         "contact": "Contacto",

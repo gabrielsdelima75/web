@@ -8465,6 +8465,11 @@
       "cta": {
         "title": "Din næste kamp er kun et klik væk."
       },
+      "world": {
+        "title": "5Stack kører i {count} land. | 5Stack kører i {count} lande.",
+        "lede": "Communities overalt kører deres egen 5Stack. Her er det {count} panel, der har meldt sig inden for de sidste 30 dage. | Communities overalt kører deres egen 5Stack. Her er de {count} paneler, der har meldt sig inden for de sidste 30 dage.",
+        "panels": "{count} panel | {count} paneler"
+      },
       "footer": {
         "run_own": "Vil du køre din egen?",
         "contact": "Kontakt",

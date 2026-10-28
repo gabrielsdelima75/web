@@ -8465,6 +8465,11 @@
       "cta": {
         "title": "Your next match is a click away."
       },
+      "world": {
+        "title": "5Stack runs in {count} country. | 5Stack runs in {count} countries.",
+        "lede": "Communities everywhere host their own 5Stack. This is the {count} panel that checked in during the last 30 days. | Communities everywhere host their own 5Stack. These are the {count} panels that checked in during the last 30 days.",
+        "panels": "{count} panel | {count} panels"
+      },
       "footer": {
         "run_own": "Want to run your own?",
         "contact": "Contact",

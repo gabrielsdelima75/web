@@ -2,6 +2,7 @@
 import { computed } from "vue";
 import { DiscordLogoIcon } from "@radix-icons/vue";
 import { useBranding } from "~/composables/useBranding";
+import LandingBand from "~/components/landing/LandingBand.vue";
 
 const { brandName, logoUrl } = useBranding();
 const name = computed(() => brandName.value || "5Stack");
@@ -25,58 +26,64 @@ const linkClasses =
 </script>
 
 <template>
-  <footer class="border-t border-border">
-    <div
-      class="mx-auto grid max-w-[1320px] gap-x-8 gap-y-10 px-8 pb-12 pt-14 max-sm:grid-cols-2 max-sm:px-4 sm:grid-cols-[minmax(0,3fr)_repeat(2,minmax(0,1fr))]"
-    >
-      <div class="grid content-start gap-3 max-sm:col-span-2">
-        <span class="inline-flex items-center gap-2.5">
-          <img
-            :src="logoUrl || '/favicon/192.png'"
-            alt=""
-            width="28"
-            height="28"
-            class="size-7 rounded-md object-cover"
-          />
-          <span class="text-[15px] font-bold uppercase tracking-[0.08em]">
-            {{ name }}
-          </span>
-        </span>
-        <p class="m-0 max-w-[20rem] text-sm text-muted-foreground">
-          {{ $t("pages.welcome.footer.tagline") }}
-        </p>
-      </div>
-
-      <div class="grid content-start gap-2.5 text-sm">
-        <p :class="headingClasses">{{ $t("pages.welcome.footer.contact") }}</p>
-        <a
-          :href="`https://${webDomain}/discord-invite`"
-          target="_blank"
-          rel="noopener noreferrer"
-          :class="[linkClasses, 'inline-flex items-center gap-2']"
-        >
-          <DiscordLogoIcon class="size-4" />
-          Discord
-        </a>
-        <a v-if="email" :href="`mailto:${email}`" :class="linkClasses">
-          {{ email }}
-        </a>
-      </div>
-
-      <nav
-        class="grid content-start gap-2.5 text-sm"
-        :aria-label="$t('pages.welcome.footer.legal')"
+  <footer id="footer" class="mt-16 max-sm:mt-10">
+    <!-- The dots stop at the copyright row. -->
+    <div class="relative isolate">
+      <LandingBand band="dots" />
+      <div
+        class="mx-auto grid max-w-[1320px] gap-x-8 gap-y-10 px-8 pb-12 pt-14 max-sm:grid-cols-2 max-sm:px-4 sm:grid-cols-[minmax(0,3fr)_repeat(2,minmax(0,1fr))]"
       >
-        <p :class="headingClasses">{{ $t("pages.welcome.footer.legal") }}</p>
-        <NuxtLink
-          v-for="link in legal"
-          :key="link.to"
-          :to="link.to"
-          :class="linkClasses"
+        <div class="grid content-start gap-3 max-sm:col-span-2">
+          <span class="inline-flex items-center gap-2.5">
+            <img
+              :src="logoUrl || '/favicon/192.png'"
+              alt=""
+              width="28"
+              height="28"
+              class="size-7 rounded-md object-cover"
+            />
+            <span class="text-[15px] font-bold uppercase tracking-[0.08em]">
+              {{ name }}
+            </span>
+          </span>
+          <p class="m-0 max-w-[20rem] text-sm text-muted-foreground">
+            {{ $t("pages.welcome.footer.tagline") }}
+          </p>
+        </div>
+
+        <div class="grid content-start gap-2.5 text-sm">
+          <p :class="headingClasses">
+            {{ $t("pages.welcome.footer.contact") }}
+          </p>
+          <a
+            :href="`https://${webDomain}/discord-invite`"
+            target="_blank"
+            rel="noopener noreferrer"
+            :class="[linkClasses, 'inline-flex items-center gap-2']"
+          >
+            <DiscordLogoIcon class="size-4" />
+            Discord
+          </a>
+          <a v-if="email" :href="`mailto:${email}`" :class="linkClasses">
+            {{ email }}
+          </a>
+        </div>
+
+        <nav
+          class="grid content-start gap-2.5 text-sm"
+          :aria-label="$t('pages.welcome.footer.legal')"
         >
-          {{ $t(link.label) }}
-        </NuxtLink>
-      </nav>
+          <p :class="headingClasses">{{ $t("pages.welcome.footer.legal") }}</p>
+          <NuxtLink
+            v-for="link in legal"
+            :key="link.to"
+            :to="link.to"
+            :class="linkClasses"
+          >
+            {{ $t(link.label) }}
+          </NuxtLink>
+        </nav>
+      </div>
     </div>
 
     <div class="border-t border-border/60">

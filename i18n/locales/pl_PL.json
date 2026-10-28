@@ -8465,6 +8465,11 @@
       "cta": {
         "title": "Twój następny mecz jest o jedno kliknięcie stąd."
       },
+      "world": {
+        "title": "5Stack działa w {count} kraju. | 5Stack działa w {count} krajach.",
+        "lede": "Społeczności na całym świecie prowadzą własne 5Stack. Panele, które zgłosiły się w ciągu ostatnich 30 dni: {count}. | Społeczności na całym świecie prowadzą własne 5Stack. Panele, które zgłosiły się w ciągu ostatnich 30 dni: {count}.",
+        "panels": "{count} panel | Panele: {count}"
+      },
       "footer": {
         "run_own": "Chcesz postawić własny?",
         "contact": "Kontakt",

@@ -8465,6 +8465,11 @@
       "cta": {
         "title": "Ton prochain match est à un clic."
       },
+      "world": {
+        "title": "5Stack tourne dans {count} pays. | 5Stack tourne dans {count} pays.",
+        "lede": "Des communautés partout dans le monde hébergent leur propre 5Stack. Voici le {count} panel qui s'est connecté ces 30 derniers jours. | Des communautés partout dans le monde hébergent leur propre 5Stack. Voici les {count} panels qui se sont connectés ces 30 derniers jours.",
+        "panels": "{count} panel | {count} panels"
+      },
       "footer": {
         "run_own": "Envie de lancer le tien ?",
         "contact": "Contact",

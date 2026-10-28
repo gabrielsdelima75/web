@@ -8465,6 +8465,11 @@
       "cta": {
         "title": "Sua próxima partida está a um clique."
       },
+      "world": {
+        "title": "O 5Stack roda em {count} país. | O 5Stack roda em {count} países.",
+        "lede": "Comunidades do mundo todo hospedam seu próprio 5Stack. Este é o {count} painel que se conectou nos últimos 30 dias. | Comunidades do mundo todo hospedam seu próprio 5Stack. Estes são os {count} painéis que se conectaram nos últimos 30 dias.",
+        "panels": "{count} painel | {count} painéis"
+      },
       "footer": {
         "run_own": "Quer rodar o seu próprio?",
         "contact": "Contato",

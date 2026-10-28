@@ -16,6 +16,7 @@ import LandingHero from "~/components/landing/LandingHero.vue";
 import LandingNow from "~/components/landing/LandingNow.vue";
 import LandingFooter from "~/components/landing/LandingFooter.vue";
 import LandingNetworkStats from "~/components/landing/LandingNetworkStats.vue";
+import LandingWorld from "~/components/landing/LandingWorld.vue";
 import { useBranding } from "~/composables/useBranding";
 import { useGtm } from "~/layouts/composables/useGtm";
 import { useSiteContent } from "~/composables/useSiteContent";
@@ -79,7 +80,6 @@ function points(section: string, list: Point[]) {
 
 function copy(section: string) {
   return {
-    eyebrow: t(`pages.welcome.${section}.eyebrow`),
     title: t(`pages.welcome.${section}.title`),
     lede: t(`pages.welcome.${section}.lede`),
   };
@@ -88,6 +88,8 @@ function copy(section: string) {
 const highlightsOn = computed(() => hasContent("highlights"));
 // The inventory is a 5stack.gg app, not part of every panel.
 const inventoryOn = webDomain === "5stack.gg";
+// Every panel reports to 5stack.gg, so only it can show where they are.
+const worldOn = webDomain === "5stack.gg";
 const streamsGated = computed(
   () => !signedIn.value && settings.requireLoginForLiveStreams,
 );
@@ -329,6 +331,7 @@ const outlineButton =
 
         <LandingSection
           id="play"
+          band="panel"
           v-bind="copy('play')"
           :lede="
             settings.matchmakingEnabled
@@ -379,6 +382,7 @@ const outlineButton =
 
         <LandingSection
           id="watch"
+          band="start"
           wide
           v-bind="copy('watch')"
           :points="sections.watch"
@@ -394,6 +398,7 @@ const outlineButton =
 
         <LandingSection
           id="rewatch"
+          band="fill"
           wide
           v-bind="copy('rewatch')"
           :points="sections.rewatch"
@@ -410,6 +415,7 @@ const outlineButton =
 
         <LandingSection
           id="utility"
+          band="end"
           wide
           v-bind="copy('utility')"
           :points="sections.utility"
@@ -423,6 +429,7 @@ const outlineButton =
         <LandingSection
           v-if="inventoryOn"
           id="inventory"
+          band="panel"
           v-bind="copy('inventory')"
           :points="sections.inventory"
           :link="
@@ -502,6 +509,8 @@ const outlineButton =
             </div>
           </div>
         </section>
+
+        <LandingWorld v-if="worldOn" />
       </main>
 
       <LandingFooter />

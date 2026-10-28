@@ -1,12 +1,9 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import AnimatedStat from "~/components/AnimatedStat.vue";
+import { useNetworkStats } from "~/composables/useNetworkStats";
 
-// 5stack.gg only: the server route answers null on every other panel.
-const { data } = await useFetch<{ matches: number; players: number } | null>(
-  "/api/network-stats",
-  { key: "network-stats", default: () => null },
-);
+const { data } = await useNetworkStats();
 
 const stats = computed(() =>
   data.value

@@ -8465,6 +8465,11 @@
       "cta": {
         "title": "Bir sonraki maçın bir tık uzağında."
       },
+      "world": {
+        "title": "5Stack {count} ülkede çalışıyor. | 5Stack {count} ülkede çalışıyor.",
+        "lede": "Her yerden topluluklar kendi 5Stack'lerini barındırıyor. Bunlar son 30 günde bağlanan {count} panel. | Her yerden topluluklar kendi 5Stack'lerini barındırıyor. Bunlar son 30 günde bağlanan {count} panel.",
+        "panels": "{count} panel | {count} panel"
+      },
       "footer": {
         "run_own": "Kendininkini çalıştırmak ister misin?",
         "contact": "İletişim",

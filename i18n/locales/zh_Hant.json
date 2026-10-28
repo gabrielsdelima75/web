@@ -8465,6 +8465,11 @@
       "cta": {
         "title": "下一場比賽，一鍵即達。"
       },
+      "world": {
+        "title": "5Stack 已在 {count} 個國家和地區運作。 | 5Stack 已在 {count} 個國家和地區運作。",
+        "lede": "世界各地的社群都在運行自己的 5Stack。過去 30 天內共有 {count} 個面板傳送過回報。 | 世界各地的社群都在運行自己的 5Stack。過去 30 天內共有 {count} 個面板傳送過回報。",
+        "panels": "{count} 個面板 | {count} 個面板"
+      },
       "footer": {
         "run_own": "想自己架一個？",
         "contact": "聯絡我們",

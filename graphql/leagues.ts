@@ -555,9 +555,11 @@ export const RESPOND_PROPOSAL_MUTATION = gql`
 // Actionability (needs scheduling vs a proposal to answer) is derived on the
 // client so this stays a plain, enum-free filter — it powers the client-derived
 // "scheduling tasks" surface in the notifications panel (no backing rows).
+// Every signed-in page polls it, so seasons that are over, which scheduleTasks
+// skips, are left out rather than read again each second.
 export const MY_SCHEDULE_TASKS_SUBSCRIPTION = gql`
   subscription MyLeagueScheduleTasks($steamId: bigint!) {
-    league_seasons {
+    league_seasons(where: { status: { _nin: [Finished, Canceled] } }) {
       id
       season_number
       status

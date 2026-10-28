@@ -6,6 +6,7 @@ import SelectDot from "~/components/admin/SelectDot.vue";
 import NodeStatusDot from "~/components/game-server-nodes/NodeStatusDot.vue";
 import NodeControlMenu from "~/components/game-server-nodes/NodeControlMenu.vue";
 import NodeCs2Chip from "~/components/game-server-nodes/NodeCs2Chip.vue";
+import NodeK3sChip from "~/components/game-server-nodes/NodeK3sChip.vue";
 import NodeLoadStack from "~/components/game-server-nodes/NodeLoadStack.vue";
 import TweenNumber from "~/components/game-server-nodes/TweenNumber.vue";
 import { Button } from "~/components/ui/button";
@@ -239,6 +240,9 @@ function onKeydown(event: KeyboardEvent) {
         :game-versions="gameVersions"
         :current-build-id="context.currentBuildId"
       />
+    </td>
+    <td class="gsn-c-k3s">
+      <NodeK3sChip :node-id="node.id" />
     </td>
     <td class="gsn-c-cap text-right">
       <span v-if="capacity === 'none'" class="text-muted-foreground/60">—</span>

@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import { ArrowRight, CalendarClock, ChevronDown } from "lucide-vue-next";
+import { ArrowRight, CalendarClock } from "lucide-vue-next";
 import { toast } from "~/components/ui/toast";
 import { Button } from "~/components/ui/button";
 import { Fold } from "~/components/ui/transitions";
 import StatusDot from "~/components/admin/StatusDot.vue";
 import type { Tone } from "~/components/admin/tone";
 import TimeAgo from "~/components/TimeAgo.vue";
-import K3sNodeList from "~/components/game-server-nodes/K3sNodeList.vue";
 import K3sScheduleForm from "~/components/game-server-nodes/K3sScheduleForm.vue";
 import {
   useK3sMaintenance,
@@ -36,7 +35,6 @@ const TONES: Record<string, Tone> = {
   changes: "warn",
 };
 
-const nodesOpen = ref(false);
 const scheduling = ref(false);
 
 const target = computed(() => {
@@ -222,25 +220,7 @@ async function write(value: string, title: string) {
         {{ facts.join(" · ") }}
       </p>
       <p class="text-muted-foreground">{{ t(`${K3S}.how`) }}</p>
-      <button
-        v-if="!scheduling"
-        type="button"
-        class="inline-flex items-center gap-1 text-muted-foreground transition-colors hover:text-foreground"
-        :aria-expanded="nodesOpen"
-        data-testid="k3s-notice-nodes"
-        @click="nodesOpen = !nodesOpen"
-      >
-        {{ t(nodesOpen ? `${K3S}.hide_nodes` : `${K3S}.show_nodes`) }}
-        <ChevronDown
-          class="h-3 w-3 transition-transform duration-200 motion-reduce:transition-none"
-          :class="{ 'rotate-180': nodesOpen }"
-        />
-      </button>
     </template>
-
-    <Fold :open="nodesOpen || scheduling || state.kind === 'running'">
-      <K3sNodeList :versions="versions" :maintenance="maintenance" />
-    </Fold>
 
     <Fold :open="scheduling">
       <div class="border-t border-[hsl(var(--tac-amber)/0.25)] pt-3">

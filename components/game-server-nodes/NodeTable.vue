@@ -124,6 +124,7 @@ onBeforeUnmount(() => observer?.disconnect());
               {{ t("pages.game_server_nodes.table.load") }}
             </th>
             <th class="gsn-c-cs2">CS2</th>
+            <th class="gsn-c-k3s">k3s</th>
             <th class="gsn-c-cap text-right">
               <FiveStackToolTip as-child :delay-duration="120" side="bottom">
                 <template #trigger>
@@ -247,6 +248,9 @@ onBeforeUnmount(() => observer?.disconnect());
 .gsn-table .gsn-c-cs2 {
   width: 140px;
 }
+.gsn-table .gsn-c-k3s {
+  width: 132px;
+}
 .gsn-table .gsn-c-load {
   width: 136px;
 }
@@ -280,8 +284,8 @@ onBeforeUnmount(() => observer?.disconnect());
     transform 240ms cubic-bezier(0.16, 1, 0.3, 1),
     opacity 150ms ease;
 }
-/* Region goes first (it moves under the node's name), then CS2; Load holds
-   on until phone width. */
+/* Region goes first (it moves under the node's name), then k3s, then CS2;
+   Load holds on until phone width. */
 @container gsn-list (max-width: 820px) {
   .gsn-table .gsn-c-region,
   .gsn-table :deep(.gsn-c-region) {
@@ -289,6 +293,12 @@ onBeforeUnmount(() => observer?.disconnect());
   }
   .gsn-table :deep(.gsn-row-region) {
     display: inline;
+  }
+}
+@container gsn-list (max-width: 700px) {
+  .gsn-table .gsn-c-k3s,
+  .gsn-table :deep(.gsn-c-k3s) {
+    display: none;
   }
 }
 @container gsn-list (max-width: 600px) {

@@ -1,14 +1,11 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
-import { ChevronDown } from "lucide-vue-next";
 import { toast } from "~/components/ui/toast";
 import { Button } from "~/components/ui/button";
-import { Fold } from "~/components/ui/transitions";
 import StatusDot from "~/components/admin/StatusDot.vue";
 import type { Tone } from "~/components/admin/tone";
 import K3sUpdateDialog from "~/components/game-server-nodes/K3sUpdateDialog.vue";
-import K3sNodeList from "~/components/game-server-nodes/K3sNodeList.vue";
 import {
   useK3sMaintenance,
   useMaintenanceAt,
@@ -38,7 +35,6 @@ const TONES: Record<string, Tone> = {
 
 const dialogOpen = ref(false);
 const changing = ref(false);
-const nodesOpen = ref(false);
 
 function openDialog(change: boolean) {
   changing.value = change;
@@ -197,21 +193,6 @@ async function clearSchedule() {
 
       <span class="ml-auto inline-flex gap-2">
         <Button
-          v-if="versions?.nodes.length"
-          size="xs"
-          variant="ghost"
-          class="[&_svg]:size-3.5"
-          :aria-expanded="nodesOpen"
-          data-testid="k3s-nodes-toggle"
-          @click="nodesOpen = !nodesOpen"
-        >
-          {{ t(nodesOpen ? `${K3S}.hide_nodes` : `${K3S}.show_nodes`) }}
-          <ChevronDown
-            class="transition-transform duration-200 motion-reduce:transition-none"
-            :class="{ 'rotate-180': nodesOpen }"
-          />
-        </Button>
-        <Button
           v-if="
             ['available', 'catch_up', 'failed', 'changes'].includes(state.kind)
           "
@@ -252,12 +233,6 @@ async function clearSchedule() {
       </span>
     </div>
 
-    <Fold :open="nodesOpen">
-      <div v-if="versions" class="px-3 pb-3">
-        <K3sNodeList :versions="versions" :maintenance="maintenance" />
-      </div>
-    </Fold>
-
     <K3sUpdateDialog
       v-if="versions && updatable"
       v-model:open="dialogOpen"
@@ -268,8 +243,6 @@ async function clearSchedule() {
       :behind="target ? nodesBehind(versions) : 0"
       :changes="changes"
       :initial="changing ? scheduledAt : null"
-    >
-      <K3sNodeList :versions="versions" :maintenance="maintenance" />
-    </K3sUpdateDialog>
+    />
   </section>
 </template>

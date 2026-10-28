@@ -144,9 +144,9 @@ describe("the header update area", () => {
     );
     expect(find("k3s-notice")!.textContent).toContain("2 of 3 nodes need it");
 
+    expect(find("k3s-notice")!.textContent).not.toContain("node-a");
+
     await click("k3s-schedule");
-    expect(find("k3s-node-panel")!.textContent).toContain("Needs update");
-    expect(find("k3s-node-node-b")!.textContent).toContain("Current");
 
     await click("k3s-when-now");
     const before = Date.now();
@@ -267,12 +267,12 @@ describe("the header update area", () => {
     });
 
     await openUpdates();
-    await click("k3s-notice-nodes");
 
     expect(find("k3s-jump")).toBeNull();
     expect(find("k3s-notice")!.textContent).not.toContain("need it");
-    expect(find("k3s-node-panel")!.textContent).toContain("Current");
-    expect(find("k3s-node-node-a")!.textContent).toContain("Changes waiting");
+    expect(find("k3s-notice")!.textContent).toContain(
+      "1 node has changes waiting",
+    );
   });
 
   it("follows a running update node by node", async () => {
@@ -297,9 +297,7 @@ describe("the header update area", () => {
     await openUpdates();
 
     expect(find("k3s-progress")!.textContent).toContain("1 of 2 done");
-    expect(find("k3s-node-panel")!.textContent).toContain("Updated");
-    expect(find("k3s-node-node-a")!.textContent).toContain("Updating");
-    expect(find("k3s-node-node-b")!.textContent).toContain("Current");
+    expect(find("k3s-notice")!.textContent).not.toContain("node-b");
     expect(find("k3s-stop")).not.toBeNull();
   });
 });

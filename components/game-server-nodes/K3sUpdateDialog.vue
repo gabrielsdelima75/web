@@ -79,8 +79,6 @@ const saving = ref(false);
         </AlertDialogDescription>
       </AlertDialogHeader>
 
-      <slot />
-
       <K3sScheduleForm
         :initial="initial"
         @saving="(value) => (saving = value)"

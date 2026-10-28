@@ -364,36 +364,6 @@ describe("K3sCard", () => {
     expect(written()).toHaveLength(1);
   });
 
-  it("lists each node with what the update does to it", async () => {
-    settings({
-      k3s_versions: {
-        ...VERSIONS,
-        nodes: [
-          ...VERSIONS.nodes,
-          {
-            name: "node-b",
-            version: "v1.34.4+k3s1",
-            server: false,
-            ready: false,
-          },
-        ],
-      },
-    });
-    await mountCard();
-    expect(document.body.querySelector('[data-testid="k3s-nodes"]')).toBeNull();
-
-    click("k3s-nodes-toggle");
-    await flushPromises();
-
-    const row = (name: string) =>
-      document.body.querySelector(`[data-testid="k3s-node-${name}"]`)
-        ?.textContent;
-    expect(row("panel")).toContain("panel server");
-    expect(row("panel")).toContain("Needs update");
-    expect(row("node-a")).toContain("Needs update");
-    expect(row("node-b")).toContain("Offline, skipped");
-  });
-
   it("moves a scheduled update to a new time", async () => {
     settings({
       k3s_versions: VERSIONS,

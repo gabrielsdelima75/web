@@ -2384,6 +2384,11 @@
               "description": "Un nodo o una región se desconectó o volvió, o a un nodo le queda poco espacio en disco.",
               "example": "Nodo de servidor de juego desconectado"
             },
+            "ClusterUpdate": {
+              "title": "Actualizaciones de Kubernetes",
+              "description": "Hay una nueva versión de k3s, o una actualización de k3s programada está por llegar, terminó o falló.",
+              "example": "Actualización de Kubernetes disponible"
+            },
             "DedicatedServerStatus": {
               "title": "Servidores dedicados",
               "description": "Un servidor dedicado se desconectó o su plugin está desactualizado.",
@@ -5093,6 +5098,52 @@
             "success": "Correcto",
             "idle": "Sin ejecutar"
           }
+        }
+      },
+      "k3s": {
+        "title": "Kubernetes",
+        "not_installed": "Ejecuta ./update.sh en el panel para activar las actualizaciones de k3s",
+        "up_to_date": "Al día",
+        "available": "{version} disponible",
+        "steps": "{count} versiones menores hasta stable",
+        "catch_up": "{count} nodo por detrás de {version} | {count} nodos por detrás de {version}",
+        "changes": "{count} nodo tiene cambios pendientes | {count} nodos tienen cambios pendientes",
+        "files_failed": "Los archivos de configuración fallaron en {count} nodo | Los archivos de configuración fallaron en {count} nodos",
+        "scheduled": "Actualización a {version} programada para {time}",
+        "scheduled_changes": "Cambios de nodos programados para {time}",
+        "running": "Actualizando a {version} · {node}",
+        "updating": "Actualizando a {version}",
+        "applying": "Aplicando cambios del nodo · {node}",
+        "applying_any": "Aplicando cambios de los nodos",
+        "stopping": "Se detendrá tras {node}",
+        "failed": "La última actualización falló",
+        "update": "Actualizar",
+        "cancel": "Cancelar actualización",
+        "stop": "Detener tras este nodo",
+        "dialog": {
+          "title": "Actualizar k3s",
+          "from_to": "De {from} a {to}",
+          "catch_up": "{count} nodo va por detrás del servidor del panel, que ya usa {to}. Se pone al día con ella. | {count} nodos van por detrás del servidor del panel, que ya usa {to}. Cada uno se pone al día con ella.",
+          "changes": "{count} nodo tiene cambios que se aplican al reiniciar k3s-agent. | {count} nodos tienen cambios que se aplican al reiniciar k3s-agent.",
+          "steps": "{count} versiones menores hasta stable ({stable}). k3s avanza de una en una, así que cada una se instala por turno en el mismo mantenimiento.",
+          "what_happens": "Qué pasa:",
+          "server": "Primero se actualiza el servidor del panel. Durante un minuto aproximadamente no pueden empezar partidas ni streams nuevos; las partidas en curso siguen.",
+          "nodes": "Después cada nodo de juego, de uno en uno. Un nodo no recibe partidas nuevas mientras se actualiza; las partidas que ya tiene siguen.",
+          "restart": "Cada nodo, de uno en uno: no recibe partidas nuevas, se escriben sus cambios y k3s-agent se reinicia. Las partidas que ya tiene siguen.",
+          "offline": "Los nodos sin conexión se omiten y se listan al terminar.",
+          "banner": "Los jugadores ven un aviso de mantenimiento desde 24 horas antes.",
+          "risk": "En raras ocasiones una actualización reinicia algo que estaba en marcha, así que elige un momento tranquilo.",
+          "schedule": "Programar",
+          "now": "Ahora",
+          "when": "Empezar a las (tu hora local)",
+          "start_now": "Actualizar ahora",
+          "start_scheduled": "Programar actualización"
+        },
+        "toast": {
+          "scheduled": "Actualización de k3s programada",
+          "started": "Actualización de k3s iniciada",
+          "cancelled": "Actualización de k3s cancelada",
+          "failed": "No se pudo guardar la actualización de k3s"
         }
       },
       "hide_offline": "Ocultar nodos desconectados",

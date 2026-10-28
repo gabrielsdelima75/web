@@ -2384,6 +2384,11 @@
               "description": "En node eller region gik offline eller kom tilbage, eller en node er ved at løbe tør for diskplads.",
               "example": "Spilserver-node offline"
             },
+            "ClusterUpdate": {
+              "title": "Kubernetes-opdateringer",
+              "description": "En ny k3s-version er udkommet, eller en planlagt k3s-opdatering nærmer sig, er færdig eller mislykkedes.",
+              "example": "Kubernetes-opdatering tilgængelig"
+            },
             "DedicatedServerStatus": {
               "title": "Dedikerede servere",
               "description": "En dedikeret server gik offline, eller dens plugin er forældet.",
@@ -5093,6 +5098,52 @@
             "success": "Sund",
             "idle": "Ikke kørt"
           }
+        }
+      },
+      "k3s": {
+        "title": "Kubernetes",
+        "not_installed": "Kør ./update.sh på panelet for at slå k3s-opdateringer til",
+        "up_to_date": "Opdateret",
+        "available": "{version} tilgængelig",
+        "steps": "{count} minor-versioner til stable",
+        "catch_up": "{count} node bag {version} | {count} noder bag {version}",
+        "changes": "{count} node har ventende ændringer | {count} noder har ventende ændringer",
+        "files_failed": "Opsætningsfiler fejlede på {count} node | Opsætningsfiler fejlede på {count} noder",
+        "scheduled": "Opdatering til {version} planlagt til {time}",
+        "scheduled_changes": "Nodeændringer planlagt til {time}",
+        "running": "Opdaterer til {version} · {node}",
+        "updating": "Opdaterer til {version}",
+        "applying": "Anvender nodeændringer · {node}",
+        "applying_any": "Anvender nodeændringer",
+        "stopping": "Stopper efter {node}",
+        "failed": "Seneste opdatering mislykkedes",
+        "update": "Opdater",
+        "cancel": "Annuller opdatering",
+        "stop": "Stop efter denne node",
+        "dialog": {
+          "title": "Opdater k3s",
+          "from_to": "Fra {from} til {to}",
+          "catch_up": "{count} node er bag panelserveren, som allerede kører {to}. Den bringes op på den. | {count} noder er bag panelserveren, som allerede kører {to}. Hver af dem bringes op på den.",
+          "changes": "{count} node har ændringer, der træder i kraft, når k3s-agent genstarter. | {count} noder har ændringer, der træder i kraft, når k3s-agent genstarter.",
+          "steps": "{count} minor-versioner til stable ({stable}). k3s flytter én ad gangen, så de installeres efter tur i samme vedligeholdelse.",
+          "what_happens": "Hvad der sker:",
+          "server": "Panelserveren opdateres først. I omkring et minut kan nye kampe og streams ikke starte; kampe der allerede kører fortsætter.",
+          "nodes": "Derefter hver spilnode, én ad gangen. En node får ingen nye kampe mens den opdateres; kampe der allerede kører på den fortsætter.",
+          "restart": "Én node ad gangen: den får ingen nye kampe, dens ændringer skrives, og k3s-agent genstarter. Kampe, der allerede kører på den, fortsætter.",
+          "offline": "Offline noder springes over og listes, når den er færdig.",
+          "banner": "Spillere ser et vedligeholdelsesbanner fra 24 timer før.",
+          "risk": "En sjælden gang genstarter en opdatering noget der kørte, så vælg et roligt tidspunkt.",
+          "schedule": "Planlæg",
+          "now": "Nu",
+          "when": "Start kl. (din lokale tid)",
+          "start_now": "Opdater nu",
+          "start_scheduled": "Planlæg opdatering"
+        },
+        "toast": {
+          "scheduled": "k3s-opdatering planlagt",
+          "started": "k3s-opdatering startet",
+          "cancelled": "k3s-opdatering annulleret",
+          "failed": "Kunne ikke gemme k3s-opdateringen"
         }
       },
       "hide_offline": "Skjul offline noder",

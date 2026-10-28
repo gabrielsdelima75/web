@@ -2384,6 +2384,11 @@
               "description": "Um nó ou região ficou offline ou voltou, ou um nó está com pouco espaço em disco.",
               "example": "Nó de Servidor de Jogo Offline"
             },
+            "ClusterUpdate": {
+              "title": "Atualizações do Kubernetes",
+              "description": "Saiu uma nova versão do k3s, ou uma atualização agendada do k3s está chegando, terminou ou falhou.",
+              "example": "Atualização do Kubernetes disponível"
+            },
             "DedicatedServerStatus": {
               "title": "Servidores dedicados",
               "description": "Um servidor dedicado ficou offline ou o plugin dele está desatualizado.",
@@ -5093,6 +5098,52 @@
             "success": "Saudável",
             "idle": "Não executado"
           }
+        }
+      },
+      "k3s": {
+        "title": "Kubernetes",
+        "not_installed": "Execute ./update.sh no painel para ativar as atualizações do k3s",
+        "up_to_date": "Atualizado",
+        "available": "{version} disponível",
+        "steps": "{count} versões menores até stable",
+        "catch_up": "{count} nó atrás de {version} | {count} nós atrás de {version}",
+        "changes": "{count} nó tem mudanças pendentes | {count} nós têm mudanças pendentes",
+        "files_failed": "Os arquivos de configuração falharam em {count} nó | Os arquivos de configuração falharam em {count} nós",
+        "scheduled": "Atualização para {version} agendada para {time}",
+        "scheduled_changes": "Mudanças nos nós agendadas para {time}",
+        "running": "Atualizando para {version} · {node}",
+        "updating": "Atualizando para {version}",
+        "applying": "Aplicando mudanças do nó · {node}",
+        "applying_any": "Aplicando mudanças dos nós",
+        "stopping": "Parando após {node}",
+        "failed": "A última atualização falhou",
+        "update": "Atualizar",
+        "cancel": "Cancelar atualização",
+        "stop": "Parar após este nó",
+        "dialog": {
+          "title": "Atualizar k3s",
+          "from_to": "De {from} para {to}",
+          "catch_up": "{count} nó está atrás do servidor do painel, que já usa {to}. Ele é atualizado para ela. | {count} nós estão atrás do servidor do painel, que já usa {to}. Cada um é atualizado para ela.",
+          "changes": "{count} nó tem mudanças que valem quando o k3s-agent reinicia. | {count} nós têm mudanças que valem quando o k3s-agent reinicia.",
+          "steps": "{count} versões menores até stable ({stable}). O k3s avança uma de cada vez, então cada uma é instalada na sua vez na mesma manutenção.",
+          "what_happens": "O que acontece:",
+          "server": "O servidor do painel é atualizado primeiro. Por cerca de um minuto, novas partidas e streams não podem começar; partidas em andamento continuam.",
+          "nodes": "Depois cada nó de jogo, um de cada vez. Um nó não recebe novas partidas enquanto atualiza; as partidas que já estão nele continuam.",
+          "restart": "Um nó de cada vez: ele não recebe novas partidas, suas mudanças são gravadas e o k3s-agent reinicia. Partidas que já estão nele continuam.",
+          "offline": "Nós offline são ignorados e listados no final.",
+          "banner": "Os jogadores veem um aviso de manutenção a partir de 24 horas antes.",
+          "risk": "Raramente uma atualização reinicia algo que estava rodando, então escolha um horário tranquilo.",
+          "schedule": "Agendar",
+          "now": "Agora",
+          "when": "Começar às (seu horário local)",
+          "start_now": "Atualizar agora",
+          "start_scheduled": "Agendar atualização"
+        },
+        "toast": {
+          "scheduled": "Atualização do k3s agendada",
+          "started": "Atualização do k3s iniciada",
+          "cancelled": "Atualização do k3s cancelada",
+          "failed": "Não foi possível salvar a atualização do k3s"
         }
       },
       "hide_offline": "Ocultar Nós Offline",

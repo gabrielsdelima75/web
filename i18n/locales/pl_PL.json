@@ -2384,6 +2384,11 @@
               "description": "Węzeł lub region przeszedł w tryb offline albo wrócił, lub na węźle kończy się miejsce na dysku.",
               "example": "Węzeł serwera gry offline"
             },
+            "ClusterUpdate": {
+              "title": "Aktualizacje Kubernetes",
+              "description": "Wyszła nowa wersja k3s albo zaplanowana aktualizacja k3s się zbliża, zakończyła lub nie powiodła.",
+              "example": "Dostępna aktualizacja Kubernetes"
+            },
             "DedicatedServerStatus": {
               "title": "Serwery dedykowane",
               "description": "Serwer dedykowany przeszedł w tryb offline lub jego wtyczka jest nieaktualna.",
@@ -5093,6 +5098,52 @@
             "success": "Sprawne",
             "idle": "Nie uruchomiono"
           }
+        }
+      },
+      "k3s": {
+        "title": "Kubernetes",
+        "not_installed": "Uruchom ./update.sh na panelu, aby włączyć aktualizacje k3s",
+        "up_to_date": "Aktualne",
+        "available": "Dostępna wersja {version}",
+        "steps": "{count} wersje minor do stable",
+        "catch_up": "{count} węzeł za {version} | {count} węzły za {version}",
+        "changes": "{count} węzeł ma oczekujące zmiany | {count} węzły mają oczekujące zmiany",
+        "files_failed": "Pliki konfiguracyjne nie powiodły się na {count} węźle | Pliki konfiguracyjne nie powiodły się na {count} węzłach",
+        "scheduled": "Aktualizacja do {version} zaplanowana na {time}",
+        "scheduled_changes": "Zmiany węzłów zaplanowane na {time}",
+        "running": "Aktualizacja do {version} · {node}",
+        "updating": "Aktualizacja do {version}",
+        "applying": "Stosowanie zmian węzła · {node}",
+        "applying_any": "Stosowanie zmian węzłów",
+        "stopping": "Zatrzyma się po {node}",
+        "failed": "Ostatnia aktualizacja nie powiodła się",
+        "update": "Aktualizuj",
+        "cancel": "Anuluj aktualizację",
+        "stop": "Zatrzymaj po tym węźle",
+        "dialog": {
+          "title": "Aktualizuj k3s",
+          "from_to": "Z {from} do {to}",
+          "catch_up": "{count} węzeł jest za serwerem panelu, który już działa na {to}. Zostanie do niej podniesiony. | {count} węzły są za serwerem panelu, który już działa na {to}. Każdy zostanie do niej podniesiony.",
+          "changes": "{count} węzeł ma zmiany, które zadziałają po restarcie k3s-agent. | {count} węzły mają zmiany, które zadziałają po restarcie k3s-agent.",
+          "steps": "{count} wersje minor do stable ({stable}). k3s przechodzi o jedną naraz, więc każda instaluje się po kolei w tej samej przerwie technicznej.",
+          "what_happens": "Co się stanie:",
+          "server": "Najpierw aktualizuje się serwer panelu. Przez około minutę nie mogą wystartować nowe mecze ani streamy; trwające mecze toczą się dalej.",
+          "nodes": "Potem każdy węzeł gry, po jednym. Węzeł nie dostaje nowych meczów podczas aktualizacji; mecze już na nim trwają dalej.",
+          "restart": "Po jednym węźle: nie dostaje nowych meczów, jego zmiany są zapisywane i k3s-agent się restartuje. Mecze już na nim trwają dalej.",
+          "offline": "Węzły offline są pomijane i wymieniane na końcu.",
+          "banner": "Gracze widzą baner o przerwie technicznej od 24 godzin wcześniej.",
+          "risk": "Rzadko aktualizacja restartuje coś, co działało, więc wybierz spokojną porę.",
+          "schedule": "Zaplanuj",
+          "now": "Teraz",
+          "when": "Start o (twój czas lokalny)",
+          "start_now": "Aktualizuj teraz",
+          "start_scheduled": "Zaplanuj aktualizację"
+        },
+        "toast": {
+          "scheduled": "Zaplanowano aktualizację k3s",
+          "started": "Rozpoczęto aktualizację k3s",
+          "cancelled": "Anulowano aktualizację k3s",
+          "failed": "Nie udało się zapisać aktualizacji k3s"
         }
       },
       "hide_offline": "Ukryj węzły offline",

@@ -17,6 +17,7 @@ import NodeStatsPoll from "~/components/game-server-nodes/NodeStatsPoll.vue";
 import NodeRemoveDialog from "~/components/game-server-nodes/NodeRemoveDialog.vue";
 import SetupDialog from "~/components/game-server-nodes/SetupDialog.vue";
 import Cs2BuildCard from "~/components/game-server-nodes/Cs2BuildCard.vue";
+import K3sCard from "~/components/game-server-nodes/K3sCard.vue";
 import AdminSearch from "~/components/admin/AdminSearch.vue";
 import FilterMenu from "~/components/common/FilterMenu.vue";
 import FilterToggle from "~/components/common/FilterToggle.vue";
@@ -748,6 +749,10 @@ onBeforeUnmount(() => stopTier?.());
     <div class="min-w-0">
       <PageTransition v-if="currentGameVersion" class="gsn-cap">
         <Cs2BuildCard :current-version="currentGameVersion" />
+      </PageTransition>
+
+      <PageTransition class="gsn-cap">
+        <K3sCard />
       </PageTransition>
 
       <PageTransition

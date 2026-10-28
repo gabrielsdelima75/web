@@ -2384,6 +2384,11 @@
               "description": "Bir düğüm ya da bölge çevrimdışı oldu veya geri geldi ya da bir düğümün disk alanı azaldı.",
               "example": "Oyun Sunucusu Düğümü Çevrimdışı"
             },
+            "ClusterUpdate": {
+              "title": "Kubernetes güncellemeleri",
+              "description": "Yeni bir k3s sürümü çıktı ya da planlanan bir k3s güncellemesi yaklaşıyor, bitti veya başarısız oldu.",
+              "example": "Kubernetes güncellemesi mevcut"
+            },
             "DedicatedServerStatus": {
               "title": "Özel sunucular",
               "description": "Bir özel sunucu çevrimdışı oldu ya da eklentisi güncel değil.",
@@ -5093,6 +5098,52 @@
             "success": "Sağlıklı",
             "idle": "Çalıştırılmadı"
           }
+        }
+      },
+      "k3s": {
+        "title": "Kubernetes",
+        "not_installed": "k3s güncellemelerini açmak için panelde ./update.sh çalıştırın",
+        "up_to_date": "Güncel",
+        "available": "{version} mevcut",
+        "steps": "stable'a {count} minor sürüm",
+        "catch_up": "{count} düğüm {version} sürümünün gerisinde | {count} düğüm {version} sürümünün gerisinde",
+        "changes": "{count} düğümde bekleyen değişiklik var | {count} düğümde bekleyen değişiklik var",
+        "files_failed": "Kurulum dosyaları {count} düğümde başarısız oldu | Kurulum dosyaları {count} düğümde başarısız oldu",
+        "scheduled": "{version} güncellemesi {time} için planlandı",
+        "scheduled_changes": "Düğüm değişiklikleri {time} için planlandı",
+        "running": "{version} sürümüne güncelleniyor · {node}",
+        "updating": "{version} sürümüne güncelleniyor",
+        "applying": "Düğüm değişiklikleri uygulanıyor · {node}",
+        "applying_any": "Düğüm değişiklikleri uygulanıyor",
+        "stopping": "{node} sonrasında duracak",
+        "failed": "Son güncelleme başarısız oldu",
+        "update": "Güncelle",
+        "cancel": "Güncellemeyi iptal et",
+        "stop": "Bu düğümden sonra dur",
+        "dialog": {
+          "title": "k3s'i güncelle",
+          "from_to": "{from} sürümünden {to} sürümüne",
+          "catch_up": "{count} düğüm, zaten {to} çalıştıran panel sunucusunun gerisinde. Her biri bu sürüme yükseltilir. | {count} düğüm, zaten {to} çalıştıran panel sunucusunun gerisinde. Her biri bu sürüme yükseltilir.",
+          "changes": "{count} düğümde k3s-agent yeniden başladığında uygulanacak değişiklikler var. | {count} düğümde k3s-agent yeniden başladığında uygulanacak değişiklikler var.",
+          "steps": "stable'a ({stable}) {count} minor sürüm var. k3s her seferinde bir sürüm ilerler, bu yüzden her biri aynı bakımda sırayla kurulur.",
+          "what_happens": "Ne olacak:",
+          "server": "Önce panel sunucusu güncellenir. Yaklaşık bir dakika yeni maçlar ve yayınlar başlayamaz; devam eden maçlar sürer.",
+          "nodes": "Sonra her oyun düğümü, teker teker. Güncellenirken bir düğüme yeni maç gönderilmez; üzerinde süren maçlar devam eder.",
+          "restart": "Her seferinde bir düğüm: ona yeni maç gönderilmez, değişiklikleri yazılır ve k3s-agent yeniden başlar. Üzerinde süren maçlar devam eder.",
+          "offline": "Çevrimdışı düğümler atlanır ve sonunda listelenir.",
+          "banner": "Oyuncular 24 saat önceden bir bakım duyurusu görür.",
+          "risk": "Nadiren bir güncelleme çalışan bir şeyi yeniden başlatır, bu yüzden sakin bir zaman seçin.",
+          "schedule": "Planla",
+          "now": "Şimdi",
+          "when": "Başlangıç (yerel saatiniz)",
+          "start_now": "Şimdi güncelle",
+          "start_scheduled": "Güncellemeyi planla"
+        },
+        "toast": {
+          "scheduled": "k3s güncellemesi planlandı",
+          "started": "k3s güncellemesi başladı",
+          "cancelled": "k3s güncellemesi iptal edildi",
+          "failed": "k3s güncellemesi kaydedilemedi"
         }
       },
       "hide_offline": "Çevrimdışı düğümleri gizle",

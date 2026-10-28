@@ -2384,6 +2384,11 @@
               "description": "Un nodo o una regione è andato offline o è tornato online, oppure un nodo ha poco spazio su disco.",
               "example": "Nodo server di gioco offline"
             },
+            "ClusterUpdate": {
+              "title": "Aggiornamenti Kubernetes",
+              "description": "È uscita una nuova versione di k3s, oppure un aggiornamento k3s programmato è in arrivo, è terminato o non è riuscito.",
+              "example": "Aggiornamento Kubernetes disponibile"
+            },
             "DedicatedServerStatus": {
               "title": "Server dedicati",
               "description": "Un server dedicato è andato offline, oppure il suo plugin non è aggiornato.",
@@ -5093,6 +5098,52 @@
             "success": "Tutto ok",
             "idle": "Non eseguito"
           }
+        }
+      },
+      "k3s": {
+        "title": "Kubernetes",
+        "not_installed": "Esegui ./update.sh sul pannello per attivare gli aggiornamenti k3s",
+        "up_to_date": "Aggiornato",
+        "available": "{version} disponibile",
+        "steps": "{count} versioni minori fino a stable",
+        "catch_up": "{count} nodo indietro rispetto a {version} | {count} nodi indietro rispetto a {version}",
+        "changes": "{count} nodo ha modifiche in attesa | {count} nodi hanno modifiche in attesa",
+        "files_failed": "I file di configurazione non sono riusciti su {count} nodo | I file di configurazione non sono riusciti su {count} nodi",
+        "scheduled": "Aggiornamento a {version} programmato per {time}",
+        "scheduled_changes": "Modifiche ai nodi programmate per {time}",
+        "running": "Aggiornamento a {version} · {node}",
+        "updating": "Aggiornamento a {version}",
+        "applying": "Applicazione delle modifiche al nodo · {node}",
+        "applying_any": "Applicazione delle modifiche ai nodi",
+        "stopping": "Si ferma dopo {node}",
+        "failed": "L'ultimo aggiornamento non è riuscito",
+        "update": "Aggiorna",
+        "cancel": "Annulla aggiornamento",
+        "stop": "Fermati dopo questo nodo",
+        "dialog": {
+          "title": "Aggiorna k3s",
+          "from_to": "Da {from} a {to}",
+          "catch_up": "{count} nodo è indietro rispetto al server del pannello, che usa già {to}. Viene allineato. | {count} nodi sono indietro rispetto al server del pannello, che usa già {to}. Ognuno viene allineato.",
+          "changes": "{count} nodo ha modifiche che si applicano al riavvio di k3s-agent. | {count} nodi hanno modifiche che si applicano al riavvio di k3s-agent.",
+          "steps": "{count} versioni minori fino a stable ({stable}). k3s avanza di una alla volta, quindi ognuna si installa a turno nella stessa manutenzione.",
+          "what_happens": "Cosa succede:",
+          "server": "Prima si aggiorna il server del pannello. Per circa un minuto non possono partire nuove partite né stream; le partite in corso continuano.",
+          "nodes": "Poi ogni nodo di gioco, uno alla volta. Un nodo non riceve nuove partite mentre si aggiorna; le partite già in corso su di esso continuano.",
+          "restart": "Un nodo alla volta: non riceve nuove partite, le sue modifiche vengono scritte e k3s-agent si riavvia. Le partite già in corso su di esso continuano.",
+          "offline": "I nodi offline vengono saltati ed elencati alla fine.",
+          "banner": "I giocatori vedono un banner di manutenzione da 24 ore prima.",
+          "risk": "Raramente un aggiornamento riavvia qualcosa che era in esecuzione, quindi scegli un momento tranquillo.",
+          "schedule": "Programma",
+          "now": "Ora",
+          "when": "Inizio alle (ora locale)",
+          "start_now": "Aggiorna ora",
+          "start_scheduled": "Programma aggiornamento"
+        },
+        "toast": {
+          "scheduled": "Aggiornamento k3s programmato",
+          "started": "Aggiornamento k3s avviato",
+          "cancelled": "Aggiornamento k3s annullato",
+          "failed": "Impossibile salvare l'aggiornamento k3s"
         }
       },
       "hide_offline": "Nascondi nodi offline",

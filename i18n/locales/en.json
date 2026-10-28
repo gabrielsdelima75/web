@@ -2384,6 +2384,11 @@
               "description": "A node or region went offline or came back, or a node is low on disk.",
               "example": "Game Server Node Offline"
             },
+            "ClusterUpdate": {
+              "title": "Kubernetes updates",
+              "description": "A new k3s version is out, or a scheduled k3s update is coming up, finished or failed.",
+              "example": "Kubernetes update available"
+            },
             "DedicatedServerStatus": {
               "title": "Dedicated servers",
               "description": "A dedicated server went offline, or its plugin is out of date.",
@@ -5093,6 +5098,52 @@
             "success": "Healthy",
             "idle": "Not run"
           }
+        }
+      },
+      "k3s": {
+        "title": "Kubernetes",
+        "not_installed": "Run ./update.sh on the panel to turn on k3s updates",
+        "up_to_date": "Up to date",
+        "available": "{version} available",
+        "steps": "{count} minor versions to stable",
+        "catch_up": "{count} node behind {version} | {count} nodes behind {version}",
+        "changes": "{count} node has changes waiting | {count} nodes have changes waiting",
+        "files_failed": "Setup files failed on {count} node | Setup files failed on {count} nodes",
+        "scheduled": "Update to {version} scheduled for {time}",
+        "scheduled_changes": "Node changes scheduled for {time}",
+        "running": "Updating to {version} · {node}",
+        "updating": "Updating to {version}",
+        "applying": "Applying node changes · {node}",
+        "applying_any": "Applying node changes",
+        "stopping": "Stopping after {node}",
+        "failed": "Last update failed",
+        "update": "Update",
+        "cancel": "Cancel update",
+        "stop": "Stop after this node",
+        "dialog": {
+          "title": "Update k3s",
+          "from_to": "From {from} to {to}",
+          "catch_up": "{count} node is behind the panel server, which already runs {to}. It is brought up to it. | {count} nodes are behind the panel server, which already runs {to}. Each one is brought up to it.",
+          "changes": "{count} node has changes that apply when k3s-agent restarts. | {count} nodes have changes that apply when k3s-agent restarts.",
+          "steps": "{count} minor versions to stable ({stable}). k3s moves one at a time, so each installs in turn in the same maintenance.",
+          "what_happens": "What happens:",
+          "server": "The panel server updates first. For about a minute, new matches and streams can't start; matches already running keep going.",
+          "nodes": "Then each game node, one at a time. No new matches go to a node while it updates; matches already on it keep going.",
+          "restart": "Each node, one at a time: no new matches go to it, its changes are written and k3s-agent restarts. Matches already on it keep going.",
+          "offline": "Offline nodes are skipped and listed when it finishes.",
+          "banner": "Players see a maintenance banner from 24 hours before.",
+          "risk": "Rarely, an update restarts something that was running, so pick a quiet time.",
+          "schedule": "Schedule",
+          "now": "Now",
+          "when": "Start at (your local time)",
+          "start_now": "Update now",
+          "start_scheduled": "Schedule update"
+        },
+        "toast": {
+          "scheduled": "k3s update scheduled",
+          "started": "k3s update started",
+          "cancelled": "k3s update cancelled",
+          "failed": "Could not save the k3s update"
         }
       },
       "hide_offline": "Hide offline nodes",

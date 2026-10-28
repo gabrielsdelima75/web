@@ -2384,6 +2384,11 @@
               "description": "En nod eller region gick offline eller kom tillbaka, eller så har en nod ont om diskutrymme.",
               "example": "Spelservernod offline"
             },
+            "ClusterUpdate": {
+              "title": "Kubernetes-uppdateringar",
+              "description": "En ny k3s-version har kommit, eller en schemalagd k3s-uppdatering närmar sig, är klar eller misslyckades.",
+              "example": "Kubernetes-uppdatering tillgänglig"
+            },
             "DedicatedServerStatus": {
               "title": "Dedikerade servrar",
               "description": "En dedikerad server gick offline eller så är dess plugin inaktuellt.",
@@ -5093,6 +5098,52 @@
             "success": "Frisk",
             "idle": "Inte körd"
           }
+        }
+      },
+      "k3s": {
+        "title": "Kubernetes",
+        "not_installed": "Kör ./update.sh på panelen för att slå på k3s-uppdateringar",
+        "up_to_date": "Uppdaterad",
+        "available": "{version} tillgänglig",
+        "steps": "{count} minor-versioner till stable",
+        "catch_up": "{count} nod efter {version} | {count} noder efter {version}",
+        "changes": "{count} nod har ändringar som väntar | {count} noder har ändringar som väntar",
+        "files_failed": "Installationsfiler misslyckades på {count} nod | Installationsfiler misslyckades på {count} noder",
+        "scheduled": "Uppdatering till {version} schemalagd till {time}",
+        "scheduled_changes": "Nodändringar schemalagda till {time}",
+        "running": "Uppdaterar till {version} · {node}",
+        "updating": "Uppdaterar till {version}",
+        "applying": "Tillämpar nodändringar · {node}",
+        "applying_any": "Tillämpar nodändringar",
+        "stopping": "Stoppar efter {node}",
+        "failed": "Senaste uppdateringen misslyckades",
+        "update": "Uppdatera",
+        "cancel": "Avbryt uppdatering",
+        "stop": "Stoppa efter den här noden",
+        "dialog": {
+          "title": "Uppdatera k3s",
+          "from_to": "Från {from} till {to}",
+          "catch_up": "{count} nod ligger efter panelservern, som redan kör {to}. Den uppdateras till den. | {count} noder ligger efter panelservern, som redan kör {to}. Var och en uppdateras till den.",
+          "changes": "{count} nod har ändringar som gäller när k3s-agent startas om. | {count} noder har ändringar som gäller när k3s-agent startas om.",
+          "steps": "{count} minor-versioner till stable ({stable}). k3s flyttar en i taget, så varje installeras i tur och ordning under samma underhåll.",
+          "what_happens": "Vad som händer:",
+          "server": "Panelservern uppdateras först. Under ungefär en minut kan nya matcher och streams inte starta; matcher som redan pågår fortsätter.",
+          "nodes": "Sedan varje spelnod, en i taget. En nod får inga nya matcher medan den uppdateras; matcher som redan pågår på den fortsätter.",
+          "restart": "En nod i taget: den får inga nya matcher, dess ändringar skrivs och k3s-agent startas om. Matcher som redan pågår på den fortsätter.",
+          "offline": "Noder som är offline hoppas över och listas när den är klar.",
+          "banner": "Spelare ser en underhållsbanner från 24 timmar innan.",
+          "risk": "Ibland startar en uppdatering om något som körde, så välj en lugn tid.",
+          "schedule": "Schemalägg",
+          "now": "Nu",
+          "when": "Starta kl. (din lokala tid)",
+          "start_now": "Uppdatera nu",
+          "start_scheduled": "Schemalägg uppdatering"
+        },
+        "toast": {
+          "scheduled": "k3s-uppdatering schemalagd",
+          "started": "k3s-uppdatering startad",
+          "cancelled": "k3s-uppdatering avbruten",
+          "failed": "Kunde inte spara k3s-uppdateringen"
         }
       },
       "hide_offline": "Dölj offline-noder",

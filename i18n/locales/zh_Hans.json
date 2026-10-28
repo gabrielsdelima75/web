@@ -2384,6 +2384,11 @@
               "description": "节点或区域离线或恢复在线，或节点磁盘空间不足。",
               "example": "游戏服务器节点离线"
             },
+            "ClusterUpdate": {
+              "title": "Kubernetes 更新",
+              "description": "有新的 k3s 版本发布，或已安排的 k3s 更新即将开始、已完成或失败。",
+              "example": "Kubernetes 更新可用"
+            },
             "DedicatedServerStatus": {
               "title": "专用服务器",
               "description": "专用服务器离线，或其插件已过时。",
@@ -5093,6 +5098,52 @@
             "success": "正常",
             "idle": "未运行"
           }
+        }
+      },
+      "k3s": {
+        "title": "Kubernetes",
+        "not_installed": "在面板上运行 ./update.sh 以启用 k3s 更新",
+        "up_to_date": "已是最新",
+        "available": "{version} 可用",
+        "steps": "距 stable 还有 {count} 个次版本",
+        "catch_up": "{count} 个节点落后于 {version} | {count} 个节点落后于 {version}",
+        "changes": "{count} 个节点有待应用的更改 | {count} 个节点有待应用的更改",
+        "files_failed": "{count} 个节点上的配置文件应用失败 | {count} 个节点上的配置文件应用失败",
+        "scheduled": "更新到 {version} 已安排在 {time}",
+        "scheduled_changes": "节点更改已安排在 {time}",
+        "running": "正在更新到 {version} · {node}",
+        "updating": "正在更新到 {version}",
+        "applying": "正在应用节点更改 · {node}",
+        "applying_any": "正在应用节点更改",
+        "stopping": "将在 {node} 后停止",
+        "failed": "上次更新失败",
+        "update": "更新",
+        "cancel": "取消更新",
+        "stop": "在此节点后停止",
+        "dialog": {
+          "title": "更新 k3s",
+          "from_to": "从 {from} 到 {to}",
+          "catch_up": "{count} 个节点落后于已运行 {to} 的面板服务器，将逐一更新到该版本。 | {count} 个节点落后于已运行 {to} 的面板服务器，将逐一更新到该版本。",
+          "changes": "{count} 个节点有将在 k3s-agent 重启时生效的更改。 | {count} 个节点有将在 k3s-agent 重启时生效的更改。",
+          "steps": "距 stable（{stable}）还有 {count} 个次版本。k3s 每次只能前进一个，因此会在同一次维护中依次安装。",
+          "what_happens": "将会发生：",
+          "server": "首先更新面板服务器。大约一分钟内无法开始新的比赛和直播；进行中的比赛会继续。",
+          "nodes": "然后逐个更新每个游戏节点。节点更新期间不会分配新比赛；其上进行中的比赛会继续。",
+          "restart": "逐个节点进行：不分配新比赛，写入其更改并重启 k3s-agent。其上进行中的比赛会继续。",
+          "offline": "离线节点会被跳过，并在完成时列出。",
+          "banner": "玩家会在 24 小时前看到维护横幅。",
+          "risk": "极少数情况下，更新会重启正在运行的内容，因此请选择空闲时段。",
+          "schedule": "安排",
+          "now": "现在",
+          "when": "开始时间（本地时间）",
+          "start_now": "立即更新",
+          "start_scheduled": "安排更新"
+        },
+        "toast": {
+          "scheduled": "已安排 k3s 更新",
+          "started": "已开始 k3s 更新",
+          "cancelled": "已取消 k3s 更新",
+          "failed": "无法保存 k3s 更新"
         }
       },
       "hide_offline": "隐藏离线节点",

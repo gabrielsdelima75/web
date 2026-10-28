@@ -2384,6 +2384,11 @@
               "description": "Un nœud ou une région est passé hors ligne ou est revenu, ou un nœud manque d'espace disque.",
               "example": "Nœud de serveur de jeu hors ligne"
             },
+            "ClusterUpdate": {
+              "title": "Mises à jour Kubernetes",
+              "description": "Une nouvelle version de k3s est sortie, ou une mise à jour k3s planifiée approche, est terminée ou a échoué.",
+              "example": "Mise à jour Kubernetes disponible"
+            },
             "DedicatedServerStatus": {
               "title": "Serveurs dédiés",
               "description": "Un serveur dédié est passé hors ligne, ou son plugin n'est plus à jour.",
@@ -5093,6 +5098,52 @@
             "success": "Opérationnel",
             "idle": "Non exécuté"
           }
+        }
+      },
+      "k3s": {
+        "title": "Kubernetes",
+        "not_installed": "Lancez ./update.sh sur le panel pour activer les mises à jour k3s",
+        "up_to_date": "À jour",
+        "available": "{version} disponible",
+        "steps": "{count} versions mineures jusqu'à stable",
+        "catch_up": "{count} nœud en retard sur {version} | {count} nœuds en retard sur {version}",
+        "changes": "{count} nœud a des changements en attente | {count} nœuds ont des changements en attente",
+        "files_failed": "Les fichiers de configuration ont échoué sur {count} nœud | Les fichiers de configuration ont échoué sur {count} nœuds",
+        "scheduled": "Mise à jour vers {version} prévue le {time}",
+        "scheduled_changes": "Changements des nœuds prévus le {time}",
+        "running": "Mise à jour vers {version} · {node}",
+        "updating": "Mise à jour vers {version}",
+        "applying": "Application des changements du nœud · {node}",
+        "applying_any": "Application des changements des nœuds",
+        "stopping": "Arrêt après {node}",
+        "failed": "La dernière mise à jour a échoué",
+        "update": "Mettre à jour",
+        "cancel": "Annuler la mise à jour",
+        "stop": "Arrêter après ce nœud",
+        "dialog": {
+          "title": "Mettre à jour k3s",
+          "from_to": "De {from} à {to}",
+          "catch_up": "{count} nœud est en retard sur le serveur du panel, qui utilise déjà {to}. Il est mis à niveau. | {count} nœuds sont en retard sur le serveur du panel, qui utilise déjà {to}. Chacun est mis à niveau.",
+          "changes": "{count} nœud a des changements qui s'appliquent au redémarrage de k3s-agent. | {count} nœuds ont des changements qui s'appliquent au redémarrage de k3s-agent.",
+          "steps": "{count} versions mineures jusqu'à stable ({stable}). k3s avance d'une à la fois, chacune s'installe donc à son tour dans la même maintenance.",
+          "what_happens": "Ce qui se passe :",
+          "server": "Le serveur du panel est mis à jour en premier. Pendant environ une minute, aucun nouveau match ni stream ne peut démarrer ; les matchs en cours continuent.",
+          "nodes": "Puis chaque nœud de jeu, un par un. Un nœud ne reçoit aucun nouveau match pendant sa mise à jour ; les matchs déjà en cours dessus continuent.",
+          "restart": "Un nœud à la fois : il ne reçoit aucun nouveau match, ses changements sont écrits et k3s-agent redémarre. Les matchs déjà en cours dessus continuent.",
+          "offline": "Les nœuds hors ligne sont ignorés et listés à la fin.",
+          "banner": "Les joueurs voient une bannière de maintenance 24 heures avant.",
+          "risk": "Rarement, une mise à jour redémarre quelque chose qui tournait, choisissez donc un moment calme.",
+          "schedule": "Planifier",
+          "now": "Maintenant",
+          "when": "Début à (votre heure locale)",
+          "start_now": "Mettre à jour maintenant",
+          "start_scheduled": "Planifier la mise à jour"
+        },
+        "toast": {
+          "scheduled": "Mise à jour k3s planifiée",
+          "started": "Mise à jour k3s lancée",
+          "cancelled": "Mise à jour k3s annulée",
+          "failed": "Impossible d'enregistrer la mise à jour k3s"
         }
       },
       "hide_offline": "Masquer les nœuds hors ligne",

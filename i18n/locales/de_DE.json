@@ -2384,6 +2384,11 @@
               "description": "Ein Node oder eine Region ist offline gegangen oder wieder da, oder einem Node geht der Speicherplatz aus.",
               "example": "Gameserver-Node offline"
             },
+            "ClusterUpdate": {
+              "title": "Kubernetes-Updates",
+              "description": "Eine neue k3s-Version ist erschienen, oder ein geplantes k3s-Update steht bevor, ist fertig oder fehlgeschlagen.",
+              "example": "Kubernetes-Update verfügbar"
+            },
             "DedicatedServerStatus": {
               "title": "Dedicated Server",
               "description": "Ein Dedicated Server ist offline gegangen oder sein Plugin ist veraltet.",
@@ -5093,6 +5098,52 @@
             "success": "In Ordnung",
             "idle": "Nicht ausgeführt"
           }
+        }
+      },
+      "k3s": {
+        "title": "Kubernetes",
+        "not_installed": "Führe ./update.sh im Panel aus, um k3s-Updates zu aktivieren",
+        "up_to_date": "Aktuell",
+        "available": "{version} verfügbar",
+        "steps": "{count} Minor-Versionen bis Stable",
+        "catch_up": "{count} Node hinter {version} | {count} Nodes hinter {version}",
+        "changes": "{count} Node hat wartende Änderungen | {count} Nodes haben wartende Änderungen",
+        "files_failed": "Setup-Dateien auf {count} Node fehlgeschlagen | Setup-Dateien auf {count} Nodes fehlgeschlagen",
+        "scheduled": "Update auf {version} geplant für {time}",
+        "scheduled_changes": "Node-Änderungen geplant für {time}",
+        "running": "Update auf {version} · {node}",
+        "updating": "Update auf {version}",
+        "applying": "Node-Änderungen werden angewendet · {node}",
+        "applying_any": "Node-Änderungen werden angewendet",
+        "stopping": "Stoppt nach {node}",
+        "failed": "Letztes Update fehlgeschlagen",
+        "update": "Aktualisieren",
+        "cancel": "Update abbrechen",
+        "stop": "Nach diesem Node stoppen",
+        "dialog": {
+          "title": "k3s aktualisieren",
+          "from_to": "Von {from} auf {to}",
+          "catch_up": "{count} Node liegt hinter dem Panel-Server, der bereits {to} nutzt. Er wird darauf aktualisiert. | {count} Nodes liegen hinter dem Panel-Server, der bereits {to} nutzt. Jeder wird darauf aktualisiert.",
+          "changes": "{count} Node hat Änderungen, die beim Neustart von k3s-agent greifen. | {count} Nodes haben Änderungen, die beim Neustart von k3s-agent greifen.",
+          "steps": "{count} Minor-Versionen bis Stable ({stable}). k3s geht nur eine Version auf einmal, daher werden sie nacheinander in derselben Wartung installiert.",
+          "what_happens": "Was passiert:",
+          "server": "Zuerst wird der Panel-Server aktualisiert. Etwa eine Minute lang können keine neuen Matches und Streams starten; laufende Matches gehen weiter.",
+          "nodes": "Dann jeder Game-Node, einer nach dem anderen. Während ein Node aktualisiert wird, bekommt er keine neuen Matches; laufende Matches darauf gehen weiter.",
+          "restart": "Jeder Node einzeln: Er bekommt keine neuen Matches, seine Änderungen werden geschrieben und k3s-agent startet neu. Laufende Matches darauf gehen weiter.",
+          "offline": "Offline-Nodes werden übersprungen und am Ende aufgelistet.",
+          "banner": "Spieler sehen 24 Stunden vorher ein Wartungsbanner.",
+          "risk": "Selten startet ein Update etwas Laufendes neu, wähle also eine ruhige Zeit.",
+          "schedule": "Planen",
+          "now": "Jetzt",
+          "when": "Start um (deine Ortszeit)",
+          "start_now": "Jetzt aktualisieren",
+          "start_scheduled": "Update planen"
+        },
+        "toast": {
+          "scheduled": "k3s-Update geplant",
+          "started": "k3s-Update gestartet",
+          "cancelled": "k3s-Update abgebrochen",
+          "failed": "Das k3s-Update konnte nicht gespeichert werden"
         }
       },
       "hide_offline": "Offline-Nodes ausblenden",

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -16,6 +16,7 @@ const uploadResult = ref<{
   message: string;
 } | null>(null);
 const isDragging = ref(false);
+let dragDepth = 0;
 const apiDomain = useRuntimeConfig().public.apiDomain;
 const fileInput = ref<HTMLInputElement | null>(null);
 
@@ -37,8 +38,33 @@ function handleFileSelect(event: Event) {
   target.value = "";
 }
 
-function handleDrop(event: DragEvent) {
+function isFileDrag(event: DragEvent) {
+  return Array.from(event.dataTransfer?.types ?? []).includes("Files");
+}
+
+function handleDragEnter(event: DragEvent) {
+  if (!isFileDrag(event)) return;
+  dragDepth++;
+  isDragging.value = true;
+}
+
+function handleDragLeave(event: DragEvent) {
+  if (!isFileDrag(event)) return;
+  dragDepth = Math.max(0, dragDepth - 1);
+  if (dragDepth === 0) {
+    isDragging.value = false;
+  }
+}
+
+function handleDragOver(event: DragEvent) {
+  if (!isFileDrag(event)) return;
   event.preventDefault();
+}
+
+function handleDrop(event: DragEvent) {
+  if (!isFileDrag(event)) return;
+  event.preventDefault();
+  dragDepth = 0;
   isDragging.value = false;
   if (uploadingDemo.value) return;
   const file = event.dataTransfer?.files?.[0];
@@ -53,6 +79,22 @@ function handleDrop(event: DragEvent) {
   }
   void uploadDemo(file);
 }
+
+// A file dropped anywhere on the page is uploaded: the browser would
+// otherwise open it in place of the panel.
+onMounted(() => {
+  window.addEventListener("dragenter", handleDragEnter);
+  window.addEventListener("dragleave", handleDragLeave);
+  window.addEventListener("dragover", handleDragOver);
+  window.addEventListener("drop", handleDrop);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("dragenter", handleDragEnter);
+  window.removeEventListener("dragleave", handleDragLeave);
+  window.removeEventListener("dragover", handleDragOver);
+  window.removeEventListener("drop", handleDrop);
+});
 
 function clearUpload() {
   uploadedFile.value = null;
@@ -191,7 +233,7 @@ async function uploadDemo(file: File) {
 <template>
   <div class="grid gap-3">
     <div
-      class="rounded-lg border-2 border-dashed transition-colors p-6 text-center"
+      class="rounded-lg border-2 border-dashed transition-colors px-6 py-12 text-center"
       :class="[
         isDragging
           ? 'border-primary bg-primary/5'
@@ -203,10 +245,6 @@ async function uploadDemo(file: File) {
       @click="triggerFileInput"
       @keydown.enter.prevent="triggerFileInput"
       @keydown.space.prevent="triggerFileInput"
-      @drop="handleDrop"
-      @dragover.prevent
-      @dragenter.prevent="isDragging = true"
-      @dragleave.prevent="isDragging = false"
     >
       <Upload
         class="w-8 h-8 mx-auto mb-2"

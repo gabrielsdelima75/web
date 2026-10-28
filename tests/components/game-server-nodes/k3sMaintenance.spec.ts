@@ -2,8 +2,10 @@ import { describe, expect, it } from "vitest";
 import {
   filesFailed,
   k3sCardState,
+  k3sNodeStatus,
   readJsonSetting,
   type K3sMaintenance,
+  type K3sNode,
   type K3sVersions,
 } from "~/components/game-server-nodes/k3sMaintenance";
 
@@ -170,5 +172,76 @@ describe("k3sCardState", () => {
         }),
       ),
     ).toBe(1);
+  });
+});
+
+describe("k3sNodeStatus", () => {
+  const OLD = "v1.35.2+k3s1";
+  const NEW = "v1.36.5+k3s1";
+  const CHANGES = ["/etc/rancher/k3s/config.yaml"];
+  const node = (
+    name: string,
+    version: string,
+    extra: Partial<K3sNode> = {},
+  ): K3sNode => ({ name, version, server: false, ready: true, ...extra });
+  const statuses = (v: K3sVersions, m: K3sMaintenance | null = null) =>
+    Object.fromEntries(
+      v.nodes.map((entry) => [entry.name, k3sNodeStatus(entry, v, m)]),
+    );
+
+  it("says which nodes the update moves, and which it skips", () => {
+    expect(
+      statuses(
+        versions({
+          nodes: [
+            node("panel", OLD, { server: true }),
+            node("node-a", OLD, { maintenance: CHANGES }),
+            node("node-b", OLD, { ready: false }),
+            node("node-c", NEW),
+            node("node-d", NEW, { maintenance: CHANGES }),
+          ],
+        }),
+      ),
+    ).toEqual({
+      panel: "update",
+      "node-a": "update_changes",
+      "node-b": "offline",
+      "node-c": "current",
+      "node-d": "changes",
+    });
+  });
+
+  it("has nothing to update until the upgrade controller is installed", () => {
+    expect(statuses(versions({ installed: false }))).toEqual({
+      panel: "current",
+      "node-a": "current",
+      "node-b": "current",
+    });
+  });
+
+  it("follows a running maintenance node by node", () => {
+    expect(
+      statuses(
+        versions({
+          nodes: [
+            node("panel", NEW, { server: true }),
+            node("node-a", OLD),
+            node("node-b", OLD),
+            node("node-c", OLD, { ready: false }),
+          ],
+        }),
+        maintenance({
+          state: "running",
+          node: "node-a",
+          upgraded: ["panel"],
+          skipped: ["node-c"],
+        }),
+      ),
+    ).toEqual({
+      panel: "done",
+      "node-a": "updating",
+      "node-b": "waiting",
+      "node-c": "skipped",
+    });
   });
 });

@@ -80,6 +80,54 @@ export function nodesBehind(versions: K3sVersions) {
   ).length;
 }
 
+export type K3sNodeStatus =
+  | "current"
+  | "update"
+  | "update_changes"
+  | "changes"
+  | "offline"
+  | "waiting"
+  | "updating"
+  | "done"
+  | "skipped";
+
+export function k3sNodeStatus(
+  node: K3sNode,
+  versions: K3sVersions,
+  maintenance: K3sMaintenance | null,
+): K3sNodeStatus {
+  const run = maintenance?.state === "running" ? maintenance : null;
+  if (run?.node === node.name) {
+    return "updating";
+  }
+  if (run?.upgraded.includes(node.name)) {
+    return "done";
+  }
+  if (run?.skipped.includes(node.name)) {
+    return "skipped";
+  }
+
+  const planned =
+    run ?? (maintenance?.state === "scheduled" ? maintenance : null);
+  const target = planned
+    ? planned.target
+    : versions.installed
+      ? versions.target
+      : null;
+  const upgrade = !!target && isBehind(node.version, target);
+  const changes = !node.server && (node.maintenance?.length ?? 0) > 0;
+  if (!upgrade && !changes) {
+    return "current";
+  }
+  if (!node.server && !node.ready) {
+    return "offline";
+  }
+  if (run) {
+    return "waiting";
+  }
+  return upgrade ? (changes ? "update_changes" : "update") : "changes";
+}
+
 export function readJsonSetting<T>(
   settings: Array<{ name: string; value: string }>,
   name: string,

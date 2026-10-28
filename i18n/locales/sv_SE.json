@@ -5120,6 +5120,24 @@
         "update": "Uppdatera",
         "cancel": "Avbryt uppdatering",
         "stop": "Stoppa efter den här noden",
+        "show_nodes": "Visa noder",
+        "hide_nodes": "Dölj noder",
+        "change": "Ändra",
+        "nodes_need": "{count} av {total} noder behöver den | {count} av {total} noder behöver den",
+        "how": "Körs en nod i taget. Pågående matcher fortsätter, och spelare ser en banner 24 timmar innan.",
+        "progress": "{done} av {total} klara",
+        "node": {
+          "server": "panelserver",
+          "current": "Aktuell",
+          "update": "Behöver uppdatering",
+          "update_changes": "Uppdatering + ändringar",
+          "changes": "Väntande ändringar",
+          "offline": "Offline, hoppas över",
+          "waiting": "Väntar",
+          "updating": "Uppdateras",
+          "done": "Uppdaterad",
+          "skipped": "Överhoppad"
+        },
         "dialog": {
           "title": "Uppdatera k3s",
           "from_to": "Från {from} till {to}",
@@ -8627,11 +8645,14 @@
     },
     "system_update": {
       "title": "Systemuppdatering tillgänglig",
-      "description": "Följande tjänster har uppdateringar:",
       "note": "Observera: det tar några minuter att bearbeta och verifiera de nya uppdateringarna.",
       "fix_link": "Om systemuppgraderingen fortsätter kan du behöva fixa dina versioner",
       "updating": "Systemet uppdateras",
-      "panel_update": "Din panel är inaktuell, hämta och kör uppdateringsskriptet"
+      "panel_update": "Din panel är inaktuell, hämta och kör uppdateringsskriptet",
+      "heading": "Uppdateringar",
+      "services": "Tjänster",
+      "panel": "Panel",
+      "update_now": "Uppdatera nu"
     },
     "system_status": {
       "regions": "Serverregioner",

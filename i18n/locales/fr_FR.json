@@ -5120,6 +5120,24 @@
         "update": "Mettre à jour",
         "cancel": "Annuler la mise à jour",
         "stop": "Arrêter après ce nœud",
+        "show_nodes": "Afficher les nœuds",
+        "hide_nodes": "Masquer les nœuds",
+        "change": "Modifier",
+        "nodes_need": "{count} nœud sur {total} en a besoin | {count} nœuds sur {total} en ont besoin",
+        "how": "S'exécute nœud par nœud. Les matchs en cours continuent et les joueurs voient une bannière 24 heures avant.",
+        "progress": "{done} sur {total} terminés",
+        "node": {
+          "server": "serveur du panel",
+          "current": "À jour",
+          "update": "Mise à jour requise",
+          "update_changes": "Mise à jour + changements",
+          "changes": "Changements en attente",
+          "offline": "Hors ligne, ignoré",
+          "waiting": "En attente",
+          "updating": "Mise à jour en cours",
+          "done": "Mis à jour",
+          "skipped": "Ignoré"
+        },
         "dialog": {
           "title": "Mettre à jour k3s",
           "from_to": "De {from} à {to}",
@@ -8627,11 +8645,14 @@
     },
     "system_update": {
       "title": "Mise à jour système disponible",
-      "description": "Les services suivants ont des mises à jour :",
       "note": "À noter : le traitement et la vérification des nouvelles mises à jour prennent quelques minutes.",
       "fix_link": "Si une mise à jour système persiste, tu dois peut-être corriger tes versions",
       "updating": "Mise à jour du système en cours",
-      "panel_update": "Ton panel n'est pas à jour, récupère et lance le script de mise à jour"
+      "panel_update": "Ton panel n'est pas à jour, récupère et lance le script de mise à jour",
+      "heading": "Mises à jour",
+      "services": "Services",
+      "panel": "Panel",
+      "update_now": "Mettre à jour"
     },
     "system_status": {
       "regions": "Régions des serveurs",

@@ -5120,6 +5120,24 @@
         "update": "Güncelle",
         "cancel": "Güncellemeyi iptal et",
         "stop": "Bu düğümden sonra dur",
+        "show_nodes": "Düğümleri göster",
+        "hide_nodes": "Düğümleri gizle",
+        "change": "Değiştir",
+        "nodes_need": "{total} düğümden {count} tanesinin buna ihtiyacı var | {total} düğümden {count} tanesinin buna ihtiyacı var",
+        "how": "Her seferinde bir düğüm güncellenir. Devam eden maçlar sürer ve oyuncular 24 saat önceden bir duyuru görür.",
+        "progress": "{total} içinden {done} tamamlandı",
+        "node": {
+          "server": "panel sunucusu",
+          "current": "Güncel",
+          "update": "Güncelleme gerekli",
+          "update_changes": "Güncelleme + değişiklikler",
+          "changes": "Bekleyen değişiklikler",
+          "offline": "Çevrimdışı, atlanır",
+          "waiting": "Bekliyor",
+          "updating": "Güncelleniyor",
+          "done": "Güncellendi",
+          "skipped": "Atlandı"
+        },
         "dialog": {
           "title": "k3s'i güncelle",
           "from_to": "{from} sürümünden {to} sürümüne",
@@ -8627,11 +8645,14 @@
     },
     "system_update": {
       "title": "Sistem güncellemesi mevcut",
-      "description": "Şu servislerde güncelleme var:",
       "note": "Not: Yeni güncellemelerin işlenmesi ve doğrulanması birkaç dakika sürecek.",
       "fix_link": "Sistem güncellemesi tekrar ediyorsa sürümlerini düzeltmen gerekebilir",
       "updating": "Sistem güncelleniyor",
-      "panel_update": "Panelin güncel değil, güncelleme betiğini çekip çalıştır"
+      "panel_update": "Panelin güncel değil, güncelleme betiğini çekip çalıştır",
+      "heading": "Güncellemeler",
+      "services": "Servisler",
+      "panel": "Panel",
+      "update_now": "Şimdi güncelle"
     },
     "system_status": {
       "regions": "Sunucu bölgeleri",

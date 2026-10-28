@@ -5120,6 +5120,24 @@
         "update": "Aktualisieren",
         "cancel": "Update abbrechen",
         "stop": "Nach diesem Node stoppen",
+        "show_nodes": "Knoten anzeigen",
+        "hide_nodes": "Knoten ausblenden",
+        "change": "Ändern",
+        "nodes_need": "{count} von {total} Knoten braucht es | {count} von {total} Knoten brauchen es",
+        "how": "Läuft Knoten für Knoten. Laufende Matches gehen weiter, und Spieler sehen 24 Stunden vorher ein Banner.",
+        "progress": "{done} von {total} fertig",
+        "node": {
+          "server": "Panel-Server",
+          "current": "Aktuell",
+          "update": "Braucht Update",
+          "update_changes": "Update + Änderungen",
+          "changes": "Änderungen ausstehend",
+          "offline": "Offline, übersprungen",
+          "waiting": "Wartet",
+          "updating": "Wird aktualisiert",
+          "done": "Aktualisiert",
+          "skipped": "Übersprungen"
+        },
         "dialog": {
           "title": "k3s aktualisieren",
           "from_to": "Von {from} auf {to}",
@@ -8627,11 +8645,14 @@
     },
     "system_update": {
       "title": "System-Update verfügbar",
-      "description": "Für diese Dienste gibt es Updates:",
       "note": "Hinweis: Das Verarbeiten und Prüfen der neuen Updates dauert ein paar Minuten.",
       "fix_link": "Wenn ein System-Upgrade hängen bleibt, musst du eventuell deine Versionen korrigieren",
       "updating": "System wird aktualisiert",
-      "panel_update": "Dein Panel ist veraltet — hol dir die neue Version und führ das Update-Skript aus"
+      "panel_update": "Dein Panel ist veraltet — hol dir die neue Version und führ das Update-Skript aus",
+      "heading": "Updates",
+      "services": "Dienste",
+      "panel": "Panel",
+      "update_now": "Jetzt aktualisieren"
     },
     "system_status": {
       "regions": "Serverregionen",

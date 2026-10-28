@@ -5120,6 +5120,24 @@
         "update": "更新",
         "cancel": "取消更新",
         "stop": "在此节点后停止",
+        "show_nodes": "显示节点",
+        "hide_nodes": "隐藏节点",
+        "change": "更改",
+        "nodes_need": "{total} 个节点中有 {count} 个需要更新 | {total} 个节点中有 {count} 个需要更新",
+        "how": "逐个节点进行。进行中的比赛会继续，玩家会提前 24 小时看到横幅。",
+        "progress": "已完成 {done}/{total}",
+        "node": {
+          "server": "面板服务器",
+          "current": "最新",
+          "update": "需要更新",
+          "update_changes": "更新 + 更改",
+          "changes": "待应用的更改",
+          "offline": "离线，跳过",
+          "waiting": "等待中",
+          "updating": "更新中",
+          "done": "已更新",
+          "skipped": "已跳过"
+        },
         "dialog": {
           "title": "更新 k3s",
           "from_to": "从 {from} 到 {to}",
@@ -8627,11 +8645,14 @@
     },
     "system_update": {
       "title": "系统更新可用",
-      "description": "以下服务有更新：",
       "note": "请注意：处理并验证新更新需要几分钟时间。",
       "fix_link": "如果系统升级持续存在，您可能需要修复版本",
       "updating": "系统正在更新",
-      "panel_update": "您的面板已过时，请拉取并运行更新脚本"
+      "panel_update": "您的面板已过时，请拉取并运行更新脚本",
+      "heading": "更新",
+      "services": "服务",
+      "panel": "面板",
+      "update_now": "立即更新"
     },
     "system_status": {
       "regions": "服务器区域",

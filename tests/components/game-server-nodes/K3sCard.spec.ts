@@ -364,6 +364,96 @@ describe("K3sCard", () => {
     expect(written()).toHaveLength(1);
   });
 
+  it("lists each node with what the update does to it", async () => {
+    settings({
+      k3s_versions: {
+        ...VERSIONS,
+        nodes: [
+          ...VERSIONS.nodes,
+          {
+            name: "node-b",
+            version: "v1.34.4+k3s1",
+            server: false,
+            ready: false,
+          },
+        ],
+      },
+    });
+    await mountCard();
+    expect(document.body.querySelector('[data-testid="k3s-nodes"]')).toBeNull();
+
+    click("k3s-nodes-toggle");
+    await flushPromises();
+
+    const row = (name: string) =>
+      document.body.querySelector(`[data-testid="k3s-node-${name}"]`)
+        ?.textContent;
+    expect(row("panel")).toContain("panel server");
+    expect(row("panel")).toContain("Needs update");
+    expect(row("node-a")).toContain("Needs update");
+    expect(row("node-b")).toContain("Offline, skipped");
+  });
+
+  it("moves a scheduled update to a new time", async () => {
+    settings({
+      k3s_versions: VERSIONS,
+      k3s_maintenance: {
+        at: "2099-01-02T03:04:00.000Z",
+        state: "scheduled",
+        target: "v1.35.9+k3s1",
+        node: null,
+        upgraded: [],
+        skipped: [],
+        error: null,
+      },
+      k3s_maintenance_at: "2099-01-02T03:04:00.000Z",
+    });
+    await mountCard();
+
+    click("k3s-change");
+    await flushPromises();
+    const input = document.body.querySelector<HTMLInputElement>(
+      '[data-testid="k3s-at"]',
+    )!;
+    expect(new Date(input.value).toISOString()).toBe(
+      "2099-01-02T03:04:00.000Z",
+    );
+
+    input.value = "2099-01-03T05:06";
+    input.dispatchEvent(new Event("input"));
+    await flushPromises();
+    click("k3s-confirm");
+    await flushPromises();
+
+    expect(written()).toEqual([
+      {
+        name: "k3s_maintenance_at",
+        value: new Date("2099-01-03T05:06").toISOString(),
+      },
+    ]);
+  });
+
+  it("offers no change to a scheduled run that has nothing left to do", async () => {
+    settings({
+      k3s_versions: { ...VERSIONS, target: null, steps: 0 },
+      k3s_maintenance: {
+        at: "2099-01-02T03:04:00.000Z",
+        state: "scheduled",
+        target: "v1.35.9+k3s1",
+        node: null,
+        upgraded: [],
+        skipped: [],
+        error: null,
+      },
+      k3s_maintenance_at: "2099-01-02T03:04:00.000Z",
+    });
+
+    const wrapper = await mountCard();
+
+    expect(wrapper.find('[data-testid="k3s-change"]').exists()).toBe(false);
+    expect(wrapper.find('[data-testid="k3s-cancel"]').exists()).toBe(true);
+  });
+
   it("names a scheduled run of node changes without a version", async () => {
     settings({
       k3s_versions: { ...VERSIONS, target: null, steps: 0, maintenance: 1 },

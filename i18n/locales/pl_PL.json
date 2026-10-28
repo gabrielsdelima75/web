@@ -5120,6 +5120,24 @@
         "update": "Aktualizuj",
         "cancel": "Anuluj aktualizację",
         "stop": "Zatrzymaj po tym węźle",
+        "show_nodes": "Pokaż węzły",
+        "hide_nodes": "Ukryj węzły",
+        "change": "Zmień",
+        "nodes_need": "{count} z {total} węzłów wymaga aktualizacji | {count} z {total} węzłów wymaga aktualizacji",
+        "how": "Działa po jednym węźle. Trwające mecze toczą się dalej, a gracze widzą baner 24 godziny wcześniej.",
+        "progress": "Gotowe: {done} z {total}",
+        "node": {
+          "server": "serwer panelu",
+          "current": "Aktualny",
+          "update": "Wymaga aktualizacji",
+          "update_changes": "Aktualizacja + zmiany",
+          "changes": "Oczekujące zmiany",
+          "offline": "Offline, pominięty",
+          "waiting": "Oczekuje",
+          "updating": "Aktualizowanie",
+          "done": "Zaktualizowany",
+          "skipped": "Pominięty"
+        },
         "dialog": {
           "title": "Aktualizuj k3s",
           "from_to": "Z {from} do {to}",
@@ -8627,11 +8645,14 @@
     },
     "system_update": {
       "title": "Dostępna aktualizacja systemu",
-      "description": "Poniższe usługi mają dostępne aktualizacje:",
       "note": "Uwaga: przetworzenie i weryfikacja nowych aktualizacji zajmie kilka minut.",
       "fix_link": "Jeśli aktualizacja systemu utrzymuje się, może być konieczne naprawienie wersji",
       "updating": "System się aktualizuje",
-      "panel_update": "Twój panel jest nieaktualny, pobierz i uruchom skrypt aktualizacji"
+      "panel_update": "Twój panel jest nieaktualny, pobierz i uruchom skrypt aktualizacji",
+      "heading": "Aktualizacje",
+      "services": "Usługi",
+      "panel": "Panel",
+      "update_now": "Aktualizuj teraz"
     },
     "system_status": {
       "regions": "Regiony serwerów",

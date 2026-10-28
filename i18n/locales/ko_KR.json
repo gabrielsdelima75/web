@@ -5120,6 +5120,24 @@
         "update": "업데이트",
         "cancel": "업데이트 취소",
         "stop": "이 노드 이후 중지",
+        "show_nodes": "노드 보기",
+        "hide_nodes": "노드 숨기기",
+        "change": "변경",
+        "nodes_need": "{total}개 노드 중 {count}개 필요 | {total}개 노드 중 {count}개 필요",
+        "how": "노드를 하나씩 진행합니다. 진행 중인 경기는 계속되며, 플레이어에게는 24시간 전부터 배너가 표시됩니다.",
+        "progress": "{total}개 중 {done}개 완료",
+        "node": {
+          "server": "패널 서버",
+          "current": "최신",
+          "update": "업데이트 필요",
+          "update_changes": "업데이트 + 변경",
+          "changes": "대기 중인 변경",
+          "offline": "오프라인, 건너뜀",
+          "waiting": "대기 중",
+          "updating": "업데이트 중",
+          "done": "업데이트됨",
+          "skipped": "건너뜀"
+        },
         "dialog": {
           "title": "k3s 업데이트",
           "from_to": "{from}에서 {to}(으)로",
@@ -8627,11 +8645,14 @@
     },
     "system_update": {
       "title": "시스템 업데이트 가능",
-      "description": "다음 서비스에 업데이트가 있습니다:",
       "note": "참고: 새 업데이트를 처리하고 확인하는 데 몇 분 정도 걸립니다.",
       "fix_link": "시스템 업그레이드가 계속 표시되면 버전을 수정해야 할 수 있습니다",
       "updating": "시스템 업데이트 중",
-      "panel_update": "패널이 오래되었습니다. 업데이트 스크립트를 받아서 실행하세요"
+      "panel_update": "패널이 오래되었습니다. 업데이트 스크립트를 받아서 실행하세요",
+      "heading": "업데이트",
+      "services": "서비스",
+      "panel": "패널",
+      "update_now": "지금 업데이트"
     },
     "system_status": {
       "regions": "서버 지역",

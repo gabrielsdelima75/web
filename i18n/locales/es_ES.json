@@ -5120,6 +5120,24 @@
         "update": "Actualizar",
         "cancel": "Cancelar actualización",
         "stop": "Detener tras este nodo",
+        "show_nodes": "Mostrar nodos",
+        "hide_nodes": "Ocultar nodos",
+        "change": "Cambiar",
+        "nodes_need": "{count} de {total} nodos lo necesita | {count} de {total} nodos lo necesitan",
+        "how": "Se ejecuta nodo a nodo. Las partidas en curso continúan y los jugadores ven un aviso 24 horas antes.",
+        "progress": "{done} de {total} listos",
+        "node": {
+          "server": "servidor del panel",
+          "current": "Al día",
+          "update": "Necesita actualización",
+          "update_changes": "Actualización + cambios",
+          "changes": "Cambios pendientes",
+          "offline": "Sin conexión, se omite",
+          "waiting": "En espera",
+          "updating": "Actualizando",
+          "done": "Actualizado",
+          "skipped": "Omitido"
+        },
         "dialog": {
           "title": "Actualizar k3s",
           "from_to": "De {from} a {to}",
@@ -8627,11 +8645,14 @@
     },
     "system_update": {
       "title": "Actualización del sistema disponible",
-      "description": "Estos servicios tienen actualizaciones:",
       "note": "Ten en cuenta que procesar y verificar las nuevas actualizaciones tardará unos minutos.",
       "fix_link": "Si la actualización del sistema no termina, puede que tengas que corregir tus versiones",
       "updating": "El sistema se está actualizando",
-      "panel_update": "Tu panel está desactualizado, haz pull y ejecuta el script de actualización"
+      "panel_update": "Tu panel está desactualizado, haz pull y ejecuta el script de actualización",
+      "heading": "Actualizaciones",
+      "services": "Servicios",
+      "panel": "Panel",
+      "update_now": "Actualizar ahora"
     },
     "system_status": {
       "regions": "Regiones de servidores",

@@ -1,46 +1,29 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import { useApolloClient } from "@vue/apollo-composable";
 import { useI18n } from "vue-i18n";
-import { settings_constraint, settings_update_column } from "~/generated/zeus";
-import { generateMutation } from "~/graphql/graphqlGen";
+import { ChevronDown } from "lucide-vue-next";
 import { toast } from "~/components/ui/toast";
 import { Button } from "~/components/ui/button";
+import { Fold } from "~/components/ui/transitions";
 import StatusDot from "~/components/admin/StatusDot.vue";
 import type { Tone } from "~/components/admin/tone";
 import K3sUpdateDialog from "~/components/game-server-nodes/K3sUpdateDialog.vue";
+import K3sNodeList from "~/components/game-server-nodes/K3sNodeList.vue";
 import {
-  K3S_MAINTENANCE_AT,
+  useK3sMaintenance,
+  useMaintenanceAt,
+} from "~/components/game-server-nodes/useK3sMaintenance";
+import {
   filesFailed,
-  k3sCardState,
   nodesBehind,
-  readJsonSetting,
-  type K3sMaintenance,
-  type K3sVersions,
 } from "~/components/game-server-nodes/k3sMaintenance";
-import { useApplicationSettingsStore } from "~/stores/ApplicationSettings";
 import { tacticalSectionTickClasses } from "~/utilities/tacticalClasses";
 import { dateLocale } from "~/utilities/dateLocale";
 
 const { t } = useI18n();
-const { client } = useApolloClient();
-const store = useApplicationSettingsStore();
+const writeAt = useMaintenanceAt();
+const { versions, maintenance, scheduledAt, state } = useK3sMaintenance();
 const K3S = "pages.game_server_nodes.k3s";
-
-const versions = computed(() =>
-  readJsonSetting<K3sVersions>(store.settings, "k3s_versions"),
-);
-const maintenance = computed(() =>
-  readJsonSetting<K3sMaintenance>(store.settings, "k3s_maintenance"),
-);
-const scheduledAt = computed(
-  () =>
-    store.settings.find(({ name }) => name === K3S_MAINTENANCE_AT)?.value ||
-    null,
-);
-const state = computed(() =>
-  k3sCardState(versions.value, maintenance.value, scheduledAt.value),
-);
 
 const TONES: Record<string, Tone> = {
   not_installed: "off",
@@ -54,6 +37,13 @@ const TONES: Record<string, Tone> = {
 };
 
 const dialogOpen = ref(false);
+const changing = ref(false);
+const nodesOpen = ref(false);
+
+function openDialog(change: boolean) {
+  changing.value = change;
+  dialogOpen.value = true;
+}
 
 const target = computed(() =>
   versions.value?.installed ? versions.value.target : null,
@@ -79,20 +69,7 @@ function formatTime(iso: string) {
 
 async function clearSchedule() {
   try {
-    await client.mutate({
-      mutation: generateMutation({
-        insert_settings_one: [
-          {
-            object: { name: K3S_MAINTENANCE_AT, value: "" },
-            on_conflict: {
-              constraint: settings_constraint.settings_pkey,
-              update_columns: [settings_update_column.value],
-            },
-          },
-          { __typename: true },
-        ],
-      }),
-    });
+    await writeAt("");
     toast({ title: t(`${K3S}.toast.cancelled`) });
   } catch {
     toast({ variant: "destructive", title: t(`${K3S}.toast.failed`) });
@@ -220,15 +197,39 @@ async function clearSchedule() {
 
       <span class="ml-auto inline-flex gap-2">
         <Button
+          v-if="versions?.nodes.length"
+          size="xs"
+          variant="ghost"
+          class="[&_svg]:size-3.5"
+          :aria-expanded="nodesOpen"
+          data-testid="k3s-nodes-toggle"
+          @click="nodesOpen = !nodesOpen"
+        >
+          {{ t(nodesOpen ? `${K3S}.hide_nodes` : `${K3S}.show_nodes`) }}
+          <ChevronDown
+            class="transition-transform duration-200 motion-reduce:transition-none"
+            :class="{ 'rotate-180': nodesOpen }"
+          />
+        </Button>
+        <Button
           v-if="
             ['available', 'catch_up', 'failed', 'changes'].includes(state.kind)
           "
           size="xs"
           variant="outline"
           data-testid="k3s-update"
-          @click="dialogOpen = true"
+          @click="openDialog(false)"
         >
           {{ t(`${K3S}.update`) }}
+        </Button>
+        <Button
+          v-if="state.kind === 'scheduled' && updatable"
+          size="xs"
+          variant="outline"
+          data-testid="k3s-change"
+          @click="openDialog(true)"
+        >
+          {{ t(`${K3S}.change`) }}
         </Button>
         <Button
           v-if="state.kind === 'scheduled'"
@@ -251,6 +252,12 @@ async function clearSchedule() {
       </span>
     </div>
 
+    <Fold :open="nodesOpen">
+      <div v-if="versions" class="px-3 pb-3">
+        <K3sNodeList :versions="versions" :maintenance="maintenance" />
+      </div>
+    </Fold>
+
     <K3sUpdateDialog
       v-if="versions && updatable"
       v-model:open="dialogOpen"
@@ -260,6 +267,9 @@ async function clearSchedule() {
       :steps="versions.steps"
       :behind="target ? nodesBehind(versions) : 0"
       :changes="changes"
-    />
+      :initial="changing ? scheduledAt : null"
+    >
+      <K3sNodeList :versions="versions" :maintenance="maintenance" />
+    </K3sUpdateDialog>
   </section>
 </template>

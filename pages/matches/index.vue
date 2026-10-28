@@ -743,6 +743,26 @@ export default {
     },
   },
   apollo: {
+    // Counted when the filters change and when a poll changes the list
+    // (below), not on every poll: a count reads every match the viewer may
+    // see, and the total only numbers the pages.
+    matchesAggregate: {
+      query: typedGql("query")({
+        matches_aggregate: [
+          {
+            where: $("where_clause", "matches_bool_exp!"),
+          },
+          { aggregate: { count: true } },
+        ],
+      }),
+      fetchPolicy: "network-only",
+      variables(this: any) {
+        return { where_clause: this.getWhereClause() };
+      },
+      update(data: any) {
+        return data?.matches_aggregate?.aggregate?.count || 0;
+      },
+    },
     $subscribe: {
       matches: {
         query: typedGql("subscription")({
@@ -774,35 +794,17 @@ export default {
           };
         },
         result(this: any, { data }: any) {
+          const matches = data?.matches ?? [];
+          // On a poll, with the same filters and page, a match joining or
+          // leaving the list is what moves the total.
+          if (!this.loading && matchIds(matches) !== matchIds(this.matches)) {
+            this.$apollo.queries.matchesAggregate?.refetch();
+          }
           this.loading = false;
-          this.matches = data?.matches ?? [];
+          this.matches = matches;
         },
         error(this: any) {
           this.loading = false;
-        },
-      },
-      matchesAggregate: {
-        query: typedGql("subscription")({
-          matches_aggregate: [
-            {
-              where: $("where_clause", "matches_bool_exp!"),
-            },
-            { aggregate: { count: true } },
-          ],
-        }),
-        variables(this: any) {
-          if (
-            this.form.matchId?.trim() &&
-            !validateUUID(this.form.matchId.trim())
-          ) {
-            this.matchesAggregate = 0;
-            return undefined;
-          }
-          return { where_clause: this.getWhereClause() };
-        },
-        result(this: any, { data }: any) {
-          this.matchesAggregate =
-            data?.matches_aggregate?.aggregate?.count || 0;
         },
       },
     },
@@ -1104,6 +1106,10 @@ export default {
     },
   },
 };
+
+function matchIds(matches: Array<{ id: string }>) {
+  return matches.map((match) => match.id).join();
+}
 
 // The finished preset was just Finished before forfeits and surrenders kept
 // their own status.

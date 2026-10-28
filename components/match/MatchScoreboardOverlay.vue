@@ -9,6 +9,8 @@ import { order_by } from "~/generated/zeus";
 import { generateSubscription } from "~/graphql/graphqlGen";
 import MatchLineupScoreDisplay from "~/components/match/MatchLineupScoreDisplay.vue";
 import StatLabel from "~/components/common/StatLabel.vue";
+import SortableTableHead from "~/components/common/SortableTableHead.vue";
+import { useTableSort } from "~/composables/useTableSort";
 import formatStatValue from "~/utilities/formatStatValue";
 import mapLabel from "~/utilities/mapLabel";
 import { kdColor } from "~/utils/statTiers";
@@ -221,11 +223,42 @@ const otherMaps = computed(() =>
 );
 const showOtherMaps = computed(() => matchMaps.value.length > 1);
 
-const lineup1Players = computed<any[]>(
-  () => match.value?.lineup_1?.lineup_players ?? [],
+const {
+  sortKey,
+  sortDir,
+  toggle: toggleSort,
+  sortRows,
+} = useTableSort<string>(
+  "kills",
+  "desc",
 );
-const lineup2Players = computed<any[]>(
-  () => match.value?.lineup_2?.lineup_players ?? [],
+
+function sortedPlayers(players: any[]): any[] {
+  const byDamage = [...players].sort(
+    (a, b) =>
+      (statsForCurrentMap(b)?.damage ?? 0) -
+      (statsForCurrentMap(a)?.damage ?? 0),
+  );
+  return sortRows(byDamage, {
+    kills: (lp) => statsForCurrentMap(lp)?.kills,
+    deaths: (lp) => statsForCurrentMap(lp)?.deaths,
+    assists: (lp) => statsForCurrentMap(lp)?.assists,
+    kd: (lp) => (statsForCurrentMap(lp) ? playerKDNum(lp) : null),
+    hs: (lp) => {
+      const s = statsForCurrentMap(lp);
+      if (!s) return null;
+      return s.kills ? (s.hs_kills ?? 0) / s.kills : 0;
+    },
+    damage: (lp) => statsForCurrentMap(lp)?.damage,
+    adr: (lp) => statsForCurrentMap(lp)?.damage,
+  });
+}
+
+const lineup1Players = computed<any[]>(() =>
+  sortedPlayers(match.value?.lineup_1?.lineup_players ?? []),
+);
+const lineup2Players = computed<any[]>(() =>
+  sortedPlayers(match.value?.lineup_2?.lineup_players ?? []),
 );
 
 const currentMapRounds = computed(() => {
@@ -383,27 +416,76 @@ function statCell(lp: any, key: "kills" | "deaths" | "assists" | "damage") {
                 <th class="px-2 py-1 text-left font-normal">
                   {{ $t("common.player") }}
                 </th>
-                <th class="px-1 py-1 text-center font-normal">
+                <SortableTableHead
+                  sort-key="kills"
+                  :active-key="sortKey"
+                  :direction="sortDir"
+                  :disabled="touch"
+                  class="h-auto px-1 py-1 text-center font-normal text-muted-foreground/70"
+                  @sort="toggleSort"
+                >
                   <StatLabel stat="k" label="K" />
-                </th>
-                <th class="px-1 py-1 text-center font-normal">
+                </SortableTableHead>
+                <SortableTableHead
+                  sort-key="deaths"
+                  :active-key="sortKey"
+                  :direction="sortDir"
+                  :disabled="touch"
+                  class="h-auto px-1 py-1 text-center font-normal text-muted-foreground/70"
+                  @sort="toggleSort"
+                >
                   <StatLabel stat="d" label="D" />
-                </th>
-                <th class="px-1 py-1 text-center font-normal">
+                </SortableTableHead>
+                <SortableTableHead
+                  sort-key="assists"
+                  :active-key="sortKey"
+                  :direction="sortDir"
+                  :disabled="touch"
+                  class="h-auto px-1 py-1 text-center font-normal text-muted-foreground/70"
+                  @sort="toggleSort"
+                >
                   <StatLabel stat="a" label="A" />
-                </th>
-                <th class="px-1 py-1 text-center font-normal">
+                </SortableTableHead>
+                <SortableTableHead
+                  sort-key="kd"
+                  :active-key="sortKey"
+                  :direction="sortDir"
+                  :disabled="touch"
+                  class="h-auto px-1 py-1 text-center font-normal text-muted-foreground/70"
+                  @sort="toggleSort"
+                >
                   <StatLabel stat="kd" label="K/D" />
-                </th>
-                <th class="px-1 py-1 text-center font-normal">
+                </SortableTableHead>
+                <SortableTableHead
+                  sort-key="hs"
+                  :active-key="sortKey"
+                  :direction="sortDir"
+                  :disabled="touch"
+                  class="h-auto px-1 py-1 text-center font-normal text-muted-foreground/70"
+                  @sort="toggleSort"
+                >
                   <StatLabel stat="hs" label="HS%" />
-                </th>
-                <th class="px-1 py-1 text-center font-normal">
+                </SortableTableHead>
+                <SortableTableHead
+                  sort-key="damage"
+                  :active-key="sortKey"
+                  :direction="sortDir"
+                  :disabled="touch"
+                  class="h-auto px-1 py-1 text-center font-normal text-muted-foreground/70"
+                  @sort="toggleSort"
+                >
                   <StatLabel stat="total_damage" label="DMG" />
-                </th>
-                <th class="px-1 py-1 text-center font-normal">
+                </SortableTableHead>
+                <SortableTableHead
+                  sort-key="adr"
+                  :active-key="sortKey"
+                  :direction="sortDir"
+                  :disabled="touch"
+                  class="h-auto px-1 py-1 text-center font-normal text-muted-foreground/70"
+                  @sort="toggleSort"
+                >
                   <StatLabel stat="adr" label="ADR" />
-                </th>
+                </SortableTableHead>
               </tr>
             </thead>
             <tbody>

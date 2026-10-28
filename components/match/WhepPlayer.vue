@@ -89,6 +89,11 @@ const status = ref<
 const useFallback = ref(false);
 let failureCount = 0;
 const MAX_WHEP_FAILURES = 3;
+// mediamtx answers WHEP with a 404 "no stream is available" until the
+// publisher is up. That is not WebRTC failing, and HLS would have no stream
+// either, so it doesn't count towards the fallback; the player keeps waiting.
+// Any other 404 (eg. a proxy that doesn't route /whep) still counts.
+class StreamNotPublishedError extends Error {}
 // Once WHEP has played a frame, never fall back to HLS — mediamtx
 // briefly drops the path during clip-render's restart_capture, and
 // falling back at that moment locks us at HLS latency.
@@ -497,9 +502,11 @@ async function connect() {
       return;
     }
     if (!res.ok) {
-      throw new Error(
-        `WHEP ${res.status}: ${await res.text().catch(() => "")}`,
-      );
+      const body = await res.text().catch(() => "");
+      const notPublished =
+        res.status === 404 && body.includes("no stream is available");
+      const ErrorType = notPublished ? StreamNotPublishedError : Error;
+      throw new ErrorType(`WHEP ${res.status}: ${body}`);
     }
     const answerSdp = await res.text();
     await pc.setRemoteDescription({ type: "answer", sdp: answerSdp });
@@ -534,7 +541,7 @@ async function connect() {
     errorMessage.value = message;
     if (!everPlayed.value) failedBeforePlay.value = true;
     await teardown();
-    if (shouldFallBack()) {
+    if (!(err instanceof StreamNotPublishedError) && shouldFallBack()) {
       fallBack();
       return;
     }

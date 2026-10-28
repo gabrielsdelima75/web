@@ -85,6 +85,7 @@ class FakePeerConnection {
 }
 
 let whepStatus = 201;
+let whepBody = "answer";
 let answerLocation: string | null = null;
 let patchStatus = 204;
 // Holds the WHEP answer back until the test releases it.
@@ -121,6 +122,7 @@ beforeEach(() => {
   posts.length = 0;
   patches.length = 0;
   whepStatus = 201;
+  whepBody = "answer";
   answerLocation = null;
   patchStatus = 204;
   answerGate = null;
@@ -134,7 +136,7 @@ beforeEach(() => {
       if (String(input) === WHEP_URL) {
         posts.push(Date.now());
         await answerGate;
-        return new Response("answer", {
+        return new Response(whepBody, {
           status: whepStatus,
           headers: answerLocation ? { Location: answerLocation } : {},
         });
@@ -177,6 +179,47 @@ describe("WhepPlayer", () => {
 
   it("falls back to HLS when the WHEP request keeps failing", async () => {
     whepStatus = 500;
+    const wrapper = await mountPlayer();
+
+    await vi.waitFor(
+      () => expect(wrapper.find("iframe").attributes("src")).toBe(FALLBACK_URL),
+      { timeout: 5000 },
+    );
+    expect(peers.length).toBe(3);
+  });
+
+  it("keeps waiting for WebRTC while the stream is not published yet", async () => {
+    whepStatus = 404;
+    whepBody =
+      '{"status":"error","error":"no stream is available on path \'match-1\'"}';
+    const wrapper = await mountPlayer();
+
+    // Three failures would have meant HLS by now.
+    await vi.waitFor(() => expect(posts.length).toBeGreaterThanOrEqual(4), {
+      timeout: 10000,
+    });
+    expect(wrapper.find("iframe").exists()).toBe(false);
+
+    whepStatus = 201;
+    whepBody = "answer";
+    let answer: FakePeerConnection | undefined;
+    await vi.waitFor(
+      () => {
+        answer = peers.find((peer) => peer.remoteDescription);
+        expect(answer).toBeDefined();
+      },
+      { timeout: 15000 },
+    );
+    answer!.become("connected");
+    await flushPromises();
+
+    expect(wrapper.find("iframe").exists()).toBe(false);
+    expect(wrapper.find("video").exists()).toBe(true);
+  });
+
+  it("falls back to HLS when the WHEP endpoint itself is not found", async () => {
+    whepStatus = 404;
+    whepBody = "404 page not found";
     const wrapper = await mountPlayer();
 
     await vi.waitFor(

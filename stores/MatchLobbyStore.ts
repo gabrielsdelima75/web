@@ -1,4 +1,4 @@
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { defineStore, acceptHMRUpdate } from "pinia";
 import { useSubscriptionManager } from "~/composables/useSubscriptionManager";
 import { simpleMatchFields } from "~/graphql/simpleMatchFields";
@@ -17,6 +17,12 @@ import {
   fromMyActiveMatches,
 } from "~/utilities/activeMatches";
 import { generateSubscription } from "~/graphql/graphqlGen";
+import {
+  LINEUP_STREAM_STATUSES,
+  lineupStreamSubscription,
+  streamedLineups,
+  withStreamedLineups,
+} from "~/utilities/lineupStream";
 import { NOT_LEAGUE_TOURNAMENT } from "~/graphql/tournamentFilters";
 import { FINISHED_TOURNAMENT_CHAT_MS } from "~/constants/chat";
 
@@ -75,6 +81,68 @@ export const useMatchLobbyStore = defineStore("matchLobby", () => {
     },
   });
 
+  // Before a match starts, its lineups (who has checked in, seats, captains)
+  // come from their stream, so a check-in from /play shows at once. Each row is
+  // laid over once per change, so unchanged rows stay the same objects.
+  const streamedLineupsByMatch = ref<Record<string, any>>({});
+  const overlaid = new WeakMap<object, { streamed: any; row: any }>();
+  const withLineups = (match: any) => {
+    const streamed = streamedLineupsByMatch.value[match.id];
+    if (!streamed || !LINEUP_STREAM_STATUSES.includes(match.status)) {
+      return match;
+    }
+    const hit = overlaid.get(match);
+    if (hit?.streamed === streamed) {
+      return hit.row;
+    }
+    const row = withStreamedLineups(match, streamed);
+    overlaid.set(match, { streamed, row });
+    return row;
+  };
+
+  watch(
+    () =>
+      myMatchRows.value
+        .filter((match: any) => LINEUP_STREAM_STATUSES.includes(match.status))
+        .map((match: any) => match.id)
+        .sort()
+        .join(),
+    (ids, previous) => {
+      const { subscribe, unsubscribe } = useSubscriptionManager();
+      const wanted = ids ? ids.split(",") : [];
+      for (const matchId of previous ? previous.split(",") : []) {
+        if (matchId && !wanted.includes(matchId)) {
+          unsubscribe(`matchLobby:lineups:${matchId}`);
+          delete streamedLineupsByMatch.value[matchId];
+        }
+      }
+      for (const matchId of wanted) {
+        if (previous?.split(",").includes(matchId)) {
+          continue;
+        }
+        subscribe(
+          `matchLobby:lineups:${matchId}`,
+          getGraphqlClient()
+            .subscribe({
+              query: lineupStreamSubscription,
+              variables: { matchId },
+            })
+            .subscribe({
+              next: ({ data }) => {
+                const streamed = streamedLineups(data);
+                if (streamed) {
+                  streamedLineupsByMatch.value = {
+                    ...streamedLineupsByMatch.value,
+                    [matchId]: streamed,
+                  };
+                }
+              },
+            }),
+        );
+      }
+    },
+  );
+
   // A scheduled match is "upcoming" — keep it out of the lobby nav until it's
   // within an hour of kickoff, judged against the clock rather than when the
   // subscription last pushed. The clock ticks every minute, so the same
@@ -82,15 +150,17 @@ export const useMatchLobbyStore = defineStore("matchLobby", () => {
   const myMatches = computed({
     get: (previous?: any[]) => {
       const cutoff = now.value + SCHEDULED_MATCH_LEAD_MS;
-      const matches = myMatchRows.value.filter((match: any) => {
-        if (match.status !== e_match_status_enum.Scheduled) {
-          return true;
-        }
-        return (
-          !!match.scheduled_at &&
-          new Date(match.scheduled_at).getTime() <= cutoff
-        );
-      });
+      const matches = myMatchRows.value
+        .map(withLineups)
+        .filter((match: any) => {
+          if (match.status !== e_match_status_enum.Scheduled) {
+            return true;
+          }
+          return (
+            !!match.scheduled_at &&
+            new Date(match.scheduled_at).getTime() <= cutoff
+          );
+        });
       if (
         previous?.length === matches.length &&
         matches.every((match, index) => match === previous[index])

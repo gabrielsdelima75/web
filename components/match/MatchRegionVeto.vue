@@ -25,7 +25,7 @@ import VetoBoard from "~/components/match/VetoBoard.vue";
       :status-line="statusLine"
       @confirm="({ itemId }) => itemId && vetoPick(itemId)"
     />
-    <template v-else-if="canSelectRegion && !match.region">
+    <template v-else-if="canSelectRegion && !vetoMatch.region">
       <Card class="sm:col-span-4 bg-card/20">
         <CardHeader class="pb-3">
           <CardContent>
@@ -84,13 +84,11 @@ import VetoBoard from "~/components/match/VetoBoard.vue";
 </template>
 
 <script lang="ts">
-import { typedGql } from "~/generated/zeus/typedDocumentNode";
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "~/utilities/vee-validate-zod";
 import * as z from "zod";
 import {
   $,
-  order_by,
   e_match_status_enum,
   e_veto_pick_types_enum,
   e_player_roles_enum,
@@ -102,6 +100,11 @@ import { useMatchmakingStore } from "~/stores/MatchmakingStore";
 import { regionVetoOrder } from "~/utilities/vetoOrder";
 import { lineupSlot, vetoLineups, viewerSlot } from "~/utilities/vetoLineups";
 import { isVetoOverrideEnabled } from "~/composables/useVetoOverride";
+import {
+  streamedVeto,
+  vetoStreamSubscription,
+  withStreamedVeto,
+} from "~/utilities/vetoStream";
 import { toast } from "@/components/ui/toast";
 
 export default {
@@ -121,40 +124,19 @@ export default {
   },
   apollo: {
     $subscribe: {
-      match_map_veto_picks: {
-        // Without a region veto there are no picks to show.
+      veto: {
+        // Nothing to follow without a region veto or an organizer's choice.
         skip() {
-          return !this.match.options.region_veto;
+          return !this.match.options.region_veto && !this.canSelectRegion;
         },
         variables: function () {
           return {
             matchId: this.matchId || this.$route.params.id,
           };
         },
-        query: typedGql("subscription")({
-          match_region_veto_picks: [
-            {
-              where: {
-                match_id: {
-                  _eq: $("matchId", "uuid!"),
-                },
-              },
-              order_by: [
-                {
-                  created_at: order_by.asc,
-                },
-              ],
-            },
-            {
-              region: true,
-              type: true,
-              auto_picked: true,
-              match_lineup_id: true,
-            },
-          ],
-        }),
+        query: vetoStreamSubscription,
         result: function ({ data }) {
-          this.picks = data.match_region_veto_picks;
+          this.streamed = streamedVeto(data) ?? this.streamed;
         },
       },
     },
@@ -186,7 +168,7 @@ export default {
   },
   data() {
     return {
-      picks: [],
+      streamed: undefined as any,
       submitting: false,
       form: useForm({
         validationSchema: toTypedSchema(
@@ -200,6 +182,14 @@ export default {
     };
   },
   computed: {
+    // The match with the veto as the stream last sent it: the picks, whose
+    // turn it is and the clock all from one read.
+    vetoMatch() {
+      return withStreamedVeto(this.match, this.streamed);
+    },
+    picks() {
+      return this.streamed?.region_veto_picks ?? [];
+    },
     canOverride() {
       return (
         this.match.is_organizer &&
@@ -207,10 +197,10 @@ export default {
       );
     },
     pickingLineup() {
-      if (this.match.lineup_1?.is_picking_region_veto) {
+      if (this.vetoMatch.lineup_1?.is_picking_region_veto) {
         return 1;
       }
-      if (this.match.lineup_2?.is_picking_region_veto) {
+      if (this.vetoMatch.lineup_2?.is_picking_region_veto) {
         return 2;
       }
       return null;
@@ -260,7 +250,7 @@ export default {
         return null;
       }
 
-      return this.match.veto_pick_expires_at ?? null;
+      return this.vetoMatch.veto_pick_expires_at ?? null;
     },
     override() {
       return isVetoOverrideEnabled(this.match?.id);
@@ -271,8 +261,8 @@ export default {
       }
 
       return (
-        this.match.lineup_1.can_pick_region_veto ||
-        this.match.lineup_2.can_pick_region_veto
+        this.vetoMatch.lineup_1.can_pick_region_veto ||
+        this.vetoMatch.lineup_2.can_pick_region_veto
       );
     },
     regions() {
@@ -296,10 +286,10 @@ export default {
       });
     },
     isBanning() {
-      return this.match.options.region_veto && !this.match.region;
+      return this.match.options.region_veto && !this.vetoMatch.region;
     },
     isRegionVeto() {
-      return this.match.status == e_match_status_enum.Veto;
+      return this.vetoMatch.status == e_match_status_enum.Veto;
     },
     canSelectRegion() {
       return (
@@ -373,7 +363,7 @@ export default {
             region,
             type: e_veto_pick_types_enum.Ban,
             match_id: this.matchId || this.$route.params.id,
-            match_lineup_id: this.match.region_veto_picking_lineup_id,
+            match_lineup_id: this.vetoMatch.region_veto_picking_lineup_id,
           },
           mutation: generateMutation({
             insert_match_region_veto_picks_one: [

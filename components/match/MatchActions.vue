@@ -602,9 +602,10 @@ import {
 import { DEADLINE_MINUTES, matchFixMenu } from "~/utilities/fixProblem";
 import { vetoTimelineSteps } from "~/utilities/rewind";
 import { mapVetoSteps } from "~/utilities/vetoLineups";
+import { streamedVeto, vetoStreamSubscription } from "~/utilities/vetoStream";
 import { useMatchRoundsFocus } from "~/composables/useMatchRoundsFocus";
 import { useVetoOverride } from "~/composables/useVetoOverride";
-import { e_veto_pick_types_enum, order_by } from "~/generated/zeus";
+import { e_veto_pick_types_enum } from "~/generated/zeus";
 type MatchActionChoice = { value: string; label: string };
 
 type MatchActionConfirm = {
@@ -1054,28 +1055,19 @@ export default {
       if (!this.vetoPicksScope) {
         return;
       }
+      // The veto stream, so the step count a rewind is sent with is as fresh
+      // as the board's.
       this.vetoPicksSub = (this as any).$apollo
         .subscribe({
-          query: generateSubscription({
-            match_map_veto_picks: [
-              {
-                where: { match_id: { _eq: this.match.id } },
-                order_by: [{ created_at: order_by.asc }],
-              },
-              {
-                id: true,
-                type: true,
-                side: true,
-                match_lineup_id: true,
-                auto_picked: true,
-                map: { id: true, name: true, label: true },
-              },
-            ],
-          }),
+          query: vetoStreamSubscription,
+          variables: { matchId: this.match.id },
         })
         .subscribe({
           next: ({ data }: any) => {
-            this.vetoPicks = data?.match_map_veto_picks ?? [];
+            const veto = streamedVeto(data);
+            if (veto) {
+              this.vetoPicks = veto.map_veto_picks;
+            }
           },
         });
     },

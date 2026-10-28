@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { mountSuspended } from "@nuxt/test-utils/runtime";
 import MatchMapVeto from "~/components/match/MatchMapVeto.vue";
 import VetoBoard from "~/components/match/VetoBoard.vue";
@@ -61,6 +61,24 @@ function match(overrides: Record<string, unknown> = {}) {
   };
 }
 
+// What the veto stream sends for a match: its veto, as one read.
+function streamed(m: any, picks: any[] = []) {
+  return {
+    id: m.id,
+    status: m.status,
+    region: m.region ?? null,
+    veto_pick_expires_at: m.veto_pick_expires_at ?? null,
+    map_veto_type: m.map_veto_type,
+    map_veto_picking_lineup_id: m.map_veto_picking_lineup_id ?? null,
+    region_veto_picking_lineup_id: null,
+    lineup_1: m.lineup_1,
+    lineup_2: m.lineup_2,
+    match_maps: m.match_maps,
+    map_veto_picks: picks,
+    region_veto_picks: [],
+  };
+}
+
 const board = (wrapper: any) => wrapper.findComponent(VetoBoard);
 
 afterEach(() => {
@@ -117,7 +135,7 @@ describe("MatchMapVeto start stage", () => {
     // Not until its moves have arrived.
     expect(board(wrapper).exists()).toBe(false);
 
-    (wrapper.vm as any).fetchedPicks = [];
+    (wrapper.vm as any).streamed = streamed(match());
     await wrapper.vm.$nextTick();
     expect(board(wrapper).exists()).toBe(true);
     expect(board(wrapper).props("start")).toBeNull();
@@ -130,5 +148,77 @@ describe("MatchMapVeto start stage", () => {
     });
 
     expect(board(wrapper).exists()).toBe(false);
+  });
+});
+
+describe("MatchMapVeto veto stream", () => {
+  // The page's poll still has the veto before lineup 1's ban.
+  const polled = () =>
+    match({
+      status: "Veto",
+      map_veto_type: "Ban",
+      map_veto_picking_lineup_id: "l1",
+      lineup_1: { ...lineup("l1", "1"), is_picking_map_veto: true },
+      match_maps: [],
+    });
+  const afterBan = () =>
+    streamed(
+      match({
+        status: "Veto",
+        map_veto_type: "Ban",
+        map_veto_picking_lineup_id: "l2",
+        lineup_2: {
+          ...lineup("l2", "2"),
+          is_picking_map_veto: true,
+          can_pick_map_veto: true,
+        },
+        match_maps: [],
+      }),
+      [
+        {
+          id: "pick-1",
+          map: { id: "ancient", name: "ancient", label: "ancient" },
+          side: null,
+          type: "Ban",
+          auto_picked: false,
+          match_lineup_id: "l1",
+        },
+      ],
+    );
+
+  it("shows whose turn it is from the stream, ahead of the page's poll", async () => {
+    const wrapper = await mountSuspended(MatchMapVeto, {
+      props: { match: polled(), matchId: "match-1" },
+    });
+    (wrapper.vm as any).streamed = afterBan();
+    await wrapper.vm.$nextTick();
+
+    expect(board(wrapper).props("pickingLineup")).toBe(2);
+    expect(board(wrapper).props("isPicking")).toBe(true);
+    expect(board(wrapper).props("steps")[0].record).toMatchObject({
+      itemId: "ancient",
+      lineup: 1,
+    });
+  });
+
+  it("picks for the lineup the stream says is up", async () => {
+    const client = (useNuxtApp() as any).$apollo.defaultClient;
+    vi.spyOn(client, "subscribe").mockImplementation(
+      () =>
+        ({
+          subscribe: () => ({ unsubscribe() {}, closed: false }),
+        }) as any,
+    );
+    const mutate = vi.spyOn(client, "mutate").mockResolvedValue({ data: {} });
+    const wrapper = await mountSuspended(MatchMapVeto, {
+      props: { match: polled(), matchId: "match-1" },
+      global: { mixins: (useNuxtApp().vueApp as any)._context.mixins },
+    });
+    (wrapper.vm as any).streamed = afterBan();
+
+    await (wrapper.vm as any).vetoPick("dust2");
+
+    expect(mutate.mock.calls[0][0].variables.match_lineup_id).toBe("l2");
+    vi.restoreAllMocks();
   });
 });

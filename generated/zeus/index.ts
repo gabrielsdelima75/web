@@ -30099,6 +30099,107 @@ count?: [{	columns?: Array<ValueTypes["match_type_cfgs_select_column"]> | undefi
 	/** filter the rows which have to be updated */
 	where: ValueTypes["match_type_cfgs_bool_exp"] | Variable<any, string>
 };
+	/** columns and relationships of "match_veto_versions" */
+["match_veto_versions"]: AliasType<{
+	changed_at?:boolean | `@${string}`,
+	/** An object relationship */
+	match?:ValueTypes["matches"],
+	match_id?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	/** aggregated selection of "match_veto_versions" */
+["match_veto_versions_aggregate"]: AliasType<{
+	aggregate?:ValueTypes["match_veto_versions_aggregate_fields"],
+	nodes?:ValueTypes["match_veto_versions"],
+		__typename?: boolean | `@${string}`
+}>;
+	/** aggregate fields of "match_veto_versions" */
+["match_veto_versions_aggregate_fields"]: AliasType<{
+count?: [{	columns?: Array<ValueTypes["match_veto_versions_select_column"]> | undefined | null | Variable<any, string>,	distinct?: boolean | undefined | null | Variable<any, string>},boolean | `@${string}`],
+	max?:ValueTypes["match_veto_versions_max_fields"],
+	min?:ValueTypes["match_veto_versions_min_fields"],
+		__typename?: boolean | `@${string}`
+}>;
+	/** Boolean expression to filter rows from the table "match_veto_versions". All fields are combined with a logical 'AND'. */
+["match_veto_versions_bool_exp"]: {
+	_and?: Array<ValueTypes["match_veto_versions_bool_exp"]> | undefined | null | Variable<any, string>,
+	_not?: ValueTypes["match_veto_versions_bool_exp"] | undefined | null | Variable<any, string>,
+	_or?: Array<ValueTypes["match_veto_versions_bool_exp"]> | undefined | null | Variable<any, string>,
+	changed_at?: ValueTypes["timestamptz_comparison_exp"] | undefined | null | Variable<any, string>,
+	match?: ValueTypes["matches_bool_exp"] | undefined | null | Variable<any, string>,
+	match_id?: ValueTypes["uuid_comparison_exp"] | undefined | null | Variable<any, string>
+};
+	/** unique or primary key constraints on table "match_veto_versions" */
+["match_veto_versions_constraint"]:match_veto_versions_constraint;
+	/** input type for inserting data into table "match_veto_versions" */
+["match_veto_versions_insert_input"]: {
+	changed_at?: ValueTypes["timestamptz"] | undefined | null | Variable<any, string>,
+	match?: ValueTypes["matches_obj_rel_insert_input"] | undefined | null | Variable<any, string>,
+	match_id?: ValueTypes["uuid"] | undefined | null | Variable<any, string>
+};
+	/** aggregate max on columns */
+["match_veto_versions_max_fields"]: AliasType<{
+	changed_at?:boolean | `@${string}`,
+	match_id?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	/** aggregate min on columns */
+["match_veto_versions_min_fields"]: AliasType<{
+	changed_at?:boolean | `@${string}`,
+	match_id?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	/** response of any mutation on the table "match_veto_versions" */
+["match_veto_versions_mutation_response"]: AliasType<{
+	/** number of rows affected by the mutation */
+	affected_rows?:boolean | `@${string}`,
+	/** data from the rows affected by the mutation */
+	returning?:ValueTypes["match_veto_versions"],
+		__typename?: boolean | `@${string}`
+}>;
+	/** on_conflict condition type for table "match_veto_versions" */
+["match_veto_versions_on_conflict"]: {
+	constraint: ValueTypes["match_veto_versions_constraint"] | Variable<any, string>,
+	update_columns: Array<ValueTypes["match_veto_versions_update_column"]> | Variable<any, string>,
+	where?: ValueTypes["match_veto_versions_bool_exp"] | undefined | null | Variable<any, string>
+};
+	/** Ordering options when selecting data from "match_veto_versions". */
+["match_veto_versions_order_by"]: {
+	changed_at?: ValueTypes["order_by"] | undefined | null | Variable<any, string>,
+	match?: ValueTypes["matches_order_by"] | undefined | null | Variable<any, string>,
+	match_id?: ValueTypes["order_by"] | undefined | null | Variable<any, string>
+};
+	/** primary key columns input for table: match_veto_versions */
+["match_veto_versions_pk_columns_input"]: {
+	match_id: ValueTypes["uuid"] | Variable<any, string>
+};
+	/** select columns of table "match_veto_versions" */
+["match_veto_versions_select_column"]:match_veto_versions_select_column;
+	/** input type for updating data in table "match_veto_versions" */
+["match_veto_versions_set_input"]: {
+	changed_at?: ValueTypes["timestamptz"] | undefined | null | Variable<any, string>,
+	match_id?: ValueTypes["uuid"] | undefined | null | Variable<any, string>
+};
+	/** Streaming cursor of the table "match_veto_versions" */
+["match_veto_versions_stream_cursor_input"]: {
+	/** Stream column input with initial value */
+	initial_value: ValueTypes["match_veto_versions_stream_cursor_value_input"] | Variable<any, string>,
+	/** cursor ordering */
+	ordering?: ValueTypes["cursor_ordering"] | undefined | null | Variable<any, string>
+};
+	/** Initial value of the column from where the streaming should start */
+["match_veto_versions_stream_cursor_value_input"]: {
+	changed_at?: ValueTypes["timestamptz"] | undefined | null | Variable<any, string>,
+	match_id?: ValueTypes["uuid"] | undefined | null | Variable<any, string>
+};
+	/** update columns of table "match_veto_versions" */
+["match_veto_versions_update_column"]:match_veto_versions_update_column;
+	["match_veto_versions_updates"]: {
+	/** sets the columns of the filtered rows to the given values */
+	_set?: ValueTypes["match_veto_versions_set_input"] | undefined | null | Variable<any, string>,
+	/** filter the rows which have to be updated */
+	where: ValueTypes["match_veto_versions_bool_exp"] | Variable<any, string>
+};
 	/** columns and relationships of "matches" */
 ["matches"]: AliasType<{
 	/** A computed field, executes function "can_assign_server_to_match" */
@@ -31692,6 +31793,9 @@ delete_match_streams_by_pk?: [{	id: ValueTypes["uuid"] | Variable<any, string>},
 delete_match_type_cfgs?: [{	/** filter the rows which have to be deleted */
 	where: ValueTypes["match_type_cfgs_bool_exp"] | Variable<any, string>},ValueTypes["match_type_cfgs_mutation_response"]],
 delete_match_type_cfgs_by_pk?: [{	type: ValueTypes["e_game_cfg_types_enum"] | Variable<any, string>},ValueTypes["match_type_cfgs"]],
+delete_match_veto_versions?: [{	/** filter the rows which have to be deleted */
+	where: ValueTypes["match_veto_versions_bool_exp"] | Variable<any, string>},ValueTypes["match_veto_versions_mutation_response"]],
+delete_match_veto_versions_by_pk?: [{	match_id: ValueTypes["uuid"] | Variable<any, string>},ValueTypes["match_veto_versions"]],
 delete_matches?: [{	/** filter the rows which have to be deleted */
 	where: ValueTypes["matches_bool_exp"] | Variable<any, string>},ValueTypes["matches_mutation_response"]],
 delete_matches_by_pk?: [{	id: ValueTypes["uuid"] | Variable<any, string>},ValueTypes["matches"]],
@@ -32771,6 +32875,12 @@ insert_match_type_cfgs?: [{	/** the rows to be inserted */
 insert_match_type_cfgs_one?: [{	/** the row to be inserted */
 	object: ValueTypes["match_type_cfgs_insert_input"] | Variable<any, string>,	/** upsert condition */
 	on_conflict?: ValueTypes["match_type_cfgs_on_conflict"] | undefined | null | Variable<any, string>},ValueTypes["match_type_cfgs"]],
+insert_match_veto_versions?: [{	/** the rows to be inserted */
+	objects: Array<ValueTypes["match_veto_versions_insert_input"]> | Variable<any, string>,	/** upsert condition */
+	on_conflict?: ValueTypes["match_veto_versions_on_conflict"] | undefined | null | Variable<any, string>},ValueTypes["match_veto_versions_mutation_response"]],
+insert_match_veto_versions_one?: [{	/** the row to be inserted */
+	object: ValueTypes["match_veto_versions_insert_input"] | Variable<any, string>,	/** upsert condition */
+	on_conflict?: ValueTypes["match_veto_versions_on_conflict"] | undefined | null | Variable<any, string>},ValueTypes["match_veto_versions"]],
 insert_matches?: [{	/** the rows to be inserted */
 	objects: Array<ValueTypes["matches_insert_input"]> | Variable<any, string>,	/** upsert condition */
 	on_conflict?: ValueTypes["matches_on_conflict"] | undefined | null | Variable<any, string>},ValueTypes["matches_mutation_response"]],
@@ -34725,6 +34835,13 @@ update_match_type_cfgs_by_pk?: [{	/** sets the columns of the filtered rows to t
 	_set?: ValueTypes["match_type_cfgs_set_input"] | undefined | null | Variable<any, string>,	pk_columns: ValueTypes["match_type_cfgs_pk_columns_input"] | Variable<any, string>},ValueTypes["match_type_cfgs"]],
 update_match_type_cfgs_many?: [{	/** updates to execute, in order */
 	updates: Array<ValueTypes["match_type_cfgs_updates"]> | Variable<any, string>},ValueTypes["match_type_cfgs_mutation_response"]],
+update_match_veto_versions?: [{	/** sets the columns of the filtered rows to the given values */
+	_set?: ValueTypes["match_veto_versions_set_input"] | undefined | null | Variable<any, string>,	/** filter the rows which have to be updated */
+	where: ValueTypes["match_veto_versions_bool_exp"] | Variable<any, string>},ValueTypes["match_veto_versions_mutation_response"]],
+update_match_veto_versions_by_pk?: [{	/** sets the columns of the filtered rows to the given values */
+	_set?: ValueTypes["match_veto_versions_set_input"] | undefined | null | Variable<any, string>,	pk_columns: ValueTypes["match_veto_versions_pk_columns_input"] | Variable<any, string>},ValueTypes["match_veto_versions"]],
+update_match_veto_versions_many?: [{	/** updates to execute, in order */
+	updates: Array<ValueTypes["match_veto_versions_updates"]> | Variable<any, string>},ValueTypes["match_veto_versions_mutation_response"]],
 update_matches?: [{	/** increments the numeric columns with given value of the filtered values */
 	_inc?: ValueTypes["matches_inc_input"] | undefined | null | Variable<any, string>,	/** sets the columns of the filtered rows to the given values */
 	_set?: ValueTypes["matches_set_input"] | undefined | null | Variable<any, string>,	/** filter the rows which have to be updated */
@@ -54911,6 +55028,19 @@ match_type_cfgs_aggregate?: [{	/** distinct select on columns */
 	order_by?: Array<ValueTypes["match_type_cfgs_order_by"]> | undefined | null | Variable<any, string>,	/** filter the rows returned */
 	where?: ValueTypes["match_type_cfgs_bool_exp"] | undefined | null | Variable<any, string>},ValueTypes["match_type_cfgs_aggregate"]],
 match_type_cfgs_by_pk?: [{	type: ValueTypes["e_game_cfg_types_enum"] | Variable<any, string>},ValueTypes["match_type_cfgs"]],
+match_veto_versions?: [{	/** distinct select on columns */
+	distinct_on?: Array<ValueTypes["match_veto_versions_select_column"]> | undefined | null | Variable<any, string>,	/** limit the number of rows returned */
+	limit?: number | undefined | null | Variable<any, string>,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null | Variable<any, string>,	/** sort the rows by one or more columns */
+	order_by?: Array<ValueTypes["match_veto_versions_order_by"]> | undefined | null | Variable<any, string>,	/** filter the rows returned */
+	where?: ValueTypes["match_veto_versions_bool_exp"] | undefined | null | Variable<any, string>},ValueTypes["match_veto_versions"]],
+match_veto_versions_aggregate?: [{	/** distinct select on columns */
+	distinct_on?: Array<ValueTypes["match_veto_versions_select_column"]> | undefined | null | Variable<any, string>,	/** limit the number of rows returned */
+	limit?: number | undefined | null | Variable<any, string>,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null | Variable<any, string>,	/** sort the rows by one or more columns */
+	order_by?: Array<ValueTypes["match_veto_versions_order_by"]> | undefined | null | Variable<any, string>,	/** filter the rows returned */
+	where?: ValueTypes["match_veto_versions_bool_exp"] | undefined | null | Variable<any, string>},ValueTypes["match_veto_versions_aggregate"]],
+match_veto_versions_by_pk?: [{	match_id: ValueTypes["uuid"] | Variable<any, string>},ValueTypes["match_veto_versions"]],
 matches?: [{	/** distinct select on columns */
 	distinct_on?: Array<ValueTypes["matches_select_column"]> | undefined | null | Variable<any, string>,	/** limit the number of rows returned */
 	limit?: number | undefined | null | Variable<any, string>,	/** skip the first n rows. Use only with order_by */
@@ -63511,6 +63641,23 @@ match_type_cfgs_stream?: [{	/** maximum number of rows returned in a single batc
 	batch_size: number | Variable<any, string>,	/** cursor to stream the results returned by the query */
 	cursor: Array<ValueTypes["match_type_cfgs_stream_cursor_input"] | undefined | null> | Variable<any, string>,	/** filter the rows returned */
 	where?: ValueTypes["match_type_cfgs_bool_exp"] | undefined | null | Variable<any, string>},ValueTypes["match_type_cfgs"]],
+match_veto_versions?: [{	/** distinct select on columns */
+	distinct_on?: Array<ValueTypes["match_veto_versions_select_column"]> | undefined | null | Variable<any, string>,	/** limit the number of rows returned */
+	limit?: number | undefined | null | Variable<any, string>,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null | Variable<any, string>,	/** sort the rows by one or more columns */
+	order_by?: Array<ValueTypes["match_veto_versions_order_by"]> | undefined | null | Variable<any, string>,	/** filter the rows returned */
+	where?: ValueTypes["match_veto_versions_bool_exp"] | undefined | null | Variable<any, string>},ValueTypes["match_veto_versions"]],
+match_veto_versions_aggregate?: [{	/** distinct select on columns */
+	distinct_on?: Array<ValueTypes["match_veto_versions_select_column"]> | undefined | null | Variable<any, string>,	/** limit the number of rows returned */
+	limit?: number | undefined | null | Variable<any, string>,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null | Variable<any, string>,	/** sort the rows by one or more columns */
+	order_by?: Array<ValueTypes["match_veto_versions_order_by"]> | undefined | null | Variable<any, string>,	/** filter the rows returned */
+	where?: ValueTypes["match_veto_versions_bool_exp"] | undefined | null | Variable<any, string>},ValueTypes["match_veto_versions_aggregate"]],
+match_veto_versions_by_pk?: [{	match_id: ValueTypes["uuid"] | Variable<any, string>},ValueTypes["match_veto_versions"]],
+match_veto_versions_stream?: [{	/** maximum number of rows returned in a single batch */
+	batch_size: number | Variable<any, string>,	/** cursor to stream the results returned by the query */
+	cursor: Array<ValueTypes["match_veto_versions_stream_cursor_input"] | undefined | null> | Variable<any, string>,	/** filter the rows returned */
+	where?: ValueTypes["match_veto_versions_bool_exp"] | undefined | null | Variable<any, string>},ValueTypes["match_veto_versions"]],
 matches?: [{	/** distinct select on columns */
 	distinct_on?: Array<ValueTypes["matches_select_column"]> | undefined | null | Variable<any, string>,	/** limit the number of rows returned */
 	limit?: number | undefined | null | Variable<any, string>,	/** skip the first n rows. Use only with order_by */
@@ -124088,6 +124235,107 @@ count?: [{	columns?: Array<ResolverInputTypes["match_type_cfgs_select_column"]> 
 	/** filter the rows which have to be updated */
 	where: ResolverInputTypes["match_type_cfgs_bool_exp"]
 };
+	/** columns and relationships of "match_veto_versions" */
+["match_veto_versions"]: AliasType<{
+	changed_at?:boolean | `@${string}`,
+	/** An object relationship */
+	match?:ResolverInputTypes["matches"],
+	match_id?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	/** aggregated selection of "match_veto_versions" */
+["match_veto_versions_aggregate"]: AliasType<{
+	aggregate?:ResolverInputTypes["match_veto_versions_aggregate_fields"],
+	nodes?:ResolverInputTypes["match_veto_versions"],
+		__typename?: boolean | `@${string}`
+}>;
+	/** aggregate fields of "match_veto_versions" */
+["match_veto_versions_aggregate_fields"]: AliasType<{
+count?: [{	columns?: Array<ResolverInputTypes["match_veto_versions_select_column"]> | undefined | null,	distinct?: boolean | undefined | null},boolean | `@${string}`],
+	max?:ResolverInputTypes["match_veto_versions_max_fields"],
+	min?:ResolverInputTypes["match_veto_versions_min_fields"],
+		__typename?: boolean | `@${string}`
+}>;
+	/** Boolean expression to filter rows from the table "match_veto_versions". All fields are combined with a logical 'AND'. */
+["match_veto_versions_bool_exp"]: {
+	_and?: Array<ResolverInputTypes["match_veto_versions_bool_exp"]> | undefined | null,
+	_not?: ResolverInputTypes["match_veto_versions_bool_exp"] | undefined | null,
+	_or?: Array<ResolverInputTypes["match_veto_versions_bool_exp"]> | undefined | null,
+	changed_at?: ResolverInputTypes["timestamptz_comparison_exp"] | undefined | null,
+	match?: ResolverInputTypes["matches_bool_exp"] | undefined | null,
+	match_id?: ResolverInputTypes["uuid_comparison_exp"] | undefined | null
+};
+	/** unique or primary key constraints on table "match_veto_versions" */
+["match_veto_versions_constraint"]:match_veto_versions_constraint;
+	/** input type for inserting data into table "match_veto_versions" */
+["match_veto_versions_insert_input"]: {
+	changed_at?: ResolverInputTypes["timestamptz"] | undefined | null,
+	match?: ResolverInputTypes["matches_obj_rel_insert_input"] | undefined | null,
+	match_id?: ResolverInputTypes["uuid"] | undefined | null
+};
+	/** aggregate max on columns */
+["match_veto_versions_max_fields"]: AliasType<{
+	changed_at?:boolean | `@${string}`,
+	match_id?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	/** aggregate min on columns */
+["match_veto_versions_min_fields"]: AliasType<{
+	changed_at?:boolean | `@${string}`,
+	match_id?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	/** response of any mutation on the table "match_veto_versions" */
+["match_veto_versions_mutation_response"]: AliasType<{
+	/** number of rows affected by the mutation */
+	affected_rows?:boolean | `@${string}`,
+	/** data from the rows affected by the mutation */
+	returning?:ResolverInputTypes["match_veto_versions"],
+		__typename?: boolean | `@${string}`
+}>;
+	/** on_conflict condition type for table "match_veto_versions" */
+["match_veto_versions_on_conflict"]: {
+	constraint: ResolverInputTypes["match_veto_versions_constraint"],
+	update_columns: Array<ResolverInputTypes["match_veto_versions_update_column"]>,
+	where?: ResolverInputTypes["match_veto_versions_bool_exp"] | undefined | null
+};
+	/** Ordering options when selecting data from "match_veto_versions". */
+["match_veto_versions_order_by"]: {
+	changed_at?: ResolverInputTypes["order_by"] | undefined | null,
+	match?: ResolverInputTypes["matches_order_by"] | undefined | null,
+	match_id?: ResolverInputTypes["order_by"] | undefined | null
+};
+	/** primary key columns input for table: match_veto_versions */
+["match_veto_versions_pk_columns_input"]: {
+	match_id: ResolverInputTypes["uuid"]
+};
+	/** select columns of table "match_veto_versions" */
+["match_veto_versions_select_column"]:match_veto_versions_select_column;
+	/** input type for updating data in table "match_veto_versions" */
+["match_veto_versions_set_input"]: {
+	changed_at?: ResolverInputTypes["timestamptz"] | undefined | null,
+	match_id?: ResolverInputTypes["uuid"] | undefined | null
+};
+	/** Streaming cursor of the table "match_veto_versions" */
+["match_veto_versions_stream_cursor_input"]: {
+	/** Stream column input with initial value */
+	initial_value: ResolverInputTypes["match_veto_versions_stream_cursor_value_input"],
+	/** cursor ordering */
+	ordering?: ResolverInputTypes["cursor_ordering"] | undefined | null
+};
+	/** Initial value of the column from where the streaming should start */
+["match_veto_versions_stream_cursor_value_input"]: {
+	changed_at?: ResolverInputTypes["timestamptz"] | undefined | null,
+	match_id?: ResolverInputTypes["uuid"] | undefined | null
+};
+	/** update columns of table "match_veto_versions" */
+["match_veto_versions_update_column"]:match_veto_versions_update_column;
+	["match_veto_versions_updates"]: {
+	/** sets the columns of the filtered rows to the given values */
+	_set?: ResolverInputTypes["match_veto_versions_set_input"] | undefined | null,
+	/** filter the rows which have to be updated */
+	where: ResolverInputTypes["match_veto_versions_bool_exp"]
+};
 	/** columns and relationships of "matches" */
 ["matches"]: AliasType<{
 	/** A computed field, executes function "can_assign_server_to_match" */
@@ -125681,6 +125929,9 @@ delete_match_streams_by_pk?: [{	id: ResolverInputTypes["uuid"]},ResolverInputTyp
 delete_match_type_cfgs?: [{	/** filter the rows which have to be deleted */
 	where: ResolverInputTypes["match_type_cfgs_bool_exp"]},ResolverInputTypes["match_type_cfgs_mutation_response"]],
 delete_match_type_cfgs_by_pk?: [{	type: ResolverInputTypes["e_game_cfg_types_enum"]},ResolverInputTypes["match_type_cfgs"]],
+delete_match_veto_versions?: [{	/** filter the rows which have to be deleted */
+	where: ResolverInputTypes["match_veto_versions_bool_exp"]},ResolverInputTypes["match_veto_versions_mutation_response"]],
+delete_match_veto_versions_by_pk?: [{	match_id: ResolverInputTypes["uuid"]},ResolverInputTypes["match_veto_versions"]],
 delete_matches?: [{	/** filter the rows which have to be deleted */
 	where: ResolverInputTypes["matches_bool_exp"]},ResolverInputTypes["matches_mutation_response"]],
 delete_matches_by_pk?: [{	id: ResolverInputTypes["uuid"]},ResolverInputTypes["matches"]],
@@ -126760,6 +127011,12 @@ insert_match_type_cfgs?: [{	/** the rows to be inserted */
 insert_match_type_cfgs_one?: [{	/** the row to be inserted */
 	object: ResolverInputTypes["match_type_cfgs_insert_input"],	/** upsert condition */
 	on_conflict?: ResolverInputTypes["match_type_cfgs_on_conflict"] | undefined | null},ResolverInputTypes["match_type_cfgs"]],
+insert_match_veto_versions?: [{	/** the rows to be inserted */
+	objects: Array<ResolverInputTypes["match_veto_versions_insert_input"]>,	/** upsert condition */
+	on_conflict?: ResolverInputTypes["match_veto_versions_on_conflict"] | undefined | null},ResolverInputTypes["match_veto_versions_mutation_response"]],
+insert_match_veto_versions_one?: [{	/** the row to be inserted */
+	object: ResolverInputTypes["match_veto_versions_insert_input"],	/** upsert condition */
+	on_conflict?: ResolverInputTypes["match_veto_versions_on_conflict"] | undefined | null},ResolverInputTypes["match_veto_versions"]],
 insert_matches?: [{	/** the rows to be inserted */
 	objects: Array<ResolverInputTypes["matches_insert_input"]>,	/** upsert condition */
 	on_conflict?: ResolverInputTypes["matches_on_conflict"] | undefined | null},ResolverInputTypes["matches_mutation_response"]],
@@ -128714,6 +128971,13 @@ update_match_type_cfgs_by_pk?: [{	/** sets the columns of the filtered rows to t
 	_set?: ResolverInputTypes["match_type_cfgs_set_input"] | undefined | null,	pk_columns: ResolverInputTypes["match_type_cfgs_pk_columns_input"]},ResolverInputTypes["match_type_cfgs"]],
 update_match_type_cfgs_many?: [{	/** updates to execute, in order */
 	updates: Array<ResolverInputTypes["match_type_cfgs_updates"]>},ResolverInputTypes["match_type_cfgs_mutation_response"]],
+update_match_veto_versions?: [{	/** sets the columns of the filtered rows to the given values */
+	_set?: ResolverInputTypes["match_veto_versions_set_input"] | undefined | null,	/** filter the rows which have to be updated */
+	where: ResolverInputTypes["match_veto_versions_bool_exp"]},ResolverInputTypes["match_veto_versions_mutation_response"]],
+update_match_veto_versions_by_pk?: [{	/** sets the columns of the filtered rows to the given values */
+	_set?: ResolverInputTypes["match_veto_versions_set_input"] | undefined | null,	pk_columns: ResolverInputTypes["match_veto_versions_pk_columns_input"]},ResolverInputTypes["match_veto_versions"]],
+update_match_veto_versions_many?: [{	/** updates to execute, in order */
+	updates: Array<ResolverInputTypes["match_veto_versions_updates"]>},ResolverInputTypes["match_veto_versions_mutation_response"]],
 update_matches?: [{	/** increments the numeric columns with given value of the filtered values */
 	_inc?: ResolverInputTypes["matches_inc_input"] | undefined | null,	/** sets the columns of the filtered rows to the given values */
 	_set?: ResolverInputTypes["matches_set_input"] | undefined | null,	/** filter the rows which have to be updated */
@@ -148900,6 +149164,19 @@ match_type_cfgs_aggregate?: [{	/** distinct select on columns */
 	order_by?: Array<ResolverInputTypes["match_type_cfgs_order_by"]> | undefined | null,	/** filter the rows returned */
 	where?: ResolverInputTypes["match_type_cfgs_bool_exp"] | undefined | null},ResolverInputTypes["match_type_cfgs_aggregate"]],
 match_type_cfgs_by_pk?: [{	type: ResolverInputTypes["e_game_cfg_types_enum"]},ResolverInputTypes["match_type_cfgs"]],
+match_veto_versions?: [{	/** distinct select on columns */
+	distinct_on?: Array<ResolverInputTypes["match_veto_versions_select_column"]> | undefined | null,	/** limit the number of rows returned */
+	limit?: number | undefined | null,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null,	/** sort the rows by one or more columns */
+	order_by?: Array<ResolverInputTypes["match_veto_versions_order_by"]> | undefined | null,	/** filter the rows returned */
+	where?: ResolverInputTypes["match_veto_versions_bool_exp"] | undefined | null},ResolverInputTypes["match_veto_versions"]],
+match_veto_versions_aggregate?: [{	/** distinct select on columns */
+	distinct_on?: Array<ResolverInputTypes["match_veto_versions_select_column"]> | undefined | null,	/** limit the number of rows returned */
+	limit?: number | undefined | null,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null,	/** sort the rows by one or more columns */
+	order_by?: Array<ResolverInputTypes["match_veto_versions_order_by"]> | undefined | null,	/** filter the rows returned */
+	where?: ResolverInputTypes["match_veto_versions_bool_exp"] | undefined | null},ResolverInputTypes["match_veto_versions_aggregate"]],
+match_veto_versions_by_pk?: [{	match_id: ResolverInputTypes["uuid"]},ResolverInputTypes["match_veto_versions"]],
 matches?: [{	/** distinct select on columns */
 	distinct_on?: Array<ResolverInputTypes["matches_select_column"]> | undefined | null,	/** limit the number of rows returned */
 	limit?: number | undefined | null,	/** skip the first n rows. Use only with order_by */
@@ -157500,6 +157777,23 @@ match_type_cfgs_stream?: [{	/** maximum number of rows returned in a single batc
 	batch_size: number,	/** cursor to stream the results returned by the query */
 	cursor: Array<ResolverInputTypes["match_type_cfgs_stream_cursor_input"] | undefined | null>,	/** filter the rows returned */
 	where?: ResolverInputTypes["match_type_cfgs_bool_exp"] | undefined | null},ResolverInputTypes["match_type_cfgs"]],
+match_veto_versions?: [{	/** distinct select on columns */
+	distinct_on?: Array<ResolverInputTypes["match_veto_versions_select_column"]> | undefined | null,	/** limit the number of rows returned */
+	limit?: number | undefined | null,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null,	/** sort the rows by one or more columns */
+	order_by?: Array<ResolverInputTypes["match_veto_versions_order_by"]> | undefined | null,	/** filter the rows returned */
+	where?: ResolverInputTypes["match_veto_versions_bool_exp"] | undefined | null},ResolverInputTypes["match_veto_versions"]],
+match_veto_versions_aggregate?: [{	/** distinct select on columns */
+	distinct_on?: Array<ResolverInputTypes["match_veto_versions_select_column"]> | undefined | null,	/** limit the number of rows returned */
+	limit?: number | undefined | null,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null,	/** sort the rows by one or more columns */
+	order_by?: Array<ResolverInputTypes["match_veto_versions_order_by"]> | undefined | null,	/** filter the rows returned */
+	where?: ResolverInputTypes["match_veto_versions_bool_exp"] | undefined | null},ResolverInputTypes["match_veto_versions_aggregate"]],
+match_veto_versions_by_pk?: [{	match_id: ResolverInputTypes["uuid"]},ResolverInputTypes["match_veto_versions"]],
+match_veto_versions_stream?: [{	/** maximum number of rows returned in a single batch */
+	batch_size: number,	/** cursor to stream the results returned by the query */
+	cursor: Array<ResolverInputTypes["match_veto_versions_stream_cursor_input"] | undefined | null>,	/** filter the rows returned */
+	where?: ResolverInputTypes["match_veto_versions_bool_exp"] | undefined | null},ResolverInputTypes["match_veto_versions"]],
 matches?: [{	/** distinct select on columns */
 	distinct_on?: Array<ResolverInputTypes["matches_select_column"]> | undefined | null,	/** limit the number of rows returned */
 	limit?: number | undefined | null,	/** skip the first n rows. Use only with order_by */
@@ -215639,6 +215933,98 @@ export type ModelTypes = {
 	/** filter the rows which have to be updated */
 	where: ModelTypes["match_type_cfgs_bool_exp"]
 };
+	/** columns and relationships of "match_veto_versions" */
+["match_veto_versions"]: {
+		changed_at: ModelTypes["timestamptz"],
+	/** An object relationship */
+	match: ModelTypes["matches"],
+	match_id: ModelTypes["uuid"]
+};
+	/** aggregated selection of "match_veto_versions" */
+["match_veto_versions_aggregate"]: {
+		aggregate?: ModelTypes["match_veto_versions_aggregate_fields"] | undefined | null,
+	nodes: Array<ModelTypes["match_veto_versions"]>
+};
+	/** aggregate fields of "match_veto_versions" */
+["match_veto_versions_aggregate_fields"]: {
+		count: number,
+	max?: ModelTypes["match_veto_versions_max_fields"] | undefined | null,
+	min?: ModelTypes["match_veto_versions_min_fields"] | undefined | null
+};
+	/** Boolean expression to filter rows from the table "match_veto_versions". All fields are combined with a logical 'AND'. */
+["match_veto_versions_bool_exp"]: {
+	_and?: Array<ModelTypes["match_veto_versions_bool_exp"]> | undefined | null,
+	_not?: ModelTypes["match_veto_versions_bool_exp"] | undefined | null,
+	_or?: Array<ModelTypes["match_veto_versions_bool_exp"]> | undefined | null,
+	changed_at?: ModelTypes["timestamptz_comparison_exp"] | undefined | null,
+	match?: ModelTypes["matches_bool_exp"] | undefined | null,
+	match_id?: ModelTypes["uuid_comparison_exp"] | undefined | null
+};
+	["match_veto_versions_constraint"]:match_veto_versions_constraint;
+	/** input type for inserting data into table "match_veto_versions" */
+["match_veto_versions_insert_input"]: {
+	changed_at?: ModelTypes["timestamptz"] | undefined | null,
+	match?: ModelTypes["matches_obj_rel_insert_input"] | undefined | null,
+	match_id?: ModelTypes["uuid"] | undefined | null
+};
+	/** aggregate max on columns */
+["match_veto_versions_max_fields"]: {
+		changed_at?: ModelTypes["timestamptz"] | undefined | null,
+	match_id?: ModelTypes["uuid"] | undefined | null
+};
+	/** aggregate min on columns */
+["match_veto_versions_min_fields"]: {
+		changed_at?: ModelTypes["timestamptz"] | undefined | null,
+	match_id?: ModelTypes["uuid"] | undefined | null
+};
+	/** response of any mutation on the table "match_veto_versions" */
+["match_veto_versions_mutation_response"]: {
+		/** number of rows affected by the mutation */
+	affected_rows: number,
+	/** data from the rows affected by the mutation */
+	returning: Array<ModelTypes["match_veto_versions"]>
+};
+	/** on_conflict condition type for table "match_veto_versions" */
+["match_veto_versions_on_conflict"]: {
+	constraint: ModelTypes["match_veto_versions_constraint"],
+	update_columns: Array<ModelTypes["match_veto_versions_update_column"]>,
+	where?: ModelTypes["match_veto_versions_bool_exp"] | undefined | null
+};
+	/** Ordering options when selecting data from "match_veto_versions". */
+["match_veto_versions_order_by"]: {
+	changed_at?: ModelTypes["order_by"] | undefined | null,
+	match?: ModelTypes["matches_order_by"] | undefined | null,
+	match_id?: ModelTypes["order_by"] | undefined | null
+};
+	/** primary key columns input for table: match_veto_versions */
+["match_veto_versions_pk_columns_input"]: {
+	match_id: ModelTypes["uuid"]
+};
+	["match_veto_versions_select_column"]:match_veto_versions_select_column;
+	/** input type for updating data in table "match_veto_versions" */
+["match_veto_versions_set_input"]: {
+	changed_at?: ModelTypes["timestamptz"] | undefined | null,
+	match_id?: ModelTypes["uuid"] | undefined | null
+};
+	/** Streaming cursor of the table "match_veto_versions" */
+["match_veto_versions_stream_cursor_input"]: {
+	/** Stream column input with initial value */
+	initial_value: ModelTypes["match_veto_versions_stream_cursor_value_input"],
+	/** cursor ordering */
+	ordering?: ModelTypes["cursor_ordering"] | undefined | null
+};
+	/** Initial value of the column from where the streaming should start */
+["match_veto_versions_stream_cursor_value_input"]: {
+	changed_at?: ModelTypes["timestamptz"] | undefined | null,
+	match_id?: ModelTypes["uuid"] | undefined | null
+};
+	["match_veto_versions_update_column"]:match_veto_versions_update_column;
+	["match_veto_versions_updates"]: {
+	/** sets the columns of the filtered rows to the given values */
+	_set?: ModelTypes["match_veto_versions_set_input"] | undefined | null,
+	/** filter the rows which have to be updated */
+	where: ModelTypes["match_veto_versions_bool_exp"]
+};
 	/** columns and relationships of "matches" */
 ["matches"]: {
 		/** A computed field, executes function "can_assign_server_to_match" */
@@ -217205,6 +217591,10 @@ export type ModelTypes = {
 	delete_match_type_cfgs?: ModelTypes["match_type_cfgs_mutation_response"] | undefined | null,
 	/** delete single row from the table: "match_type_cfgs" */
 	delete_match_type_cfgs_by_pk?: ModelTypes["match_type_cfgs"] | undefined | null,
+	/** delete data from the table: "match_veto_versions" */
+	delete_match_veto_versions?: ModelTypes["match_veto_versions_mutation_response"] | undefined | null,
+	/** delete single row from the table: "match_veto_versions" */
+	delete_match_veto_versions_by_pk?: ModelTypes["match_veto_versions"] | undefined | null,
 	/** delete data from the table: "matches" */
 	delete_matches?: ModelTypes["matches_mutation_response"] | undefined | null,
 	/** delete single row from the table: "matches" */
@@ -218140,6 +218530,10 @@ export type ModelTypes = {
 	insert_match_type_cfgs?: ModelTypes["match_type_cfgs_mutation_response"] | undefined | null,
 	/** insert a single row into the table: "match_type_cfgs" */
 	insert_match_type_cfgs_one?: ModelTypes["match_type_cfgs"] | undefined | null,
+	/** insert data into the table: "match_veto_versions" */
+	insert_match_veto_versions?: ModelTypes["match_veto_versions_mutation_response"] | undefined | null,
+	/** insert a single row into the table: "match_veto_versions" */
+	insert_match_veto_versions_one?: ModelTypes["match_veto_versions"] | undefined | null,
 	/** insert data into the table: "matches" */
 	insert_matches?: ModelTypes["matches_mutation_response"] | undefined | null,
 	/** insert a single row into the table: "matches" */
@@ -219548,6 +219942,12 @@ export type ModelTypes = {
 	update_match_type_cfgs_by_pk?: ModelTypes["match_type_cfgs"] | undefined | null,
 	/** update multiples rows of table: "match_type_cfgs" */
 	update_match_type_cfgs_many?: Array<ModelTypes["match_type_cfgs_mutation_response"] | undefined | null> | undefined | null,
+	/** update data of the table: "match_veto_versions" */
+	update_match_veto_versions?: ModelTypes["match_veto_versions_mutation_response"] | undefined | null,
+	/** update single row of the table: "match_veto_versions" */
+	update_match_veto_versions_by_pk?: ModelTypes["match_veto_versions"] | undefined | null,
+	/** update multiples rows of table: "match_veto_versions" */
+	update_match_veto_versions_many?: Array<ModelTypes["match_veto_versions_mutation_response"] | undefined | null> | undefined | null,
 	/** update data of the table: "matches" */
 	update_matches?: ModelTypes["matches_mutation_response"] | undefined | null,
 	/** update single row of the table: "matches" */
@@ -237373,6 +237773,12 @@ export type ModelTypes = {
 	match_type_cfgs_aggregate: ModelTypes["match_type_cfgs_aggregate"],
 	/** fetch data from the table: "match_type_cfgs" using primary key columns */
 	match_type_cfgs_by_pk?: ModelTypes["match_type_cfgs"] | undefined | null,
+	/** fetch data from the table: "match_veto_versions" */
+	match_veto_versions: Array<ModelTypes["match_veto_versions"]>,
+	/** fetch aggregated fields from the table: "match_veto_versions" */
+	match_veto_versions_aggregate: ModelTypes["match_veto_versions_aggregate"],
+	/** fetch data from the table: "match_veto_versions" using primary key columns */
+	match_veto_versions_by_pk?: ModelTypes["match_veto_versions"] | undefined | null,
 	/** An array relationship */
 	matches: Array<ModelTypes["matches"]>,
 	/** An aggregate relationship */
@@ -243384,6 +243790,14 @@ export type ModelTypes = {
 	match_type_cfgs_by_pk?: ModelTypes["match_type_cfgs"] | undefined | null,
 	/** fetch data from the table in a streaming manner: "match_type_cfgs" */
 	match_type_cfgs_stream: Array<ModelTypes["match_type_cfgs"]>,
+	/** fetch data from the table: "match_veto_versions" */
+	match_veto_versions: Array<ModelTypes["match_veto_versions"]>,
+	/** fetch aggregated fields from the table: "match_veto_versions" */
+	match_veto_versions_aggregate: ModelTypes["match_veto_versions_aggregate"],
+	/** fetch data from the table: "match_veto_versions" using primary key columns */
+	match_veto_versions_by_pk?: ModelTypes["match_veto_versions"] | undefined | null,
+	/** fetch data from the table in a streaming manner: "match_veto_versions" */
+	match_veto_versions_stream: Array<ModelTypes["match_veto_versions"]>,
 	/** An array relationship */
 	matches: Array<ModelTypes["matches"]>,
 	/** An aggregate relationship */
@@ -300124,6 +300538,107 @@ export type GraphQLTypes = {
 	/** filter the rows which have to be updated */
 	where: GraphQLTypes["match_type_cfgs_bool_exp"]
 };
+	/** columns and relationships of "match_veto_versions" */
+["match_veto_versions"]: {
+	__typename: "match_veto_versions",
+	changed_at: GraphQLTypes["timestamptz"],
+	/** An object relationship */
+	match: GraphQLTypes["matches"],
+	match_id: GraphQLTypes["uuid"]
+};
+	/** aggregated selection of "match_veto_versions" */
+["match_veto_versions_aggregate"]: {
+	__typename: "match_veto_versions_aggregate",
+	aggregate?: GraphQLTypes["match_veto_versions_aggregate_fields"] | undefined | null,
+	nodes: Array<GraphQLTypes["match_veto_versions"]>
+};
+	/** aggregate fields of "match_veto_versions" */
+["match_veto_versions_aggregate_fields"]: {
+	__typename: "match_veto_versions_aggregate_fields",
+	count: number,
+	max?: GraphQLTypes["match_veto_versions_max_fields"] | undefined | null,
+	min?: GraphQLTypes["match_veto_versions_min_fields"] | undefined | null
+};
+	/** Boolean expression to filter rows from the table "match_veto_versions". All fields are combined with a logical 'AND'. */
+["match_veto_versions_bool_exp"]: {
+		_and?: Array<GraphQLTypes["match_veto_versions_bool_exp"]> | undefined | null,
+	_not?: GraphQLTypes["match_veto_versions_bool_exp"] | undefined | null,
+	_or?: Array<GraphQLTypes["match_veto_versions_bool_exp"]> | undefined | null,
+	changed_at?: GraphQLTypes["timestamptz_comparison_exp"] | undefined | null,
+	match?: GraphQLTypes["matches_bool_exp"] | undefined | null,
+	match_id?: GraphQLTypes["uuid_comparison_exp"] | undefined | null
+};
+	/** unique or primary key constraints on table "match_veto_versions" */
+["match_veto_versions_constraint"]: match_veto_versions_constraint;
+	/** input type for inserting data into table "match_veto_versions" */
+["match_veto_versions_insert_input"]: {
+		changed_at?: GraphQLTypes["timestamptz"] | undefined | null,
+	match?: GraphQLTypes["matches_obj_rel_insert_input"] | undefined | null,
+	match_id?: GraphQLTypes["uuid"] | undefined | null
+};
+	/** aggregate max on columns */
+["match_veto_versions_max_fields"]: {
+	__typename: "match_veto_versions_max_fields",
+	changed_at?: GraphQLTypes["timestamptz"] | undefined | null,
+	match_id?: GraphQLTypes["uuid"] | undefined | null
+};
+	/** aggregate min on columns */
+["match_veto_versions_min_fields"]: {
+	__typename: "match_veto_versions_min_fields",
+	changed_at?: GraphQLTypes["timestamptz"] | undefined | null,
+	match_id?: GraphQLTypes["uuid"] | undefined | null
+};
+	/** response of any mutation on the table "match_veto_versions" */
+["match_veto_versions_mutation_response"]: {
+	__typename: "match_veto_versions_mutation_response",
+	/** number of rows affected by the mutation */
+	affected_rows: number,
+	/** data from the rows affected by the mutation */
+	returning: Array<GraphQLTypes["match_veto_versions"]>
+};
+	/** on_conflict condition type for table "match_veto_versions" */
+["match_veto_versions_on_conflict"]: {
+		constraint: GraphQLTypes["match_veto_versions_constraint"],
+	update_columns: Array<GraphQLTypes["match_veto_versions_update_column"]>,
+	where?: GraphQLTypes["match_veto_versions_bool_exp"] | undefined | null
+};
+	/** Ordering options when selecting data from "match_veto_versions". */
+["match_veto_versions_order_by"]: {
+		changed_at?: GraphQLTypes["order_by"] | undefined | null,
+	match?: GraphQLTypes["matches_order_by"] | undefined | null,
+	match_id?: GraphQLTypes["order_by"] | undefined | null
+};
+	/** primary key columns input for table: match_veto_versions */
+["match_veto_versions_pk_columns_input"]: {
+		match_id: GraphQLTypes["uuid"]
+};
+	/** select columns of table "match_veto_versions" */
+["match_veto_versions_select_column"]: match_veto_versions_select_column;
+	/** input type for updating data in table "match_veto_versions" */
+["match_veto_versions_set_input"]: {
+		changed_at?: GraphQLTypes["timestamptz"] | undefined | null,
+	match_id?: GraphQLTypes["uuid"] | undefined | null
+};
+	/** Streaming cursor of the table "match_veto_versions" */
+["match_veto_versions_stream_cursor_input"]: {
+		/** Stream column input with initial value */
+	initial_value: GraphQLTypes["match_veto_versions_stream_cursor_value_input"],
+	/** cursor ordering */
+	ordering?: GraphQLTypes["cursor_ordering"] | undefined | null
+};
+	/** Initial value of the column from where the streaming should start */
+["match_veto_versions_stream_cursor_value_input"]: {
+		changed_at?: GraphQLTypes["timestamptz"] | undefined | null,
+	match_id?: GraphQLTypes["uuid"] | undefined | null
+};
+	/** update columns of table "match_veto_versions" */
+["match_veto_versions_update_column"]: match_veto_versions_update_column;
+	["match_veto_versions_updates"]: {
+		/** sets the columns of the filtered rows to the given values */
+	_set?: GraphQLTypes["match_veto_versions_set_input"] | undefined | null,
+	/** filter the rows which have to be updated */
+	where: GraphQLTypes["match_veto_versions_bool_exp"]
+};
 	/** columns and relationships of "matches" */
 ["matches"]: {
 	__typename: "matches",
@@ -301719,6 +302234,10 @@ export type GraphQLTypes = {
 	delete_match_type_cfgs?: GraphQLTypes["match_type_cfgs_mutation_response"] | undefined | null,
 	/** delete single row from the table: "match_type_cfgs" */
 	delete_match_type_cfgs_by_pk?: GraphQLTypes["match_type_cfgs"] | undefined | null,
+	/** delete data from the table: "match_veto_versions" */
+	delete_match_veto_versions?: GraphQLTypes["match_veto_versions_mutation_response"] | undefined | null,
+	/** delete single row from the table: "match_veto_versions" */
+	delete_match_veto_versions_by_pk?: GraphQLTypes["match_veto_versions"] | undefined | null,
 	/** delete data from the table: "matches" */
 	delete_matches?: GraphQLTypes["matches_mutation_response"] | undefined | null,
 	/** delete single row from the table: "matches" */
@@ -302654,6 +303173,10 @@ export type GraphQLTypes = {
 	insert_match_type_cfgs?: GraphQLTypes["match_type_cfgs_mutation_response"] | undefined | null,
 	/** insert a single row into the table: "match_type_cfgs" */
 	insert_match_type_cfgs_one?: GraphQLTypes["match_type_cfgs"] | undefined | null,
+	/** insert data into the table: "match_veto_versions" */
+	insert_match_veto_versions?: GraphQLTypes["match_veto_versions_mutation_response"] | undefined | null,
+	/** insert a single row into the table: "match_veto_versions" */
+	insert_match_veto_versions_one?: GraphQLTypes["match_veto_versions"] | undefined | null,
 	/** insert data into the table: "matches" */
 	insert_matches?: GraphQLTypes["matches_mutation_response"] | undefined | null,
 	/** insert a single row into the table: "matches" */
@@ -304062,6 +304585,12 @@ export type GraphQLTypes = {
 	update_match_type_cfgs_by_pk?: GraphQLTypes["match_type_cfgs"] | undefined | null,
 	/** update multiples rows of table: "match_type_cfgs" */
 	update_match_type_cfgs_many?: Array<GraphQLTypes["match_type_cfgs_mutation_response"] | undefined | null> | undefined | null,
+	/** update data of the table: "match_veto_versions" */
+	update_match_veto_versions?: GraphQLTypes["match_veto_versions_mutation_response"] | undefined | null,
+	/** update single row of the table: "match_veto_versions" */
+	update_match_veto_versions_by_pk?: GraphQLTypes["match_veto_versions"] | undefined | null,
+	/** update multiples rows of table: "match_veto_versions" */
+	update_match_veto_versions_many?: Array<GraphQLTypes["match_veto_versions_mutation_response"] | undefined | null> | undefined | null,
 	/** update data of the table: "matches" */
 	update_matches?: GraphQLTypes["matches_mutation_response"] | undefined | null,
 	/** update single row of the table: "matches" */
@@ -322550,6 +323079,12 @@ export type GraphQLTypes = {
 	match_type_cfgs_aggregate: GraphQLTypes["match_type_cfgs_aggregate"],
 	/** fetch data from the table: "match_type_cfgs" using primary key columns */
 	match_type_cfgs_by_pk?: GraphQLTypes["match_type_cfgs"] | undefined | null,
+	/** fetch data from the table: "match_veto_versions" */
+	match_veto_versions: Array<GraphQLTypes["match_veto_versions"]>,
+	/** fetch aggregated fields from the table: "match_veto_versions" */
+	match_veto_versions_aggregate: GraphQLTypes["match_veto_versions_aggregate"],
+	/** fetch data from the table: "match_veto_versions" using primary key columns */
+	match_veto_versions_by_pk?: GraphQLTypes["match_veto_versions"] | undefined | null,
 	/** An array relationship */
 	matches: Array<GraphQLTypes["matches"]>,
 	/** An aggregate relationship */
@@ -328794,6 +329329,14 @@ export type GraphQLTypes = {
 	match_type_cfgs_by_pk?: GraphQLTypes["match_type_cfgs"] | undefined | null,
 	/** fetch data from the table in a streaming manner: "match_type_cfgs" */
 	match_type_cfgs_stream: Array<GraphQLTypes["match_type_cfgs"]>,
+	/** fetch data from the table: "match_veto_versions" */
+	match_veto_versions: Array<GraphQLTypes["match_veto_versions"]>,
+	/** fetch aggregated fields from the table: "match_veto_versions" */
+	match_veto_versions_aggregate: GraphQLTypes["match_veto_versions_aggregate"],
+	/** fetch data from the table: "match_veto_versions" using primary key columns */
+	match_veto_versions_by_pk?: GraphQLTypes["match_veto_versions"] | undefined | null,
+	/** fetch data from the table in a streaming manner: "match_veto_versions" */
+	match_veto_versions_stream: Array<GraphQLTypes["match_veto_versions"]>,
 	/** An array relationship */
 	matches: Array<GraphQLTypes["matches"]>,
 	/** An aggregate relationship */
@@ -362056,6 +362599,20 @@ export enum match_type_cfgs_update_column {
 	cfg = "cfg",
 	type = "type"
 }
+/** unique or primary key constraints on table "match_veto_versions" */
+export enum match_veto_versions_constraint {
+	match_veto_versions_pkey = "match_veto_versions_pkey"
+}
+/** select columns of table "match_veto_versions" */
+export enum match_veto_versions_select_column {
+	changed_at = "changed_at",
+	match_id = "match_id"
+}
+/** update columns of table "match_veto_versions" */
+export enum match_veto_versions_update_column {
+	changed_at = "changed_at",
+	match_id = "match_id"
+}
 /** unique or primary key constraints on table "matches" */
 export enum matches_constraint {
 	matches_lineup_1_id_key = "matches_lineup_1_id_key",
@@ -369637,6 +370194,18 @@ type ZEUS_VARIABLES = {
 	["match_type_cfgs_stream_cursor_value_input"]: ValueTypes["match_type_cfgs_stream_cursor_value_input"];
 	["match_type_cfgs_update_column"]: ValueTypes["match_type_cfgs_update_column"];
 	["match_type_cfgs_updates"]: ValueTypes["match_type_cfgs_updates"];
+	["match_veto_versions_bool_exp"]: ValueTypes["match_veto_versions_bool_exp"];
+	["match_veto_versions_constraint"]: ValueTypes["match_veto_versions_constraint"];
+	["match_veto_versions_insert_input"]: ValueTypes["match_veto_versions_insert_input"];
+	["match_veto_versions_on_conflict"]: ValueTypes["match_veto_versions_on_conflict"];
+	["match_veto_versions_order_by"]: ValueTypes["match_veto_versions_order_by"];
+	["match_veto_versions_pk_columns_input"]: ValueTypes["match_veto_versions_pk_columns_input"];
+	["match_veto_versions_select_column"]: ValueTypes["match_veto_versions_select_column"];
+	["match_veto_versions_set_input"]: ValueTypes["match_veto_versions_set_input"];
+	["match_veto_versions_stream_cursor_input"]: ValueTypes["match_veto_versions_stream_cursor_input"];
+	["match_veto_versions_stream_cursor_value_input"]: ValueTypes["match_veto_versions_stream_cursor_value_input"];
+	["match_veto_versions_update_column"]: ValueTypes["match_veto_versions_update_column"];
+	["match_veto_versions_updates"]: ValueTypes["match_veto_versions_updates"];
 	["matches_aggregate_bool_exp"]: ValueTypes["matches_aggregate_bool_exp"];
 	["matches_aggregate_bool_exp_bool_and"]: ValueTypes["matches_aggregate_bool_exp_bool_and"];
 	["matches_aggregate_bool_exp_bool_or"]: ValueTypes["matches_aggregate_bool_exp_bool_or"];

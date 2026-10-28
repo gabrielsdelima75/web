@@ -40,13 +40,16 @@ import VetoBoard from "~/components/match/VetoBoard.vue";
 <script lang="ts">
 import { useAuthStore } from "~/stores/AuthStore";
 import { generateMutation } from "~/graphql/graphqlGen";
-import { typedGql } from "~/generated/zeus/typedDocumentNode";
 import {
   $,
   e_veto_pick_types_enum,
-  order_by,
   e_player_roles_enum,
 } from "~/generated/zeus/index";
+import {
+  streamedVeto,
+  vetoStreamSubscription,
+  withStreamedVeto,
+} from "~/utilities/vetoStream";
 import { useSound } from "~/composables/useSound";
 import { isVetoOverrideEnabled } from "~/composables/useVetoOverride";
 import { toast } from "@/components/ui/toast";
@@ -117,49 +120,18 @@ export default {
   },
   apollo: {
     $subscribe: {
-      match_map_veto_picks: {
+      veto: {
         skip() {
           return !!this.picks;
         },
         variables: function () {
           return {
-            order_by: order_by.asc,
             matchId: this.matchId || this.$route.params.id,
           };
         },
-        query: typedGql("subscription")({
-          match_map_veto_picks: [
-            {
-              where: {
-                match_id: {
-                  _eq: $("matchId", "uuid!"),
-                },
-              },
-              order_by: [
-                {},
-                {
-                  created_at: $("order_by", "order_by"),
-                },
-              ],
-            },
-            {
-              id: true,
-              map: {
-                id: true,
-                name: true,
-                label: true,
-                patch: true,
-                poster: true,
-              },
-              side: true,
-              type: true,
-              auto_picked: true,
-              match_lineup_id: true,
-            },
-          ],
-        }),
+        query: vetoStreamSubscription,
         result: function ({ data }) {
-          this.fetchedPicks = data.match_map_veto_picks;
+          this.streamed = streamedVeto(data) ?? this.streamed;
         },
       },
     },
@@ -167,7 +139,7 @@ export default {
   data() {
     return {
       submitting: false,
-      fetchedPicks: undefined,
+      streamed: undefined as any,
       scouting: null as [ScoutLineup | null, ScoutLineup | null] | null,
       playTickSound: useSound().playTickSound,
       playMatchFoundSound: useSound().playMatchFoundSound,
@@ -276,7 +248,7 @@ export default {
                 }
               : {}),
             match_id: this.matchId || this.$route.params.id,
-            match_lineup_id: this.match.map_veto_picking_lineup_id,
+            match_lineup_id: this.vetoMatch.map_veto_picking_lineup_id,
           },
           mutation: generateMutation({
             insert_match_map_veto_picks_one: [
@@ -310,6 +282,11 @@ export default {
     },
   },
   computed: {
+    // The match with the veto as the stream last sent it: the picks, whose
+    // turn it is, the clock and the maps all from one read.
+    vetoMatch() {
+      return withStreamedVeto(this.match, this.streamed);
+    },
     bestOf() {
       return this.match.options.best_of;
     },
@@ -323,24 +300,24 @@ export default {
       return isVetoOverrideEnabled(this.match?.id);
     },
     isPicking() {
-      return mapVetoPicking(this.match, this.canOverride && this.override);
+      return mapVetoPicking(this.vetoMatch, this.canOverride && this.override);
     },
     pickType() {
       if (!this.match) {
         return;
       }
 
-      return this.match.map_veto_type;
+      return this.vetoMatch.map_veto_type;
     },
     pickingLineup() {
-      return mapVetoTurn(this.match);
+      return mapVetoTurn(this.vetoMatch);
     },
     vetoPickDeadline() {
       if (!this.match.options.veto_pick_timeout) {
         return null;
       }
 
-      return this.match.veto_pick_expires_at ?? null;
+      return this.vetoMatch.veto_pick_expires_at ?? null;
     },
     previousMap() {
       return this.vetoPicks?.at(-1)?.map;
@@ -393,7 +370,7 @@ export default {
       };
     },
     vetoPicks() {
-      return this.picks ?? this.fetchedPicks;
+      return this.picks ?? this.streamed?.map_veto_picks;
     },
     steps() {
       return mapVetoSteps(this.match, this.vetoPicks ?? []);
@@ -402,16 +379,18 @@ export default {
       return vetoHandoffPhase(this.match.id);
     },
     starting() {
-      return vetoStarting(this.match);
+      return vetoStarting(this.vetoMatch);
     },
     // After the last pick: the server booting (or waiting for one), then
     // ready for a beat before the board hands over to the page.
     startPhase(): VetoStart["phase"] | null {
-      if (!this.stage || !this.regionSet || !vetoMapsSet(this.match)) {
+      if (!this.stage || !this.regionSet || !vetoMapsSet(this.vetoMatch)) {
         return null;
       }
       if (this.starting) {
-        return this.match.status === "WaitingForServer" ? "waiting" : "booting";
+        return this.vetoMatch.status === "WaitingForServer"
+          ? "waiting"
+          : "booting";
       }
       return this.handoffPhase === "stage" ? "ready" : null;
     },
@@ -421,24 +400,24 @@ export default {
       }
       return {
         phase: this.startPhase,
-        maps: vetoStartMaps(this.match, this.vetoPicks ?? []),
+        maps: vetoStartMaps(this.vetoMatch, this.vetoPicks ?? []),
       };
     },
     regionSet() {
-      return !this.match.options.region_veto || !!this.match.region;
+      return !this.match.options.region_veto || !!this.vetoMatch.region;
     },
     boardUp() {
       if (this.startPhase) {
         return true;
       }
       // The finished veto stays up, once its moves have arrived.
-      if (!this.stage && this.regionSet && vetoMapsSet(this.match)) {
+      if (!this.stage && this.regionSet && vetoMapsSet(this.vetoMatch)) {
         return this.vetoPicks !== undefined;
       }
       return (
         this.regionSet &&
-        this.match.status === "Veto" &&
-        this.match.match_maps.length < this.bestOf
+        this.vetoMatch.status === "Veto" &&
+        this.vetoMatch.match_maps.length < this.bestOf
       );
     },
   },

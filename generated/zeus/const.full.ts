@@ -14027,6 +14027,56 @@ export const AllTypesProps: Record<string,any> = {
 		_set:"match_type_cfgs_set_input",
 		where:"match_type_cfgs_bool_exp"
 	},
+	match_veto_versions_aggregate_fields:{
+		count:{
+			columns:"match_veto_versions_select_column"
+		}
+	},
+	match_veto_versions_bool_exp:{
+		_and:"match_veto_versions_bool_exp",
+		_not:"match_veto_versions_bool_exp",
+		_or:"match_veto_versions_bool_exp",
+		changed_at:"timestamptz_comparison_exp",
+		match:"matches_bool_exp",
+		match_id:"uuid_comparison_exp"
+	},
+	match_veto_versions_constraint: "enum" as const,
+	match_veto_versions_insert_input:{
+		changed_at:"timestamptz",
+		match:"matches_obj_rel_insert_input",
+		match_id:"uuid"
+	},
+	match_veto_versions_on_conflict:{
+		constraint:"match_veto_versions_constraint",
+		update_columns:"match_veto_versions_update_column",
+		where:"match_veto_versions_bool_exp"
+	},
+	match_veto_versions_order_by:{
+		changed_at:"order_by",
+		match:"matches_order_by",
+		match_id:"order_by"
+	},
+	match_veto_versions_pk_columns_input:{
+		match_id:"uuid"
+	},
+	match_veto_versions_select_column: "enum" as const,
+	match_veto_versions_set_input:{
+		changed_at:"timestamptz",
+		match_id:"uuid"
+	},
+	match_veto_versions_stream_cursor_input:{
+		initial_value:"match_veto_versions_stream_cursor_value_input",
+		ordering:"cursor_ordering"
+	},
+	match_veto_versions_stream_cursor_value_input:{
+		changed_at:"timestamptz",
+		match_id:"uuid"
+	},
+	match_veto_versions_update_column: "enum" as const,
+	match_veto_versions_updates:{
+		_set:"match_veto_versions_set_input",
+		where:"match_veto_versions_bool_exp"
+	},
 	matches:{
 		clutches:{
 			distinct_on:"v_match_clutches_select_column",
@@ -15623,6 +15673,12 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		delete_match_type_cfgs_by_pk:{
 			type:"e_game_cfg_types_enum"
+		},
+		delete_match_veto_versions:{
+			where:"match_veto_versions_bool_exp"
+		},
+		delete_match_veto_versions_by_pk:{
+			match_id:"uuid"
 		},
 		delete_matches:{
 			where:"matches_bool_exp"
@@ -17331,6 +17387,14 @@ export const AllTypesProps: Record<string,any> = {
 		insert_match_type_cfgs_one:{
 			object:"match_type_cfgs_insert_input",
 			on_conflict:"match_type_cfgs_on_conflict"
+		},
+		insert_match_veto_versions:{
+			objects:"match_veto_versions_insert_input",
+			on_conflict:"match_veto_versions_on_conflict"
+		},
+		insert_match_veto_versions_one:{
+			object:"match_veto_versions_insert_input",
+			on_conflict:"match_veto_versions_on_conflict"
 		},
 		insert_matches:{
 			objects:"matches_insert_input",
@@ -20215,6 +20279,17 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		update_match_type_cfgs_many:{
 			updates:"match_type_cfgs_updates"
+		},
+		update_match_veto_versions:{
+			_set:"match_veto_versions_set_input",
+			where:"match_veto_versions_bool_exp"
+		},
+		update_match_veto_versions_by_pk:{
+			_set:"match_veto_versions_set_input",
+			pk_columns:"match_veto_versions_pk_columns_input"
+		},
+		update_match_veto_versions_many:{
+			updates:"match_veto_versions_updates"
 		},
 		update_matches:{
 			_inc:"matches_inc_input",
@@ -31300,6 +31375,19 @@ export const AllTypesProps: Record<string,any> = {
 		match_type_cfgs_by_pk:{
 			type:"e_game_cfg_types_enum"
 		},
+		match_veto_versions:{
+			distinct_on:"match_veto_versions_select_column",
+			order_by:"match_veto_versions_order_by",
+			where:"match_veto_versions_bool_exp"
+		},
+		match_veto_versions_aggregate:{
+			distinct_on:"match_veto_versions_select_column",
+			order_by:"match_veto_versions_order_by",
+			where:"match_veto_versions_bool_exp"
+		},
+		match_veto_versions_by_pk:{
+			match_id:"uuid"
+		},
 		matches:{
 			distinct_on:"matches_select_column",
 			order_by:"matches_order_by",
@@ -37544,6 +37632,23 @@ export const AllTypesProps: Record<string,any> = {
 		match_type_cfgs_stream:{
 			cursor:"match_type_cfgs_stream_cursor_input",
 			where:"match_type_cfgs_bool_exp"
+		},
+		match_veto_versions:{
+			distinct_on:"match_veto_versions_select_column",
+			order_by:"match_veto_versions_order_by",
+			where:"match_veto_versions_bool_exp"
+		},
+		match_veto_versions_aggregate:{
+			distinct_on:"match_veto_versions_select_column",
+			order_by:"match_veto_versions_order_by",
+			where:"match_veto_versions_bool_exp"
+		},
+		match_veto_versions_by_pk:{
+			match_id:"uuid"
+		},
+		match_veto_versions_stream:{
+			cursor:"match_veto_versions_stream_cursor_input",
+			where:"match_veto_versions_bool_exp"
 		},
 		matches:{
 			distinct_on:"matches_select_column",
@@ -62165,6 +62270,32 @@ export const ReturnTypes: Record<string,any> = {
 		affected_rows:"Int",
 		returning:"match_type_cfgs"
 	},
+	match_veto_versions:{
+		changed_at:"timestamptz",
+		match:"matches",
+		match_id:"uuid"
+	},
+	match_veto_versions_aggregate:{
+		aggregate:"match_veto_versions_aggregate_fields",
+		nodes:"match_veto_versions"
+	},
+	match_veto_versions_aggregate_fields:{
+		count:"Int",
+		max:"match_veto_versions_max_fields",
+		min:"match_veto_versions_min_fields"
+	},
+	match_veto_versions_max_fields:{
+		changed_at:"timestamptz",
+		match_id:"uuid"
+	},
+	match_veto_versions_min_fields:{
+		changed_at:"timestamptz",
+		match_id:"uuid"
+	},
+	match_veto_versions_mutation_response:{
+		affected_rows:"Int",
+		returning:"match_veto_versions"
+	},
 	matches:{
 		can_assign_server:"Boolean",
 		can_cancel:"Boolean",
@@ -62750,6 +62881,8 @@ export const ReturnTypes: Record<string,any> = {
 		delete_match_streams_by_pk:"match_streams",
 		delete_match_type_cfgs:"match_type_cfgs_mutation_response",
 		delete_match_type_cfgs_by_pk:"match_type_cfgs",
+		delete_match_veto_versions:"match_veto_versions_mutation_response",
+		delete_match_veto_versions_by_pk:"match_veto_versions",
 		delete_matches:"matches_mutation_response",
 		delete_matches_by_pk:"matches",
 		delete_migration_hashes_hashes:"migration_hashes_hashes_mutation_response",
@@ -63221,6 +63354,8 @@ export const ReturnTypes: Record<string,any> = {
 		insert_match_streams_one:"match_streams",
 		insert_match_type_cfgs:"match_type_cfgs_mutation_response",
 		insert_match_type_cfgs_one:"match_type_cfgs",
+		insert_match_veto_versions:"match_veto_versions_mutation_response",
+		insert_match_veto_versions_one:"match_veto_versions",
 		insert_matches:"matches_mutation_response",
 		insert_matches_one:"matches",
 		insert_migration_hashes_hashes:"migration_hashes_hashes_mutation_response",
@@ -63951,6 +64086,9 @@ export const ReturnTypes: Record<string,any> = {
 		update_match_type_cfgs:"match_type_cfgs_mutation_response",
 		update_match_type_cfgs_by_pk:"match_type_cfgs",
 		update_match_type_cfgs_many:"match_type_cfgs_mutation_response",
+		update_match_veto_versions:"match_veto_versions_mutation_response",
+		update_match_veto_versions_by_pk:"match_veto_versions",
+		update_match_veto_versions_many:"match_veto_versions_mutation_response",
 		update_matches:"matches_mutation_response",
 		update_matches_by_pk:"matches",
 		update_matches_many:"matches_mutation_response",
@@ -71107,6 +71245,9 @@ export const ReturnTypes: Record<string,any> = {
 		match_type_cfgs:"match_type_cfgs",
 		match_type_cfgs_aggregate:"match_type_cfgs_aggregate",
 		match_type_cfgs_by_pk:"match_type_cfgs",
+		match_veto_versions:"match_veto_versions",
+		match_veto_versions_aggregate:"match_veto_versions_aggregate",
+		match_veto_versions_by_pk:"match_veto_versions",
 		matches:"matches",
 		matches_aggregate:"matches_aggregate",
 		matches_by_pk:"matches",
@@ -73327,6 +73468,10 @@ export const ReturnTypes: Record<string,any> = {
 		match_type_cfgs_aggregate:"match_type_cfgs_aggregate",
 		match_type_cfgs_by_pk:"match_type_cfgs",
 		match_type_cfgs_stream:"match_type_cfgs",
+		match_veto_versions:"match_veto_versions",
+		match_veto_versions_aggregate:"match_veto_versions_aggregate",
+		match_veto_versions_by_pk:"match_veto_versions",
+		match_veto_versions_stream:"match_veto_versions",
 		matches:"matches",
 		matches_aggregate:"matches_aggregate",
 		matches_by_pk:"matches",

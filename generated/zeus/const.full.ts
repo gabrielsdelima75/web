@@ -2231,6 +2231,56 @@ export const AllTypesProps: Record<string,any> = {
 		pick_order:"order_by",
 		steam_id:"order_by"
 	},
+	draft_game_versions_aggregate_fields:{
+		count:{
+			columns:"draft_game_versions_select_column"
+		}
+	},
+	draft_game_versions_bool_exp:{
+		_and:"draft_game_versions_bool_exp",
+		_not:"draft_game_versions_bool_exp",
+		_or:"draft_game_versions_bool_exp",
+		changed_at:"timestamptz_comparison_exp",
+		draft_game:"draft_games_bool_exp",
+		draft_game_id:"uuid_comparison_exp"
+	},
+	draft_game_versions_constraint: "enum" as const,
+	draft_game_versions_insert_input:{
+		changed_at:"timestamptz",
+		draft_game:"draft_games_obj_rel_insert_input",
+		draft_game_id:"uuid"
+	},
+	draft_game_versions_on_conflict:{
+		constraint:"draft_game_versions_constraint",
+		update_columns:"draft_game_versions_update_column",
+		where:"draft_game_versions_bool_exp"
+	},
+	draft_game_versions_order_by:{
+		changed_at:"order_by",
+		draft_game:"draft_games_order_by",
+		draft_game_id:"order_by"
+	},
+	draft_game_versions_pk_columns_input:{
+		draft_game_id:"uuid"
+	},
+	draft_game_versions_select_column: "enum" as const,
+	draft_game_versions_set_input:{
+		changed_at:"timestamptz",
+		draft_game_id:"uuid"
+	},
+	draft_game_versions_stream_cursor_input:{
+		initial_value:"draft_game_versions_stream_cursor_value_input",
+		ordering:"cursor_ordering"
+	},
+	draft_game_versions_stream_cursor_value_input:{
+		changed_at:"timestamptz",
+		draft_game_id:"uuid"
+	},
+	draft_game_versions_update_column: "enum" as const,
+	draft_game_versions_updates:{
+		_set:"draft_game_versions_set_input",
+		where:"draft_game_versions_bool_exp"
+	},
 	draft_games:{
 		pattern:{
 
@@ -11362,6 +11412,56 @@ export const AllTypesProps: Record<string,any> = {
 		_set:"maps_set_input",
 		where:"maps_bool_exp"
 	},
+	match_check_in_versions_aggregate_fields:{
+		count:{
+			columns:"match_check_in_versions_select_column"
+		}
+	},
+	match_check_in_versions_bool_exp:{
+		_and:"match_check_in_versions_bool_exp",
+		_not:"match_check_in_versions_bool_exp",
+		_or:"match_check_in_versions_bool_exp",
+		changed_at:"timestamptz_comparison_exp",
+		match:"matches_bool_exp",
+		match_id:"uuid_comparison_exp"
+	},
+	match_check_in_versions_constraint: "enum" as const,
+	match_check_in_versions_insert_input:{
+		changed_at:"timestamptz",
+		match:"matches_obj_rel_insert_input",
+		match_id:"uuid"
+	},
+	match_check_in_versions_on_conflict:{
+		constraint:"match_check_in_versions_constraint",
+		update_columns:"match_check_in_versions_update_column",
+		where:"match_check_in_versions_bool_exp"
+	},
+	match_check_in_versions_order_by:{
+		changed_at:"order_by",
+		match:"matches_order_by",
+		match_id:"order_by"
+	},
+	match_check_in_versions_pk_columns_input:{
+		match_id:"uuid"
+	},
+	match_check_in_versions_select_column: "enum" as const,
+	match_check_in_versions_set_input:{
+		changed_at:"timestamptz",
+		match_id:"uuid"
+	},
+	match_check_in_versions_stream_cursor_input:{
+		initial_value:"match_check_in_versions_stream_cursor_value_input",
+		ordering:"cursor_ordering"
+	},
+	match_check_in_versions_stream_cursor_value_input:{
+		changed_at:"timestamptz",
+		match_id:"uuid"
+	},
+	match_check_in_versions_update_column: "enum" as const,
+	match_check_in_versions_updates:{
+		_set:"match_check_in_versions_set_input",
+		where:"match_check_in_versions_bool_exp"
+	},
 	match_clips:{
 		render_jobs:{
 			distinct_on:"clip_render_jobs_select_column",
@@ -15020,6 +15120,12 @@ export const AllTypesProps: Record<string,any> = {
 			draft_game_id:"uuid",
 			steam_id:"bigint"
 		},
+		delete_draft_game_versions:{
+			where:"draft_game_versions_bool_exp"
+		},
+		delete_draft_game_versions_by_pk:{
+			draft_game_id:"uuid"
+		},
 		delete_draft_games:{
 			where:"draft_games_bool_exp"
 		},
@@ -15601,6 +15707,12 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		delete_maps_by_pk:{
 			id:"uuid"
+		},
+		delete_match_check_in_versions:{
+			where:"match_check_in_versions_bool_exp"
+		},
+		delete_match_check_in_versions_by_pk:{
+			match_id:"uuid"
 		},
 		delete_match_clips:{
 			where:"match_clips_bool_exp"
@@ -16526,6 +16638,14 @@ export const AllTypesProps: Record<string,any> = {
 			object:"draft_game_players_insert_input",
 			on_conflict:"draft_game_players_on_conflict"
 		},
+		insert_draft_game_versions:{
+			objects:"draft_game_versions_insert_input",
+			on_conflict:"draft_game_versions_on_conflict"
+		},
+		insert_draft_game_versions_one:{
+			object:"draft_game_versions_insert_input",
+			on_conflict:"draft_game_versions_on_conflict"
+		},
 		insert_draft_games:{
 			objects:"draft_games_insert_input",
 			on_conflict:"draft_games_on_conflict"
@@ -17291,6 +17411,14 @@ export const AllTypesProps: Record<string,any> = {
 		insert_maps_one:{
 			object:"maps_insert_input",
 			on_conflict:"maps_on_conflict"
+		},
+		insert_match_check_in_versions:{
+			objects:"match_check_in_versions_insert_input",
+			on_conflict:"match_check_in_versions_on_conflict"
+		},
+		insert_match_check_in_versions_one:{
+			object:"match_check_in_versions_insert_input",
+			on_conflict:"match_check_in_versions_on_conflict"
 		},
 		insert_match_clips:{
 			objects:"match_clips_insert_input",
@@ -18911,6 +19039,17 @@ export const AllTypesProps: Record<string,any> = {
 		update_draft_game_players_many:{
 			updates:"draft_game_players_updates"
 		},
+		update_draft_game_versions:{
+			_set:"draft_game_versions_set_input",
+			where:"draft_game_versions_bool_exp"
+		},
+		update_draft_game_versions_by_pk:{
+			_set:"draft_game_versions_set_input",
+			pk_columns:"draft_game_versions_pk_columns_input"
+		},
+		update_draft_game_versions_many:{
+			updates:"draft_game_versions_updates"
+		},
 		update_draft_games:{
 			_inc:"draft_games_inc_input",
 			_set:"draft_games_set_input",
@@ -20099,6 +20238,17 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		update_maps_many:{
 			updates:"maps_updates"
+		},
+		update_match_check_in_versions:{
+			_set:"match_check_in_versions_set_input",
+			where:"match_check_in_versions_bool_exp"
+		},
+		update_match_check_in_versions_by_pk:{
+			_set:"match_check_in_versions_set_input",
+			pk_columns:"match_check_in_versions_pk_columns_input"
+		},
+		update_match_check_in_versions_many:{
+			updates:"match_check_in_versions_updates"
 		},
 		update_match_clips:{
 			_inc:"match_clips_inc_input",
@@ -29860,6 +30010,19 @@ export const AllTypesProps: Record<string,any> = {
 			draft_game_id:"uuid",
 			steam_id:"bigint"
 		},
+		draft_game_versions:{
+			distinct_on:"draft_game_versions_select_column",
+			order_by:"draft_game_versions_order_by",
+			where:"draft_game_versions_bool_exp"
+		},
+		draft_game_versions_aggregate:{
+			distinct_on:"draft_game_versions_select_column",
+			order_by:"draft_game_versions_order_by",
+			where:"draft_game_versions_bool_exp"
+		},
+		draft_game_versions_by_pk:{
+			draft_game_id:"uuid"
+		},
 		draft_games:{
 			distinct_on:"draft_games_select_column",
 			order_by:"draft_games_order_by",
@@ -31218,6 +31381,19 @@ export const AllTypesProps: Record<string,any> = {
 		},
 		maps_by_pk:{
 			id:"uuid"
+		},
+		match_check_in_versions:{
+			distinct_on:"match_check_in_versions_select_column",
+			order_by:"match_check_in_versions_order_by",
+			where:"match_check_in_versions_bool_exp"
+		},
+		match_check_in_versions_aggregate:{
+			distinct_on:"match_check_in_versions_select_column",
+			order_by:"match_check_in_versions_order_by",
+			where:"match_check_in_versions_bool_exp"
+		},
+		match_check_in_versions_by_pk:{
+			match_id:"uuid"
 		},
 		match_clips:{
 			distinct_on:"match_clips_select_column",
@@ -35731,6 +35907,23 @@ export const AllTypesProps: Record<string,any> = {
 			cursor:"draft_game_players_stream_cursor_input",
 			where:"draft_game_players_bool_exp"
 		},
+		draft_game_versions:{
+			distinct_on:"draft_game_versions_select_column",
+			order_by:"draft_game_versions_order_by",
+			where:"draft_game_versions_bool_exp"
+		},
+		draft_game_versions_aggregate:{
+			distinct_on:"draft_game_versions_select_column",
+			order_by:"draft_game_versions_order_by",
+			where:"draft_game_versions_bool_exp"
+		},
+		draft_game_versions_by_pk:{
+			draft_game_id:"uuid"
+		},
+		draft_game_versions_stream:{
+			cursor:"draft_game_versions_stream_cursor_input",
+			where:"draft_game_versions_bool_exp"
+		},
 		draft_games:{
 			distinct_on:"draft_games_select_column",
 			order_by:"draft_games_order_by",
@@ -37428,6 +37621,23 @@ export const AllTypesProps: Record<string,any> = {
 		maps_stream:{
 			cursor:"maps_stream_cursor_input",
 			where:"maps_bool_exp"
+		},
+		match_check_in_versions:{
+			distinct_on:"match_check_in_versions_select_column",
+			order_by:"match_check_in_versions_order_by",
+			where:"match_check_in_versions_bool_exp"
+		},
+		match_check_in_versions_aggregate:{
+			distinct_on:"match_check_in_versions_select_column",
+			order_by:"match_check_in_versions_order_by",
+			where:"match_check_in_versions_bool_exp"
+		},
+		match_check_in_versions_by_pk:{
+			match_id:"uuid"
+		},
+		match_check_in_versions_stream:{
+			cursor:"match_check_in_versions_stream_cursor_input",
+			where:"match_check_in_versions_bool_exp"
 		},
 		match_clips:{
 			distinct_on:"match_clips_select_column",
@@ -56427,6 +56637,32 @@ export const ReturnTypes: Record<string,any> = {
 		pick_order:"Float",
 		steam_id:"Float"
 	},
+	draft_game_versions:{
+		changed_at:"timestamptz",
+		draft_game:"draft_games",
+		draft_game_id:"uuid"
+	},
+	draft_game_versions_aggregate:{
+		aggregate:"draft_game_versions_aggregate_fields",
+		nodes:"draft_game_versions"
+	},
+	draft_game_versions_aggregate_fields:{
+		count:"Int",
+		max:"draft_game_versions_max_fields",
+		min:"draft_game_versions_min_fields"
+	},
+	draft_game_versions_max_fields:{
+		changed_at:"timestamptz",
+		draft_game_id:"uuid"
+	},
+	draft_game_versions_min_fields:{
+		changed_at:"timestamptz",
+		draft_game_id:"uuid"
+	},
+	draft_game_versions_mutation_response:{
+		affected_rows:"Int",
+		returning:"draft_game_versions"
+	},
 	draft_games:{
 		access:"e_lobby_access_enum",
 		capacity:"Int",
@@ -60982,6 +61218,32 @@ export const ReturnTypes: Record<string,any> = {
 		affected_rows:"Int",
 		returning:"maps"
 	},
+	match_check_in_versions:{
+		changed_at:"timestamptz",
+		match:"matches",
+		match_id:"uuid"
+	},
+	match_check_in_versions_aggregate:{
+		aggregate:"match_check_in_versions_aggregate_fields",
+		nodes:"match_check_in_versions"
+	},
+	match_check_in_versions_aggregate_fields:{
+		count:"Int",
+		max:"match_check_in_versions_max_fields",
+		min:"match_check_in_versions_min_fields"
+	},
+	match_check_in_versions_max_fields:{
+		changed_at:"timestamptz",
+		match_id:"uuid"
+	},
+	match_check_in_versions_min_fields:{
+		changed_at:"timestamptz",
+		match_id:"uuid"
+	},
+	match_check_in_versions_mutation_response:{
+		affected_rows:"Int",
+		returning:"match_check_in_versions"
+	},
 	match_clips:{
 		created_at:"timestamptz",
 		download_url:"String",
@@ -62666,6 +62928,8 @@ export const ReturnTypes: Record<string,any> = {
 		delete_draft_game_picks_by_pk:"draft_game_picks",
 		delete_draft_game_players:"draft_game_players_mutation_response",
 		delete_draft_game_players_by_pk:"draft_game_players",
+		delete_draft_game_versions:"draft_game_versions_mutation_response",
+		delete_draft_game_versions_by_pk:"draft_game_versions",
 		delete_draft_games:"draft_games_mutation_response",
 		delete_draft_games_by_pk:"draft_games",
 		delete_e_award_sources:"e_award_sources_mutation_response",
@@ -62857,6 +63121,8 @@ export const ReturnTypes: Record<string,any> = {
 		delete_map_pools_by_pk:"map_pools",
 		delete_maps:"maps_mutation_response",
 		delete_maps_by_pk:"maps",
+		delete_match_check_in_versions:"match_check_in_versions_mutation_response",
+		delete_match_check_in_versions_by_pk:"match_check_in_versions",
 		delete_match_clips:"match_clips_mutation_response",
 		delete_match_clips_by_pk:"match_clips",
 		delete_match_demo_sessions:"match_demo_sessions_mutation_response",
@@ -63138,6 +63404,8 @@ export const ReturnTypes: Record<string,any> = {
 		insert_draft_game_picks_one:"draft_game_picks",
 		insert_draft_game_players:"draft_game_players_mutation_response",
 		insert_draft_game_players_one:"draft_game_players",
+		insert_draft_game_versions:"draft_game_versions_mutation_response",
+		insert_draft_game_versions_one:"draft_game_versions",
 		insert_draft_games:"draft_games_mutation_response",
 		insert_draft_games_one:"draft_games",
 		insert_e_award_sources:"e_award_sources_mutation_response",
@@ -63330,6 +63598,8 @@ export const ReturnTypes: Record<string,any> = {
 		insert_map_pools_one:"map_pools",
 		insert_maps:"maps_mutation_response",
 		insert_maps_one:"maps",
+		insert_match_check_in_versions:"match_check_in_versions_mutation_response",
+		insert_match_check_in_versions_one:"match_check_in_versions",
 		insert_match_clips:"match_clips_mutation_response",
 		insert_match_clips_one:"match_clips",
 		insert_match_demo_sessions:"match_demo_sessions_mutation_response",
@@ -63763,6 +64033,9 @@ export const ReturnTypes: Record<string,any> = {
 		update_draft_game_players:"draft_game_players_mutation_response",
 		update_draft_game_players_by_pk:"draft_game_players",
 		update_draft_game_players_many:"draft_game_players_mutation_response",
+		update_draft_game_versions:"draft_game_versions_mutation_response",
+		update_draft_game_versions_by_pk:"draft_game_versions",
+		update_draft_game_versions_many:"draft_game_versions_mutation_response",
 		update_draft_games:"draft_games_mutation_response",
 		update_draft_games_by_pk:"draft_games",
 		update_draft_games_many:"draft_games_mutation_response",
@@ -64050,6 +64323,9 @@ export const ReturnTypes: Record<string,any> = {
 		update_maps:"maps_mutation_response",
 		update_maps_by_pk:"maps",
 		update_maps_many:"maps_mutation_response",
+		update_match_check_in_versions:"match_check_in_versions_mutation_response",
+		update_match_check_in_versions_by_pk:"match_check_in_versions",
+		update_match_check_in_versions_many:"match_check_in_versions_mutation_response",
 		update_match_clips:"match_clips_mutation_response",
 		update_match_clips_by_pk:"match_clips",
 		update_match_clips_many:"match_clips_mutation_response",
@@ -70887,6 +71163,9 @@ export const ReturnTypes: Record<string,any> = {
 		draft_game_players:"draft_game_players",
 		draft_game_players_aggregate:"draft_game_players_aggregate",
 		draft_game_players_by_pk:"draft_game_players",
+		draft_game_versions:"draft_game_versions",
+		draft_game_versions_aggregate:"draft_game_versions_aggregate",
+		draft_game_versions_by_pk:"draft_game_versions",
 		draft_games:"draft_games",
 		draft_games_aggregate:"draft_games_aggregate",
 		draft_games_by_pk:"draft_games",
@@ -71209,6 +71488,9 @@ export const ReturnTypes: Record<string,any> = {
 		maps:"maps",
 		maps_aggregate:"maps_aggregate",
 		maps_by_pk:"maps",
+		match_check_in_versions:"match_check_in_versions",
+		match_check_in_versions_aggregate:"match_check_in_versions_aggregate",
+		match_check_in_versions_by_pk:"match_check_in_versions",
 		match_clips:"match_clips",
 		match_clips_aggregate:"match_clips_aggregate",
 		match_clips_by_pk:"match_clips",
@@ -73027,6 +73309,10 @@ export const ReturnTypes: Record<string,any> = {
 		draft_game_players_aggregate:"draft_game_players_aggregate",
 		draft_game_players_by_pk:"draft_game_players",
 		draft_game_players_stream:"draft_game_players",
+		draft_game_versions:"draft_game_versions",
+		draft_game_versions_aggregate:"draft_game_versions_aggregate",
+		draft_game_versions_by_pk:"draft_game_versions",
+		draft_game_versions_stream:"draft_game_versions",
 		draft_games:"draft_games",
 		draft_games_aggregate:"draft_games_aggregate",
 		draft_games_by_pk:"draft_games",
@@ -73420,6 +73706,10 @@ export const ReturnTypes: Record<string,any> = {
 		maps_aggregate:"maps_aggregate",
 		maps_by_pk:"maps",
 		maps_stream:"maps",
+		match_check_in_versions:"match_check_in_versions",
+		match_check_in_versions_aggregate:"match_check_in_versions_aggregate",
+		match_check_in_versions_by_pk:"match_check_in_versions",
+		match_check_in_versions_stream:"match_check_in_versions",
 		match_clips:"match_clips",
 		match_clips_aggregate:"match_clips_aggregate",
 		match_clips_by_pk:"match_clips",

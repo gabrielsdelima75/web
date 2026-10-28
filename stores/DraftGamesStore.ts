@@ -1,9 +1,10 @@
-import { ref } from "vue";
+import { computed, ref, watch } from "vue";
 import gql from "graphql-tag";
 import { defineStore, acceptHMRUpdate } from "pinia";
 import { useSubscriptionManager } from "~/composables/useSubscriptionManager";
 import {
   $,
+  cursor_ordering,
   e_draft_game_status_enum,
   e_lobby_access_enum,
   order_by,
@@ -14,6 +15,11 @@ import { generateQuery, generateSubscription } from "~/graphql/graphqlGen";
 import { playerFields } from "~/graphql/playerFields";
 import { mapFields } from "~/graphql/mapGraphql";
 import { useAuthStore } from "~/stores/AuthStore";
+import {
+  checkInStreamSubscription,
+  streamedCheckIn,
+  withStreamedCheckIn,
+} from "~/utilities/checkInStream";
 
 export const useDraftGamesStore = defineStore("draft-games", () => {
   const openDraftGames = ref<Array<any>>([]);
@@ -263,18 +269,25 @@ export const useDraftGamesStore = defineStore("draft-games", () => {
     );
   };
 
+  // The room, sent again only when its version moves (any pick, player, change
+  // to the room, or the room going away), so a pick reaches both captains
+  // within the streaming interval rather than the live queries' poll.
   const subscribeToDraftGame = async (draftGameId: string) => {
+    const fields = withInviteCode(draftRoomFields);
     const subscription = getGraphqlClient().subscribe({
       query: generateSubscription({
-        draft_games: [
+        draft_game_versions_stream: [
           {
-            where: {
-              id: {
-                _eq: $("id", "uuid!"),
+            batch_size: 1,
+            cursor: [
+              {
+                initial_value: { changed_at: "1970-01-01T00:00:00Z" },
+                ordering: cursor_ordering.ASC,
               },
-            },
+            ],
+            where: { draft_game_id: { _eq: $("id", "uuid!") } },
           },
-          withInviteCode(draftRoomFields),
+          { changed_at: true, draft_game: fields },
         ],
       }),
       variables: {
@@ -282,12 +295,17 @@ export const useDraftGamesStore = defineStore("draft-games", () => {
       },
     });
 
+    let streamed = false;
     const { subscribe } = useSubscriptionManager();
     subscribe(
       "draft-games:room",
       subscription.subscribe({
         next: ({ data }) => {
-          currentRoom.value = data.draft_games.at(0) ?? null;
+          const version = data.draft_game_versions_stream.at(-1);
+          if (version) {
+            streamed = true;
+            currentRoom.value = version.draft_game ?? null;
+          }
         },
         error: (error: any) => {
           console.error("[draft-games] room subscription:", error);
@@ -295,6 +313,23 @@ export const useDraftGamesStore = defineStore("draft-games", () => {
         },
       }),
     );
+
+    // A room that never existed has no version to stream, so the first answer
+    // comes from a read: missing or hidden, it is null.
+    try {
+      const { data } = await getGraphqlClient().query({
+        query: generateQuery({
+          draft_games_by_pk: [{ id: $("id", "uuid!") }, fields],
+        }),
+        variables: { id: draftGameId },
+        fetchPolicy: "network-only",
+      });
+      if (!streamed) {
+        currentRoom.value = (data as any)?.draft_games_by_pk ?? null;
+      }
+    } catch (error) {
+      console.error("[draft-games] room:", error);
+    }
   };
 
   const unsubscribeFromDraftGame = () => {
@@ -303,7 +338,46 @@ export const useDraftGamesStore = defineStore("draft-games", () => {
     currentRoom.value = undefined;
   };
 
-  const currentMatch = ref<any | undefined>(undefined);
+  const polledMatch = ref<any | undefined>(undefined);
+  const streamedMatchCheckIn = ref<any | undefined>(undefined);
+  // While the match waits on check-in, who has checked in comes from its
+  // stream, ahead of the match's poll.
+  const currentMatch = computed(() =>
+    polledMatch.value?.status === "WaitingForCheckIn"
+      ? withStreamedCheckIn(polledMatch.value, streamedMatchCheckIn.value)
+      : polledMatch.value,
+  );
+
+  const unsubscribeFromMatchCheckIn = () => {
+    useSubscriptionManager().unsubscribe("draft-games:match-check-in");
+    streamedMatchCheckIn.value = undefined;
+  };
+
+  watch(
+    () =>
+      polledMatch.value?.status === "WaitingForCheckIn"
+        ? polledMatch.value.id
+        : undefined,
+    (matchId) => {
+      unsubscribeFromMatchCheckIn();
+      if (!matchId) {
+        return;
+      }
+      const subscription = getGraphqlClient().subscribe({
+        query: checkInStreamSubscription,
+        variables: { matchId },
+      });
+      useSubscriptionManager().subscribe(
+        "draft-games:match-check-in",
+        subscription.subscribe({
+          next: ({ data }) => {
+            streamedMatchCheckIn.value =
+              streamedCheckIn(data) ?? streamedMatchCheckIn.value;
+          },
+        }),
+      );
+    },
+  );
 
   const subscribeToMatch = async (matchId: string) => {
     const subscription = getGraphqlClient().subscribe({
@@ -457,7 +531,7 @@ export const useDraftGamesStore = defineStore("draft-games", () => {
       "draft-games:match",
       subscription.subscribe({
         next: ({ data }) => {
-          currentMatch.value = data.matches_by_pk;
+          polledMatch.value = data.matches_by_pk;
         },
       }),
     );
@@ -466,7 +540,7 @@ export const useDraftGamesStore = defineStore("draft-games", () => {
   const unsubscribeFromMatch = () => {
     const { unsubscribe } = useSubscriptionManager();
     unsubscribe("draft-games:match");
-    currentMatch.value = undefined;
+    polledMatch.value = undefined;
   };
 
   // Rooms that expire without filling are deleted, so they don't count.

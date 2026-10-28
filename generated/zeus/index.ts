@@ -7281,6 +7281,107 @@ count?: [{	columns?: Array<ValueTypes["draft_game_players_select_column"]> | und
 	pick_order?: ValueTypes["order_by"] | undefined | null | Variable<any, string>,
 	steam_id?: ValueTypes["order_by"] | undefined | null | Variable<any, string>
 };
+	/** columns and relationships of "draft_game_versions" */
+["draft_game_versions"]: AliasType<{
+	changed_at?:boolean | `@${string}`,
+	/** An object relationship */
+	draft_game?:ValueTypes["draft_games"],
+	draft_game_id?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	/** aggregated selection of "draft_game_versions" */
+["draft_game_versions_aggregate"]: AliasType<{
+	aggregate?:ValueTypes["draft_game_versions_aggregate_fields"],
+	nodes?:ValueTypes["draft_game_versions"],
+		__typename?: boolean | `@${string}`
+}>;
+	/** aggregate fields of "draft_game_versions" */
+["draft_game_versions_aggregate_fields"]: AliasType<{
+count?: [{	columns?: Array<ValueTypes["draft_game_versions_select_column"]> | undefined | null | Variable<any, string>,	distinct?: boolean | undefined | null | Variable<any, string>},boolean | `@${string}`],
+	max?:ValueTypes["draft_game_versions_max_fields"],
+	min?:ValueTypes["draft_game_versions_min_fields"],
+		__typename?: boolean | `@${string}`
+}>;
+	/** Boolean expression to filter rows from the table "draft_game_versions". All fields are combined with a logical 'AND'. */
+["draft_game_versions_bool_exp"]: {
+	_and?: Array<ValueTypes["draft_game_versions_bool_exp"]> | undefined | null | Variable<any, string>,
+	_not?: ValueTypes["draft_game_versions_bool_exp"] | undefined | null | Variable<any, string>,
+	_or?: Array<ValueTypes["draft_game_versions_bool_exp"]> | undefined | null | Variable<any, string>,
+	changed_at?: ValueTypes["timestamptz_comparison_exp"] | undefined | null | Variable<any, string>,
+	draft_game?: ValueTypes["draft_games_bool_exp"] | undefined | null | Variable<any, string>,
+	draft_game_id?: ValueTypes["uuid_comparison_exp"] | undefined | null | Variable<any, string>
+};
+	/** unique or primary key constraints on table "draft_game_versions" */
+["draft_game_versions_constraint"]:draft_game_versions_constraint;
+	/** input type for inserting data into table "draft_game_versions" */
+["draft_game_versions_insert_input"]: {
+	changed_at?: ValueTypes["timestamptz"] | undefined | null | Variable<any, string>,
+	draft_game?: ValueTypes["draft_games_obj_rel_insert_input"] | undefined | null | Variable<any, string>,
+	draft_game_id?: ValueTypes["uuid"] | undefined | null | Variable<any, string>
+};
+	/** aggregate max on columns */
+["draft_game_versions_max_fields"]: AliasType<{
+	changed_at?:boolean | `@${string}`,
+	draft_game_id?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	/** aggregate min on columns */
+["draft_game_versions_min_fields"]: AliasType<{
+	changed_at?:boolean | `@${string}`,
+	draft_game_id?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	/** response of any mutation on the table "draft_game_versions" */
+["draft_game_versions_mutation_response"]: AliasType<{
+	/** number of rows affected by the mutation */
+	affected_rows?:boolean | `@${string}`,
+	/** data from the rows affected by the mutation */
+	returning?:ValueTypes["draft_game_versions"],
+		__typename?: boolean | `@${string}`
+}>;
+	/** on_conflict condition type for table "draft_game_versions" */
+["draft_game_versions_on_conflict"]: {
+	constraint: ValueTypes["draft_game_versions_constraint"] | Variable<any, string>,
+	update_columns: Array<ValueTypes["draft_game_versions_update_column"]> | Variable<any, string>,
+	where?: ValueTypes["draft_game_versions_bool_exp"] | undefined | null | Variable<any, string>
+};
+	/** Ordering options when selecting data from "draft_game_versions". */
+["draft_game_versions_order_by"]: {
+	changed_at?: ValueTypes["order_by"] | undefined | null | Variable<any, string>,
+	draft_game?: ValueTypes["draft_games_order_by"] | undefined | null | Variable<any, string>,
+	draft_game_id?: ValueTypes["order_by"] | undefined | null | Variable<any, string>
+};
+	/** primary key columns input for table: draft_game_versions */
+["draft_game_versions_pk_columns_input"]: {
+	draft_game_id: ValueTypes["uuid"] | Variable<any, string>
+};
+	/** select columns of table "draft_game_versions" */
+["draft_game_versions_select_column"]:draft_game_versions_select_column;
+	/** input type for updating data in table "draft_game_versions" */
+["draft_game_versions_set_input"]: {
+	changed_at?: ValueTypes["timestamptz"] | undefined | null | Variable<any, string>,
+	draft_game_id?: ValueTypes["uuid"] | undefined | null | Variable<any, string>
+};
+	/** Streaming cursor of the table "draft_game_versions" */
+["draft_game_versions_stream_cursor_input"]: {
+	/** Stream column input with initial value */
+	initial_value: ValueTypes["draft_game_versions_stream_cursor_value_input"] | Variable<any, string>,
+	/** cursor ordering */
+	ordering?: ValueTypes["cursor_ordering"] | undefined | null | Variable<any, string>
+};
+	/** Initial value of the column from where the streaming should start */
+["draft_game_versions_stream_cursor_value_input"]: {
+	changed_at?: ValueTypes["timestamptz"] | undefined | null | Variable<any, string>,
+	draft_game_id?: ValueTypes["uuid"] | undefined | null | Variable<any, string>
+};
+	/** update columns of table "draft_game_versions" */
+["draft_game_versions_update_column"]:draft_game_versions_update_column;
+	["draft_game_versions_updates"]: {
+	/** sets the columns of the filtered rows to the given values */
+	_set?: ValueTypes["draft_game_versions_set_input"] | undefined | null | Variable<any, string>,
+	/** filter the rows which have to be updated */
+	where: ValueTypes["draft_game_versions_bool_exp"] | Variable<any, string>
+};
 	/** columns and relationships of "draft_games" */
 ["draft_games"]: AliasType<{
 	access?:boolean | `@${string}`,
@@ -25146,6 +25247,107 @@ count?: [{	columns?: Array<ValueTypes["maps_select_column"]> | undefined | null 
 	/** filter the rows which have to be updated */
 	where: ValueTypes["maps_bool_exp"] | Variable<any, string>
 };
+	/** columns and relationships of "match_check_in_versions" */
+["match_check_in_versions"]: AliasType<{
+	changed_at?:boolean | `@${string}`,
+	/** An object relationship */
+	match?:ValueTypes["matches"],
+	match_id?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	/** aggregated selection of "match_check_in_versions" */
+["match_check_in_versions_aggregate"]: AliasType<{
+	aggregate?:ValueTypes["match_check_in_versions_aggregate_fields"],
+	nodes?:ValueTypes["match_check_in_versions"],
+		__typename?: boolean | `@${string}`
+}>;
+	/** aggregate fields of "match_check_in_versions" */
+["match_check_in_versions_aggregate_fields"]: AliasType<{
+count?: [{	columns?: Array<ValueTypes["match_check_in_versions_select_column"]> | undefined | null | Variable<any, string>,	distinct?: boolean | undefined | null | Variable<any, string>},boolean | `@${string}`],
+	max?:ValueTypes["match_check_in_versions_max_fields"],
+	min?:ValueTypes["match_check_in_versions_min_fields"],
+		__typename?: boolean | `@${string}`
+}>;
+	/** Boolean expression to filter rows from the table "match_check_in_versions". All fields are combined with a logical 'AND'. */
+["match_check_in_versions_bool_exp"]: {
+	_and?: Array<ValueTypes["match_check_in_versions_bool_exp"]> | undefined | null | Variable<any, string>,
+	_not?: ValueTypes["match_check_in_versions_bool_exp"] | undefined | null | Variable<any, string>,
+	_or?: Array<ValueTypes["match_check_in_versions_bool_exp"]> | undefined | null | Variable<any, string>,
+	changed_at?: ValueTypes["timestamptz_comparison_exp"] | undefined | null | Variable<any, string>,
+	match?: ValueTypes["matches_bool_exp"] | undefined | null | Variable<any, string>,
+	match_id?: ValueTypes["uuid_comparison_exp"] | undefined | null | Variable<any, string>
+};
+	/** unique or primary key constraints on table "match_check_in_versions" */
+["match_check_in_versions_constraint"]:match_check_in_versions_constraint;
+	/** input type for inserting data into table "match_check_in_versions" */
+["match_check_in_versions_insert_input"]: {
+	changed_at?: ValueTypes["timestamptz"] | undefined | null | Variable<any, string>,
+	match?: ValueTypes["matches_obj_rel_insert_input"] | undefined | null | Variable<any, string>,
+	match_id?: ValueTypes["uuid"] | undefined | null | Variable<any, string>
+};
+	/** aggregate max on columns */
+["match_check_in_versions_max_fields"]: AliasType<{
+	changed_at?:boolean | `@${string}`,
+	match_id?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	/** aggregate min on columns */
+["match_check_in_versions_min_fields"]: AliasType<{
+	changed_at?:boolean | `@${string}`,
+	match_id?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	/** response of any mutation on the table "match_check_in_versions" */
+["match_check_in_versions_mutation_response"]: AliasType<{
+	/** number of rows affected by the mutation */
+	affected_rows?:boolean | `@${string}`,
+	/** data from the rows affected by the mutation */
+	returning?:ValueTypes["match_check_in_versions"],
+		__typename?: boolean | `@${string}`
+}>;
+	/** on_conflict condition type for table "match_check_in_versions" */
+["match_check_in_versions_on_conflict"]: {
+	constraint: ValueTypes["match_check_in_versions_constraint"] | Variable<any, string>,
+	update_columns: Array<ValueTypes["match_check_in_versions_update_column"]> | Variable<any, string>,
+	where?: ValueTypes["match_check_in_versions_bool_exp"] | undefined | null | Variable<any, string>
+};
+	/** Ordering options when selecting data from "match_check_in_versions". */
+["match_check_in_versions_order_by"]: {
+	changed_at?: ValueTypes["order_by"] | undefined | null | Variable<any, string>,
+	match?: ValueTypes["matches_order_by"] | undefined | null | Variable<any, string>,
+	match_id?: ValueTypes["order_by"] | undefined | null | Variable<any, string>
+};
+	/** primary key columns input for table: match_check_in_versions */
+["match_check_in_versions_pk_columns_input"]: {
+	match_id: ValueTypes["uuid"] | Variable<any, string>
+};
+	/** select columns of table "match_check_in_versions" */
+["match_check_in_versions_select_column"]:match_check_in_versions_select_column;
+	/** input type for updating data in table "match_check_in_versions" */
+["match_check_in_versions_set_input"]: {
+	changed_at?: ValueTypes["timestamptz"] | undefined | null | Variable<any, string>,
+	match_id?: ValueTypes["uuid"] | undefined | null | Variable<any, string>
+};
+	/** Streaming cursor of the table "match_check_in_versions" */
+["match_check_in_versions_stream_cursor_input"]: {
+	/** Stream column input with initial value */
+	initial_value: ValueTypes["match_check_in_versions_stream_cursor_value_input"] | Variable<any, string>,
+	/** cursor ordering */
+	ordering?: ValueTypes["cursor_ordering"] | undefined | null | Variable<any, string>
+};
+	/** Initial value of the column from where the streaming should start */
+["match_check_in_versions_stream_cursor_value_input"]: {
+	changed_at?: ValueTypes["timestamptz"] | undefined | null | Variable<any, string>,
+	match_id?: ValueTypes["uuid"] | undefined | null | Variable<any, string>
+};
+	/** update columns of table "match_check_in_versions" */
+["match_check_in_versions_update_column"]:match_check_in_versions_update_column;
+	["match_check_in_versions_updates"]: {
+	/** sets the columns of the filtered rows to the given values */
+	_set?: ValueTypes["match_check_in_versions_set_input"] | undefined | null | Variable<any, string>,
+	/** filter the rows which have to be updated */
+	where: ValueTypes["match_check_in_versions_bool_exp"] | Variable<any, string>
+};
 	/** columns and relationships of "match_clips" */
 ["match_clips"]: AliasType<{
 	created_at?:boolean | `@${string}`,
@@ -31470,6 +31672,9 @@ delete_draft_game_picks_by_pk?: [{	id: ValueTypes["uuid"] | Variable<any, string
 delete_draft_game_players?: [{	/** filter the rows which have to be deleted */
 	where: ValueTypes["draft_game_players_bool_exp"] | Variable<any, string>},ValueTypes["draft_game_players_mutation_response"]],
 delete_draft_game_players_by_pk?: [{	draft_game_id: ValueTypes["uuid"] | Variable<any, string>,	steam_id: ValueTypes["bigint"] | Variable<any, string>},ValueTypes["draft_game_players"]],
+delete_draft_game_versions?: [{	/** filter the rows which have to be deleted */
+	where: ValueTypes["draft_game_versions_bool_exp"] | Variable<any, string>},ValueTypes["draft_game_versions_mutation_response"]],
+delete_draft_game_versions_by_pk?: [{	draft_game_id: ValueTypes["uuid"] | Variable<any, string>},ValueTypes["draft_game_versions"]],
 delete_draft_games?: [{	/** filter the rows which have to be deleted */
 	where: ValueTypes["draft_games_bool_exp"] | Variable<any, string>},ValueTypes["draft_games_mutation_response"]],
 delete_draft_games_by_pk?: [{	id: ValueTypes["uuid"] | Variable<any, string>},ValueTypes["draft_games"]],
@@ -31757,6 +31962,9 @@ delete_map_pools_by_pk?: [{	id: ValueTypes["uuid"] | Variable<any, string>},Valu
 delete_maps?: [{	/** filter the rows which have to be deleted */
 	where: ValueTypes["maps_bool_exp"] | Variable<any, string>},ValueTypes["maps_mutation_response"]],
 delete_maps_by_pk?: [{	id: ValueTypes["uuid"] | Variable<any, string>},ValueTypes["maps"]],
+delete_match_check_in_versions?: [{	/** filter the rows which have to be deleted */
+	where: ValueTypes["match_check_in_versions_bool_exp"] | Variable<any, string>},ValueTypes["match_check_in_versions_mutation_response"]],
+delete_match_check_in_versions_by_pk?: [{	match_id: ValueTypes["uuid"] | Variable<any, string>},ValueTypes["match_check_in_versions"]],
 delete_match_clips?: [{	/** filter the rows which have to be deleted */
 	where: ValueTypes["match_clips_bool_exp"] | Variable<any, string>},ValueTypes["match_clips_mutation_response"]],
 delete_match_clips_by_pk?: [{	id: ValueTypes["uuid"] | Variable<any, string>},ValueTypes["match_clips"]],
@@ -32229,6 +32437,12 @@ insert_draft_game_players?: [{	/** the rows to be inserted */
 insert_draft_game_players_one?: [{	/** the row to be inserted */
 	object: ValueTypes["draft_game_players_insert_input"] | Variable<any, string>,	/** upsert condition */
 	on_conflict?: ValueTypes["draft_game_players_on_conflict"] | undefined | null | Variable<any, string>},ValueTypes["draft_game_players"]],
+insert_draft_game_versions?: [{	/** the rows to be inserted */
+	objects: Array<ValueTypes["draft_game_versions_insert_input"]> | Variable<any, string>,	/** upsert condition */
+	on_conflict?: ValueTypes["draft_game_versions_on_conflict"] | undefined | null | Variable<any, string>},ValueTypes["draft_game_versions_mutation_response"]],
+insert_draft_game_versions_one?: [{	/** the row to be inserted */
+	object: ValueTypes["draft_game_versions_insert_input"] | Variable<any, string>,	/** upsert condition */
+	on_conflict?: ValueTypes["draft_game_versions_on_conflict"] | undefined | null | Variable<any, string>},ValueTypes["draft_game_versions"]],
 insert_draft_games?: [{	/** the rows to be inserted */
 	objects: Array<ValueTypes["draft_games_insert_input"]> | Variable<any, string>,	/** upsert condition */
 	on_conflict?: ValueTypes["draft_games_on_conflict"] | undefined | null | Variable<any, string>},ValueTypes["draft_games_mutation_response"]],
@@ -32803,6 +33017,12 @@ insert_maps?: [{	/** the rows to be inserted */
 insert_maps_one?: [{	/** the row to be inserted */
 	object: ValueTypes["maps_insert_input"] | Variable<any, string>,	/** upsert condition */
 	on_conflict?: ValueTypes["maps_on_conflict"] | undefined | null | Variable<any, string>},ValueTypes["maps"]],
+insert_match_check_in_versions?: [{	/** the rows to be inserted */
+	objects: Array<ValueTypes["match_check_in_versions_insert_input"]> | Variable<any, string>,	/** upsert condition */
+	on_conflict?: ValueTypes["match_check_in_versions_on_conflict"] | undefined | null | Variable<any, string>},ValueTypes["match_check_in_versions_mutation_response"]],
+insert_match_check_in_versions_one?: [{	/** the row to be inserted */
+	object: ValueTypes["match_check_in_versions_insert_input"] | Variable<any, string>,	/** upsert condition */
+	on_conflict?: ValueTypes["match_check_in_versions_on_conflict"] | undefined | null | Variable<any, string>},ValueTypes["match_check_in_versions"]],
 insert_match_clips?: [{	/** the rows to be inserted */
 	objects: Array<ValueTypes["match_clips_insert_input"]> | Variable<any, string>,	/** upsert condition */
 	on_conflict?: ValueTypes["match_clips_on_conflict"] | undefined | null | Variable<any, string>},ValueTypes["match_clips_mutation_response"]],
@@ -33896,6 +34116,13 @@ update_draft_game_players_by_pk?: [{	/** increments the numeric columns with giv
 	_set?: ValueTypes["draft_game_players_set_input"] | undefined | null | Variable<any, string>,	pk_columns: ValueTypes["draft_game_players_pk_columns_input"] | Variable<any, string>},ValueTypes["draft_game_players"]],
 update_draft_game_players_many?: [{	/** updates to execute, in order */
 	updates: Array<ValueTypes["draft_game_players_updates"]> | Variable<any, string>},ValueTypes["draft_game_players_mutation_response"]],
+update_draft_game_versions?: [{	/** sets the columns of the filtered rows to the given values */
+	_set?: ValueTypes["draft_game_versions_set_input"] | undefined | null | Variable<any, string>,	/** filter the rows which have to be updated */
+	where: ValueTypes["draft_game_versions_bool_exp"] | Variable<any, string>},ValueTypes["draft_game_versions_mutation_response"]],
+update_draft_game_versions_by_pk?: [{	/** sets the columns of the filtered rows to the given values */
+	_set?: ValueTypes["draft_game_versions_set_input"] | undefined | null | Variable<any, string>,	pk_columns: ValueTypes["draft_game_versions_pk_columns_input"] | Variable<any, string>},ValueTypes["draft_game_versions"]],
+update_draft_game_versions_many?: [{	/** updates to execute, in order */
+	updates: Array<ValueTypes["draft_game_versions_updates"]> | Variable<any, string>},ValueTypes["draft_game_versions_mutation_response"]],
 update_draft_games?: [{	/** increments the numeric columns with given value of the filtered values */
 	_inc?: ValueTypes["draft_games_inc_input"] | undefined | null | Variable<any, string>,	/** sets the columns of the filtered rows to the given values */
 	_set?: ValueTypes["draft_games_set_input"] | undefined | null | Variable<any, string>,	/** filter the rows which have to be updated */
@@ -34703,6 +34930,13 @@ update_maps_by_pk?: [{	/** sets the columns of the filtered rows to the given va
 	_set?: ValueTypes["maps_set_input"] | undefined | null | Variable<any, string>,	pk_columns: ValueTypes["maps_pk_columns_input"] | Variable<any, string>},ValueTypes["maps"]],
 update_maps_many?: [{	/** updates to execute, in order */
 	updates: Array<ValueTypes["maps_updates"]> | Variable<any, string>},ValueTypes["maps_mutation_response"]],
+update_match_check_in_versions?: [{	/** sets the columns of the filtered rows to the given values */
+	_set?: ValueTypes["match_check_in_versions_set_input"] | undefined | null | Variable<any, string>,	/** filter the rows which have to be updated */
+	where: ValueTypes["match_check_in_versions_bool_exp"] | Variable<any, string>},ValueTypes["match_check_in_versions_mutation_response"]],
+update_match_check_in_versions_by_pk?: [{	/** sets the columns of the filtered rows to the given values */
+	_set?: ValueTypes["match_check_in_versions_set_input"] | undefined | null | Variable<any, string>,	pk_columns: ValueTypes["match_check_in_versions_pk_columns_input"] | Variable<any, string>},ValueTypes["match_check_in_versions"]],
+update_match_check_in_versions_many?: [{	/** updates to execute, in order */
+	updates: Array<ValueTypes["match_check_in_versions_updates"]> | Variable<any, string>},ValueTypes["match_check_in_versions_mutation_response"]],
 update_match_clips?: [{	/** increments the numeric columns with given value of the filtered values */
 	_inc?: ValueTypes["match_clips_inc_input"] | undefined | null | Variable<any, string>,	/** sets the columns of the filtered rows to the given values */
 	_set?: ValueTypes["match_clips_set_input"] | undefined | null | Variable<any, string>,	/** filter the rows which have to be updated */
@@ -53522,6 +53756,19 @@ draft_game_players_aggregate?: [{	/** distinct select on columns */
 	order_by?: Array<ValueTypes["draft_game_players_order_by"]> | undefined | null | Variable<any, string>,	/** filter the rows returned */
 	where?: ValueTypes["draft_game_players_bool_exp"] | undefined | null | Variable<any, string>},ValueTypes["draft_game_players_aggregate"]],
 draft_game_players_by_pk?: [{	draft_game_id: ValueTypes["uuid"] | Variable<any, string>,	steam_id: ValueTypes["bigint"] | Variable<any, string>},ValueTypes["draft_game_players"]],
+draft_game_versions?: [{	/** distinct select on columns */
+	distinct_on?: Array<ValueTypes["draft_game_versions_select_column"]> | undefined | null | Variable<any, string>,	/** limit the number of rows returned */
+	limit?: number | undefined | null | Variable<any, string>,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null | Variable<any, string>,	/** sort the rows by one or more columns */
+	order_by?: Array<ValueTypes["draft_game_versions_order_by"]> | undefined | null | Variable<any, string>,	/** filter the rows returned */
+	where?: ValueTypes["draft_game_versions_bool_exp"] | undefined | null | Variable<any, string>},ValueTypes["draft_game_versions"]],
+draft_game_versions_aggregate?: [{	/** distinct select on columns */
+	distinct_on?: Array<ValueTypes["draft_game_versions_select_column"]> | undefined | null | Variable<any, string>,	/** limit the number of rows returned */
+	limit?: number | undefined | null | Variable<any, string>,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null | Variable<any, string>,	/** sort the rows by one or more columns */
+	order_by?: Array<ValueTypes["draft_game_versions_order_by"]> | undefined | null | Variable<any, string>,	/** filter the rows returned */
+	where?: ValueTypes["draft_game_versions_bool_exp"] | undefined | null | Variable<any, string>},ValueTypes["draft_game_versions_aggregate"]],
+draft_game_versions_by_pk?: [{	draft_game_id: ValueTypes["uuid"] | Variable<any, string>},ValueTypes["draft_game_versions"]],
 draft_games?: [{	/** distinct select on columns */
 	distinct_on?: Array<ValueTypes["draft_games_select_column"]> | undefined | null | Variable<any, string>,	/** limit the number of rows returned */
 	limit?: number | undefined | null | Variable<any, string>,	/** skip the first n rows. Use only with order_by */
@@ -54872,6 +55119,19 @@ maps_aggregate?: [{	/** distinct select on columns */
 	order_by?: Array<ValueTypes["maps_order_by"]> | undefined | null | Variable<any, string>,	/** filter the rows returned */
 	where?: ValueTypes["maps_bool_exp"] | undefined | null | Variable<any, string>},ValueTypes["maps_aggregate"]],
 maps_by_pk?: [{	id: ValueTypes["uuid"] | Variable<any, string>},ValueTypes["maps"]],
+match_check_in_versions?: [{	/** distinct select on columns */
+	distinct_on?: Array<ValueTypes["match_check_in_versions_select_column"]> | undefined | null | Variable<any, string>,	/** limit the number of rows returned */
+	limit?: number | undefined | null | Variable<any, string>,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null | Variable<any, string>,	/** sort the rows by one or more columns */
+	order_by?: Array<ValueTypes["match_check_in_versions_order_by"]> | undefined | null | Variable<any, string>,	/** filter the rows returned */
+	where?: ValueTypes["match_check_in_versions_bool_exp"] | undefined | null | Variable<any, string>},ValueTypes["match_check_in_versions"]],
+match_check_in_versions_aggregate?: [{	/** distinct select on columns */
+	distinct_on?: Array<ValueTypes["match_check_in_versions_select_column"]> | undefined | null | Variable<any, string>,	/** limit the number of rows returned */
+	limit?: number | undefined | null | Variable<any, string>,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null | Variable<any, string>,	/** sort the rows by one or more columns */
+	order_by?: Array<ValueTypes["match_check_in_versions_order_by"]> | undefined | null | Variable<any, string>,	/** filter the rows returned */
+	where?: ValueTypes["match_check_in_versions_bool_exp"] | undefined | null | Variable<any, string>},ValueTypes["match_check_in_versions_aggregate"]],
+match_check_in_versions_by_pk?: [{	match_id: ValueTypes["uuid"] | Variable<any, string>},ValueTypes["match_check_in_versions"]],
 match_clips?: [{	/** distinct select on columns */
 	distinct_on?: Array<ValueTypes["match_clips_select_column"]> | undefined | null | Variable<any, string>,	/** limit the number of rows returned */
 	limit?: number | undefined | null | Variable<any, string>,	/** skip the first n rows. Use only with order_by */
@@ -61736,6 +61996,23 @@ draft_game_players_stream?: [{	/** maximum number of rows returned in a single b
 	batch_size: number | Variable<any, string>,	/** cursor to stream the results returned by the query */
 	cursor: Array<ValueTypes["draft_game_players_stream_cursor_input"] | undefined | null> | Variable<any, string>,	/** filter the rows returned */
 	where?: ValueTypes["draft_game_players_bool_exp"] | undefined | null | Variable<any, string>},ValueTypes["draft_game_players"]],
+draft_game_versions?: [{	/** distinct select on columns */
+	distinct_on?: Array<ValueTypes["draft_game_versions_select_column"]> | undefined | null | Variable<any, string>,	/** limit the number of rows returned */
+	limit?: number | undefined | null | Variable<any, string>,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null | Variable<any, string>,	/** sort the rows by one or more columns */
+	order_by?: Array<ValueTypes["draft_game_versions_order_by"]> | undefined | null | Variable<any, string>,	/** filter the rows returned */
+	where?: ValueTypes["draft_game_versions_bool_exp"] | undefined | null | Variable<any, string>},ValueTypes["draft_game_versions"]],
+draft_game_versions_aggregate?: [{	/** distinct select on columns */
+	distinct_on?: Array<ValueTypes["draft_game_versions_select_column"]> | undefined | null | Variable<any, string>,	/** limit the number of rows returned */
+	limit?: number | undefined | null | Variable<any, string>,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null | Variable<any, string>,	/** sort the rows by one or more columns */
+	order_by?: Array<ValueTypes["draft_game_versions_order_by"]> | undefined | null | Variable<any, string>,	/** filter the rows returned */
+	where?: ValueTypes["draft_game_versions_bool_exp"] | undefined | null | Variable<any, string>},ValueTypes["draft_game_versions_aggregate"]],
+draft_game_versions_by_pk?: [{	draft_game_id: ValueTypes["uuid"] | Variable<any, string>},ValueTypes["draft_game_versions"]],
+draft_game_versions_stream?: [{	/** maximum number of rows returned in a single batch */
+	batch_size: number | Variable<any, string>,	/** cursor to stream the results returned by the query */
+	cursor: Array<ValueTypes["draft_game_versions_stream_cursor_input"] | undefined | null> | Variable<any, string>,	/** filter the rows returned */
+	where?: ValueTypes["draft_game_versions_bool_exp"] | undefined | null | Variable<any, string>},ValueTypes["draft_game_versions"]],
 draft_games?: [{	/** distinct select on columns */
 	distinct_on?: Array<ValueTypes["draft_games_select_column"]> | undefined | null | Variable<any, string>,	/** limit the number of rows returned */
 	limit?: number | undefined | null | Variable<any, string>,	/** skip the first n rows. Use only with order_by */
@@ -63437,6 +63714,23 @@ maps_stream?: [{	/** maximum number of rows returned in a single batch */
 	batch_size: number | Variable<any, string>,	/** cursor to stream the results returned by the query */
 	cursor: Array<ValueTypes["maps_stream_cursor_input"] | undefined | null> | Variable<any, string>,	/** filter the rows returned */
 	where?: ValueTypes["maps_bool_exp"] | undefined | null | Variable<any, string>},ValueTypes["maps"]],
+match_check_in_versions?: [{	/** distinct select on columns */
+	distinct_on?: Array<ValueTypes["match_check_in_versions_select_column"]> | undefined | null | Variable<any, string>,	/** limit the number of rows returned */
+	limit?: number | undefined | null | Variable<any, string>,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null | Variable<any, string>,	/** sort the rows by one or more columns */
+	order_by?: Array<ValueTypes["match_check_in_versions_order_by"]> | undefined | null | Variable<any, string>,	/** filter the rows returned */
+	where?: ValueTypes["match_check_in_versions_bool_exp"] | undefined | null | Variable<any, string>},ValueTypes["match_check_in_versions"]],
+match_check_in_versions_aggregate?: [{	/** distinct select on columns */
+	distinct_on?: Array<ValueTypes["match_check_in_versions_select_column"]> | undefined | null | Variable<any, string>,	/** limit the number of rows returned */
+	limit?: number | undefined | null | Variable<any, string>,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null | Variable<any, string>,	/** sort the rows by one or more columns */
+	order_by?: Array<ValueTypes["match_check_in_versions_order_by"]> | undefined | null | Variable<any, string>,	/** filter the rows returned */
+	where?: ValueTypes["match_check_in_versions_bool_exp"] | undefined | null | Variable<any, string>},ValueTypes["match_check_in_versions_aggregate"]],
+match_check_in_versions_by_pk?: [{	match_id: ValueTypes["uuid"] | Variable<any, string>},ValueTypes["match_check_in_versions"]],
+match_check_in_versions_stream?: [{	/** maximum number of rows returned in a single batch */
+	batch_size: number | Variable<any, string>,	/** cursor to stream the results returned by the query */
+	cursor: Array<ValueTypes["match_check_in_versions_stream_cursor_input"] | undefined | null> | Variable<any, string>,	/** filter the rows returned */
+	where?: ValueTypes["match_check_in_versions_bool_exp"] | undefined | null | Variable<any, string>},ValueTypes["match_check_in_versions"]],
 match_clips?: [{	/** distinct select on columns */
 	distinct_on?: Array<ValueTypes["match_clips_select_column"]> | undefined | null | Variable<any, string>,	/** limit the number of rows returned */
 	limit?: number | undefined | null | Variable<any, string>,	/** skip the first n rows. Use only with order_by */
@@ -101417,6 +101711,107 @@ count?: [{	columns?: Array<ResolverInputTypes["draft_game_players_select_column"
 	pick_order?: ResolverInputTypes["order_by"] | undefined | null,
 	steam_id?: ResolverInputTypes["order_by"] | undefined | null
 };
+	/** columns and relationships of "draft_game_versions" */
+["draft_game_versions"]: AliasType<{
+	changed_at?:boolean | `@${string}`,
+	/** An object relationship */
+	draft_game?:ResolverInputTypes["draft_games"],
+	draft_game_id?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	/** aggregated selection of "draft_game_versions" */
+["draft_game_versions_aggregate"]: AliasType<{
+	aggregate?:ResolverInputTypes["draft_game_versions_aggregate_fields"],
+	nodes?:ResolverInputTypes["draft_game_versions"],
+		__typename?: boolean | `@${string}`
+}>;
+	/** aggregate fields of "draft_game_versions" */
+["draft_game_versions_aggregate_fields"]: AliasType<{
+count?: [{	columns?: Array<ResolverInputTypes["draft_game_versions_select_column"]> | undefined | null,	distinct?: boolean | undefined | null},boolean | `@${string}`],
+	max?:ResolverInputTypes["draft_game_versions_max_fields"],
+	min?:ResolverInputTypes["draft_game_versions_min_fields"],
+		__typename?: boolean | `@${string}`
+}>;
+	/** Boolean expression to filter rows from the table "draft_game_versions". All fields are combined with a logical 'AND'. */
+["draft_game_versions_bool_exp"]: {
+	_and?: Array<ResolverInputTypes["draft_game_versions_bool_exp"]> | undefined | null,
+	_not?: ResolverInputTypes["draft_game_versions_bool_exp"] | undefined | null,
+	_or?: Array<ResolverInputTypes["draft_game_versions_bool_exp"]> | undefined | null,
+	changed_at?: ResolverInputTypes["timestamptz_comparison_exp"] | undefined | null,
+	draft_game?: ResolverInputTypes["draft_games_bool_exp"] | undefined | null,
+	draft_game_id?: ResolverInputTypes["uuid_comparison_exp"] | undefined | null
+};
+	/** unique or primary key constraints on table "draft_game_versions" */
+["draft_game_versions_constraint"]:draft_game_versions_constraint;
+	/** input type for inserting data into table "draft_game_versions" */
+["draft_game_versions_insert_input"]: {
+	changed_at?: ResolverInputTypes["timestamptz"] | undefined | null,
+	draft_game?: ResolverInputTypes["draft_games_obj_rel_insert_input"] | undefined | null,
+	draft_game_id?: ResolverInputTypes["uuid"] | undefined | null
+};
+	/** aggregate max on columns */
+["draft_game_versions_max_fields"]: AliasType<{
+	changed_at?:boolean | `@${string}`,
+	draft_game_id?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	/** aggregate min on columns */
+["draft_game_versions_min_fields"]: AliasType<{
+	changed_at?:boolean | `@${string}`,
+	draft_game_id?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	/** response of any mutation on the table "draft_game_versions" */
+["draft_game_versions_mutation_response"]: AliasType<{
+	/** number of rows affected by the mutation */
+	affected_rows?:boolean | `@${string}`,
+	/** data from the rows affected by the mutation */
+	returning?:ResolverInputTypes["draft_game_versions"],
+		__typename?: boolean | `@${string}`
+}>;
+	/** on_conflict condition type for table "draft_game_versions" */
+["draft_game_versions_on_conflict"]: {
+	constraint: ResolverInputTypes["draft_game_versions_constraint"],
+	update_columns: Array<ResolverInputTypes["draft_game_versions_update_column"]>,
+	where?: ResolverInputTypes["draft_game_versions_bool_exp"] | undefined | null
+};
+	/** Ordering options when selecting data from "draft_game_versions". */
+["draft_game_versions_order_by"]: {
+	changed_at?: ResolverInputTypes["order_by"] | undefined | null,
+	draft_game?: ResolverInputTypes["draft_games_order_by"] | undefined | null,
+	draft_game_id?: ResolverInputTypes["order_by"] | undefined | null
+};
+	/** primary key columns input for table: draft_game_versions */
+["draft_game_versions_pk_columns_input"]: {
+	draft_game_id: ResolverInputTypes["uuid"]
+};
+	/** select columns of table "draft_game_versions" */
+["draft_game_versions_select_column"]:draft_game_versions_select_column;
+	/** input type for updating data in table "draft_game_versions" */
+["draft_game_versions_set_input"]: {
+	changed_at?: ResolverInputTypes["timestamptz"] | undefined | null,
+	draft_game_id?: ResolverInputTypes["uuid"] | undefined | null
+};
+	/** Streaming cursor of the table "draft_game_versions" */
+["draft_game_versions_stream_cursor_input"]: {
+	/** Stream column input with initial value */
+	initial_value: ResolverInputTypes["draft_game_versions_stream_cursor_value_input"],
+	/** cursor ordering */
+	ordering?: ResolverInputTypes["cursor_ordering"] | undefined | null
+};
+	/** Initial value of the column from where the streaming should start */
+["draft_game_versions_stream_cursor_value_input"]: {
+	changed_at?: ResolverInputTypes["timestamptz"] | undefined | null,
+	draft_game_id?: ResolverInputTypes["uuid"] | undefined | null
+};
+	/** update columns of table "draft_game_versions" */
+["draft_game_versions_update_column"]:draft_game_versions_update_column;
+	["draft_game_versions_updates"]: {
+	/** sets the columns of the filtered rows to the given values */
+	_set?: ResolverInputTypes["draft_game_versions_set_input"] | undefined | null,
+	/** filter the rows which have to be updated */
+	where: ResolverInputTypes["draft_game_versions_bool_exp"]
+};
 	/** columns and relationships of "draft_games" */
 ["draft_games"]: AliasType<{
 	access?:boolean | `@${string}`,
@@ -119282,6 +119677,107 @@ count?: [{	columns?: Array<ResolverInputTypes["maps_select_column"]> | undefined
 	/** filter the rows which have to be updated */
 	where: ResolverInputTypes["maps_bool_exp"]
 };
+	/** columns and relationships of "match_check_in_versions" */
+["match_check_in_versions"]: AliasType<{
+	changed_at?:boolean | `@${string}`,
+	/** An object relationship */
+	match?:ResolverInputTypes["matches"],
+	match_id?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	/** aggregated selection of "match_check_in_versions" */
+["match_check_in_versions_aggregate"]: AliasType<{
+	aggregate?:ResolverInputTypes["match_check_in_versions_aggregate_fields"],
+	nodes?:ResolverInputTypes["match_check_in_versions"],
+		__typename?: boolean | `@${string}`
+}>;
+	/** aggregate fields of "match_check_in_versions" */
+["match_check_in_versions_aggregate_fields"]: AliasType<{
+count?: [{	columns?: Array<ResolverInputTypes["match_check_in_versions_select_column"]> | undefined | null,	distinct?: boolean | undefined | null},boolean | `@${string}`],
+	max?:ResolverInputTypes["match_check_in_versions_max_fields"],
+	min?:ResolverInputTypes["match_check_in_versions_min_fields"],
+		__typename?: boolean | `@${string}`
+}>;
+	/** Boolean expression to filter rows from the table "match_check_in_versions". All fields are combined with a logical 'AND'. */
+["match_check_in_versions_bool_exp"]: {
+	_and?: Array<ResolverInputTypes["match_check_in_versions_bool_exp"]> | undefined | null,
+	_not?: ResolverInputTypes["match_check_in_versions_bool_exp"] | undefined | null,
+	_or?: Array<ResolverInputTypes["match_check_in_versions_bool_exp"]> | undefined | null,
+	changed_at?: ResolverInputTypes["timestamptz_comparison_exp"] | undefined | null,
+	match?: ResolverInputTypes["matches_bool_exp"] | undefined | null,
+	match_id?: ResolverInputTypes["uuid_comparison_exp"] | undefined | null
+};
+	/** unique or primary key constraints on table "match_check_in_versions" */
+["match_check_in_versions_constraint"]:match_check_in_versions_constraint;
+	/** input type for inserting data into table "match_check_in_versions" */
+["match_check_in_versions_insert_input"]: {
+	changed_at?: ResolverInputTypes["timestamptz"] | undefined | null,
+	match?: ResolverInputTypes["matches_obj_rel_insert_input"] | undefined | null,
+	match_id?: ResolverInputTypes["uuid"] | undefined | null
+};
+	/** aggregate max on columns */
+["match_check_in_versions_max_fields"]: AliasType<{
+	changed_at?:boolean | `@${string}`,
+	match_id?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	/** aggregate min on columns */
+["match_check_in_versions_min_fields"]: AliasType<{
+	changed_at?:boolean | `@${string}`,
+	match_id?:boolean | `@${string}`,
+		__typename?: boolean | `@${string}`
+}>;
+	/** response of any mutation on the table "match_check_in_versions" */
+["match_check_in_versions_mutation_response"]: AliasType<{
+	/** number of rows affected by the mutation */
+	affected_rows?:boolean | `@${string}`,
+	/** data from the rows affected by the mutation */
+	returning?:ResolverInputTypes["match_check_in_versions"],
+		__typename?: boolean | `@${string}`
+}>;
+	/** on_conflict condition type for table "match_check_in_versions" */
+["match_check_in_versions_on_conflict"]: {
+	constraint: ResolverInputTypes["match_check_in_versions_constraint"],
+	update_columns: Array<ResolverInputTypes["match_check_in_versions_update_column"]>,
+	where?: ResolverInputTypes["match_check_in_versions_bool_exp"] | undefined | null
+};
+	/** Ordering options when selecting data from "match_check_in_versions". */
+["match_check_in_versions_order_by"]: {
+	changed_at?: ResolverInputTypes["order_by"] | undefined | null,
+	match?: ResolverInputTypes["matches_order_by"] | undefined | null,
+	match_id?: ResolverInputTypes["order_by"] | undefined | null
+};
+	/** primary key columns input for table: match_check_in_versions */
+["match_check_in_versions_pk_columns_input"]: {
+	match_id: ResolverInputTypes["uuid"]
+};
+	/** select columns of table "match_check_in_versions" */
+["match_check_in_versions_select_column"]:match_check_in_versions_select_column;
+	/** input type for updating data in table "match_check_in_versions" */
+["match_check_in_versions_set_input"]: {
+	changed_at?: ResolverInputTypes["timestamptz"] | undefined | null,
+	match_id?: ResolverInputTypes["uuid"] | undefined | null
+};
+	/** Streaming cursor of the table "match_check_in_versions" */
+["match_check_in_versions_stream_cursor_input"]: {
+	/** Stream column input with initial value */
+	initial_value: ResolverInputTypes["match_check_in_versions_stream_cursor_value_input"],
+	/** cursor ordering */
+	ordering?: ResolverInputTypes["cursor_ordering"] | undefined | null
+};
+	/** Initial value of the column from where the streaming should start */
+["match_check_in_versions_stream_cursor_value_input"]: {
+	changed_at?: ResolverInputTypes["timestamptz"] | undefined | null,
+	match_id?: ResolverInputTypes["uuid"] | undefined | null
+};
+	/** update columns of table "match_check_in_versions" */
+["match_check_in_versions_update_column"]:match_check_in_versions_update_column;
+	["match_check_in_versions_updates"]: {
+	/** sets the columns of the filtered rows to the given values */
+	_set?: ResolverInputTypes["match_check_in_versions_set_input"] | undefined | null,
+	/** filter the rows which have to be updated */
+	where: ResolverInputTypes["match_check_in_versions_bool_exp"]
+};
 	/** columns and relationships of "match_clips" */
 ["match_clips"]: AliasType<{
 	created_at?:boolean | `@${string}`,
@@ -125606,6 +126102,9 @@ delete_draft_game_picks_by_pk?: [{	id: ResolverInputTypes["uuid"]},ResolverInput
 delete_draft_game_players?: [{	/** filter the rows which have to be deleted */
 	where: ResolverInputTypes["draft_game_players_bool_exp"]},ResolverInputTypes["draft_game_players_mutation_response"]],
 delete_draft_game_players_by_pk?: [{	draft_game_id: ResolverInputTypes["uuid"],	steam_id: ResolverInputTypes["bigint"]},ResolverInputTypes["draft_game_players"]],
+delete_draft_game_versions?: [{	/** filter the rows which have to be deleted */
+	where: ResolverInputTypes["draft_game_versions_bool_exp"]},ResolverInputTypes["draft_game_versions_mutation_response"]],
+delete_draft_game_versions_by_pk?: [{	draft_game_id: ResolverInputTypes["uuid"]},ResolverInputTypes["draft_game_versions"]],
 delete_draft_games?: [{	/** filter the rows which have to be deleted */
 	where: ResolverInputTypes["draft_games_bool_exp"]},ResolverInputTypes["draft_games_mutation_response"]],
 delete_draft_games_by_pk?: [{	id: ResolverInputTypes["uuid"]},ResolverInputTypes["draft_games"]],
@@ -125893,6 +126392,9 @@ delete_map_pools_by_pk?: [{	id: ResolverInputTypes["uuid"]},ResolverInputTypes["
 delete_maps?: [{	/** filter the rows which have to be deleted */
 	where: ResolverInputTypes["maps_bool_exp"]},ResolverInputTypes["maps_mutation_response"]],
 delete_maps_by_pk?: [{	id: ResolverInputTypes["uuid"]},ResolverInputTypes["maps"]],
+delete_match_check_in_versions?: [{	/** filter the rows which have to be deleted */
+	where: ResolverInputTypes["match_check_in_versions_bool_exp"]},ResolverInputTypes["match_check_in_versions_mutation_response"]],
+delete_match_check_in_versions_by_pk?: [{	match_id: ResolverInputTypes["uuid"]},ResolverInputTypes["match_check_in_versions"]],
 delete_match_clips?: [{	/** filter the rows which have to be deleted */
 	where: ResolverInputTypes["match_clips_bool_exp"]},ResolverInputTypes["match_clips_mutation_response"]],
 delete_match_clips_by_pk?: [{	id: ResolverInputTypes["uuid"]},ResolverInputTypes["match_clips"]],
@@ -126365,6 +126867,12 @@ insert_draft_game_players?: [{	/** the rows to be inserted */
 insert_draft_game_players_one?: [{	/** the row to be inserted */
 	object: ResolverInputTypes["draft_game_players_insert_input"],	/** upsert condition */
 	on_conflict?: ResolverInputTypes["draft_game_players_on_conflict"] | undefined | null},ResolverInputTypes["draft_game_players"]],
+insert_draft_game_versions?: [{	/** the rows to be inserted */
+	objects: Array<ResolverInputTypes["draft_game_versions_insert_input"]>,	/** upsert condition */
+	on_conflict?: ResolverInputTypes["draft_game_versions_on_conflict"] | undefined | null},ResolverInputTypes["draft_game_versions_mutation_response"]],
+insert_draft_game_versions_one?: [{	/** the row to be inserted */
+	object: ResolverInputTypes["draft_game_versions_insert_input"],	/** upsert condition */
+	on_conflict?: ResolverInputTypes["draft_game_versions_on_conflict"] | undefined | null},ResolverInputTypes["draft_game_versions"]],
 insert_draft_games?: [{	/** the rows to be inserted */
 	objects: Array<ResolverInputTypes["draft_games_insert_input"]>,	/** upsert condition */
 	on_conflict?: ResolverInputTypes["draft_games_on_conflict"] | undefined | null},ResolverInputTypes["draft_games_mutation_response"]],
@@ -126939,6 +127447,12 @@ insert_maps?: [{	/** the rows to be inserted */
 insert_maps_one?: [{	/** the row to be inserted */
 	object: ResolverInputTypes["maps_insert_input"],	/** upsert condition */
 	on_conflict?: ResolverInputTypes["maps_on_conflict"] | undefined | null},ResolverInputTypes["maps"]],
+insert_match_check_in_versions?: [{	/** the rows to be inserted */
+	objects: Array<ResolverInputTypes["match_check_in_versions_insert_input"]>,	/** upsert condition */
+	on_conflict?: ResolverInputTypes["match_check_in_versions_on_conflict"] | undefined | null},ResolverInputTypes["match_check_in_versions_mutation_response"]],
+insert_match_check_in_versions_one?: [{	/** the row to be inserted */
+	object: ResolverInputTypes["match_check_in_versions_insert_input"],	/** upsert condition */
+	on_conflict?: ResolverInputTypes["match_check_in_versions_on_conflict"] | undefined | null},ResolverInputTypes["match_check_in_versions"]],
 insert_match_clips?: [{	/** the rows to be inserted */
 	objects: Array<ResolverInputTypes["match_clips_insert_input"]>,	/** upsert condition */
 	on_conflict?: ResolverInputTypes["match_clips_on_conflict"] | undefined | null},ResolverInputTypes["match_clips_mutation_response"]],
@@ -128032,6 +128546,13 @@ update_draft_game_players_by_pk?: [{	/** increments the numeric columns with giv
 	_set?: ResolverInputTypes["draft_game_players_set_input"] | undefined | null,	pk_columns: ResolverInputTypes["draft_game_players_pk_columns_input"]},ResolverInputTypes["draft_game_players"]],
 update_draft_game_players_many?: [{	/** updates to execute, in order */
 	updates: Array<ResolverInputTypes["draft_game_players_updates"]>},ResolverInputTypes["draft_game_players_mutation_response"]],
+update_draft_game_versions?: [{	/** sets the columns of the filtered rows to the given values */
+	_set?: ResolverInputTypes["draft_game_versions_set_input"] | undefined | null,	/** filter the rows which have to be updated */
+	where: ResolverInputTypes["draft_game_versions_bool_exp"]},ResolverInputTypes["draft_game_versions_mutation_response"]],
+update_draft_game_versions_by_pk?: [{	/** sets the columns of the filtered rows to the given values */
+	_set?: ResolverInputTypes["draft_game_versions_set_input"] | undefined | null,	pk_columns: ResolverInputTypes["draft_game_versions_pk_columns_input"]},ResolverInputTypes["draft_game_versions"]],
+update_draft_game_versions_many?: [{	/** updates to execute, in order */
+	updates: Array<ResolverInputTypes["draft_game_versions_updates"]>},ResolverInputTypes["draft_game_versions_mutation_response"]],
 update_draft_games?: [{	/** increments the numeric columns with given value of the filtered values */
 	_inc?: ResolverInputTypes["draft_games_inc_input"] | undefined | null,	/** sets the columns of the filtered rows to the given values */
 	_set?: ResolverInputTypes["draft_games_set_input"] | undefined | null,	/** filter the rows which have to be updated */
@@ -128839,6 +129360,13 @@ update_maps_by_pk?: [{	/** sets the columns of the filtered rows to the given va
 	_set?: ResolverInputTypes["maps_set_input"] | undefined | null,	pk_columns: ResolverInputTypes["maps_pk_columns_input"]},ResolverInputTypes["maps"]],
 update_maps_many?: [{	/** updates to execute, in order */
 	updates: Array<ResolverInputTypes["maps_updates"]>},ResolverInputTypes["maps_mutation_response"]],
+update_match_check_in_versions?: [{	/** sets the columns of the filtered rows to the given values */
+	_set?: ResolverInputTypes["match_check_in_versions_set_input"] | undefined | null,	/** filter the rows which have to be updated */
+	where: ResolverInputTypes["match_check_in_versions_bool_exp"]},ResolverInputTypes["match_check_in_versions_mutation_response"]],
+update_match_check_in_versions_by_pk?: [{	/** sets the columns of the filtered rows to the given values */
+	_set?: ResolverInputTypes["match_check_in_versions_set_input"] | undefined | null,	pk_columns: ResolverInputTypes["match_check_in_versions_pk_columns_input"]},ResolverInputTypes["match_check_in_versions"]],
+update_match_check_in_versions_many?: [{	/** updates to execute, in order */
+	updates: Array<ResolverInputTypes["match_check_in_versions_updates"]>},ResolverInputTypes["match_check_in_versions_mutation_response"]],
 update_match_clips?: [{	/** increments the numeric columns with given value of the filtered values */
 	_inc?: ResolverInputTypes["match_clips_inc_input"] | undefined | null,	/** sets the columns of the filtered rows to the given values */
 	_set?: ResolverInputTypes["match_clips_set_input"] | undefined | null,	/** filter the rows which have to be updated */
@@ -147658,6 +148186,19 @@ draft_game_players_aggregate?: [{	/** distinct select on columns */
 	order_by?: Array<ResolverInputTypes["draft_game_players_order_by"]> | undefined | null,	/** filter the rows returned */
 	where?: ResolverInputTypes["draft_game_players_bool_exp"] | undefined | null},ResolverInputTypes["draft_game_players_aggregate"]],
 draft_game_players_by_pk?: [{	draft_game_id: ResolverInputTypes["uuid"],	steam_id: ResolverInputTypes["bigint"]},ResolverInputTypes["draft_game_players"]],
+draft_game_versions?: [{	/** distinct select on columns */
+	distinct_on?: Array<ResolverInputTypes["draft_game_versions_select_column"]> | undefined | null,	/** limit the number of rows returned */
+	limit?: number | undefined | null,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null,	/** sort the rows by one or more columns */
+	order_by?: Array<ResolverInputTypes["draft_game_versions_order_by"]> | undefined | null,	/** filter the rows returned */
+	where?: ResolverInputTypes["draft_game_versions_bool_exp"] | undefined | null},ResolverInputTypes["draft_game_versions"]],
+draft_game_versions_aggregate?: [{	/** distinct select on columns */
+	distinct_on?: Array<ResolverInputTypes["draft_game_versions_select_column"]> | undefined | null,	/** limit the number of rows returned */
+	limit?: number | undefined | null,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null,	/** sort the rows by one or more columns */
+	order_by?: Array<ResolverInputTypes["draft_game_versions_order_by"]> | undefined | null,	/** filter the rows returned */
+	where?: ResolverInputTypes["draft_game_versions_bool_exp"] | undefined | null},ResolverInputTypes["draft_game_versions_aggregate"]],
+draft_game_versions_by_pk?: [{	draft_game_id: ResolverInputTypes["uuid"]},ResolverInputTypes["draft_game_versions"]],
 draft_games?: [{	/** distinct select on columns */
 	distinct_on?: Array<ResolverInputTypes["draft_games_select_column"]> | undefined | null,	/** limit the number of rows returned */
 	limit?: number | undefined | null,	/** skip the first n rows. Use only with order_by */
@@ -149008,6 +149549,19 @@ maps_aggregate?: [{	/** distinct select on columns */
 	order_by?: Array<ResolverInputTypes["maps_order_by"]> | undefined | null,	/** filter the rows returned */
 	where?: ResolverInputTypes["maps_bool_exp"] | undefined | null},ResolverInputTypes["maps_aggregate"]],
 maps_by_pk?: [{	id: ResolverInputTypes["uuid"]},ResolverInputTypes["maps"]],
+match_check_in_versions?: [{	/** distinct select on columns */
+	distinct_on?: Array<ResolverInputTypes["match_check_in_versions_select_column"]> | undefined | null,	/** limit the number of rows returned */
+	limit?: number | undefined | null,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null,	/** sort the rows by one or more columns */
+	order_by?: Array<ResolverInputTypes["match_check_in_versions_order_by"]> | undefined | null,	/** filter the rows returned */
+	where?: ResolverInputTypes["match_check_in_versions_bool_exp"] | undefined | null},ResolverInputTypes["match_check_in_versions"]],
+match_check_in_versions_aggregate?: [{	/** distinct select on columns */
+	distinct_on?: Array<ResolverInputTypes["match_check_in_versions_select_column"]> | undefined | null,	/** limit the number of rows returned */
+	limit?: number | undefined | null,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null,	/** sort the rows by one or more columns */
+	order_by?: Array<ResolverInputTypes["match_check_in_versions_order_by"]> | undefined | null,	/** filter the rows returned */
+	where?: ResolverInputTypes["match_check_in_versions_bool_exp"] | undefined | null},ResolverInputTypes["match_check_in_versions_aggregate"]],
+match_check_in_versions_by_pk?: [{	match_id: ResolverInputTypes["uuid"]},ResolverInputTypes["match_check_in_versions"]],
 match_clips?: [{	/** distinct select on columns */
 	distinct_on?: Array<ResolverInputTypes["match_clips_select_column"]> | undefined | null,	/** limit the number of rows returned */
 	limit?: number | undefined | null,	/** skip the first n rows. Use only with order_by */
@@ -155872,6 +156426,23 @@ draft_game_players_stream?: [{	/** maximum number of rows returned in a single b
 	batch_size: number,	/** cursor to stream the results returned by the query */
 	cursor: Array<ResolverInputTypes["draft_game_players_stream_cursor_input"] | undefined | null>,	/** filter the rows returned */
 	where?: ResolverInputTypes["draft_game_players_bool_exp"] | undefined | null},ResolverInputTypes["draft_game_players"]],
+draft_game_versions?: [{	/** distinct select on columns */
+	distinct_on?: Array<ResolverInputTypes["draft_game_versions_select_column"]> | undefined | null,	/** limit the number of rows returned */
+	limit?: number | undefined | null,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null,	/** sort the rows by one or more columns */
+	order_by?: Array<ResolverInputTypes["draft_game_versions_order_by"]> | undefined | null,	/** filter the rows returned */
+	where?: ResolverInputTypes["draft_game_versions_bool_exp"] | undefined | null},ResolverInputTypes["draft_game_versions"]],
+draft_game_versions_aggregate?: [{	/** distinct select on columns */
+	distinct_on?: Array<ResolverInputTypes["draft_game_versions_select_column"]> | undefined | null,	/** limit the number of rows returned */
+	limit?: number | undefined | null,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null,	/** sort the rows by one or more columns */
+	order_by?: Array<ResolverInputTypes["draft_game_versions_order_by"]> | undefined | null,	/** filter the rows returned */
+	where?: ResolverInputTypes["draft_game_versions_bool_exp"] | undefined | null},ResolverInputTypes["draft_game_versions_aggregate"]],
+draft_game_versions_by_pk?: [{	draft_game_id: ResolverInputTypes["uuid"]},ResolverInputTypes["draft_game_versions"]],
+draft_game_versions_stream?: [{	/** maximum number of rows returned in a single batch */
+	batch_size: number,	/** cursor to stream the results returned by the query */
+	cursor: Array<ResolverInputTypes["draft_game_versions_stream_cursor_input"] | undefined | null>,	/** filter the rows returned */
+	where?: ResolverInputTypes["draft_game_versions_bool_exp"] | undefined | null},ResolverInputTypes["draft_game_versions"]],
 draft_games?: [{	/** distinct select on columns */
 	distinct_on?: Array<ResolverInputTypes["draft_games_select_column"]> | undefined | null,	/** limit the number of rows returned */
 	limit?: number | undefined | null,	/** skip the first n rows. Use only with order_by */
@@ -157573,6 +158144,23 @@ maps_stream?: [{	/** maximum number of rows returned in a single batch */
 	batch_size: number,	/** cursor to stream the results returned by the query */
 	cursor: Array<ResolverInputTypes["maps_stream_cursor_input"] | undefined | null>,	/** filter the rows returned */
 	where?: ResolverInputTypes["maps_bool_exp"] | undefined | null},ResolverInputTypes["maps"]],
+match_check_in_versions?: [{	/** distinct select on columns */
+	distinct_on?: Array<ResolverInputTypes["match_check_in_versions_select_column"]> | undefined | null,	/** limit the number of rows returned */
+	limit?: number | undefined | null,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null,	/** sort the rows by one or more columns */
+	order_by?: Array<ResolverInputTypes["match_check_in_versions_order_by"]> | undefined | null,	/** filter the rows returned */
+	where?: ResolverInputTypes["match_check_in_versions_bool_exp"] | undefined | null},ResolverInputTypes["match_check_in_versions"]],
+match_check_in_versions_aggregate?: [{	/** distinct select on columns */
+	distinct_on?: Array<ResolverInputTypes["match_check_in_versions_select_column"]> | undefined | null,	/** limit the number of rows returned */
+	limit?: number | undefined | null,	/** skip the first n rows. Use only with order_by */
+	offset?: number | undefined | null,	/** sort the rows by one or more columns */
+	order_by?: Array<ResolverInputTypes["match_check_in_versions_order_by"]> | undefined | null,	/** filter the rows returned */
+	where?: ResolverInputTypes["match_check_in_versions_bool_exp"] | undefined | null},ResolverInputTypes["match_check_in_versions_aggregate"]],
+match_check_in_versions_by_pk?: [{	match_id: ResolverInputTypes["uuid"]},ResolverInputTypes["match_check_in_versions"]],
+match_check_in_versions_stream?: [{	/** maximum number of rows returned in a single batch */
+	batch_size: number,	/** cursor to stream the results returned by the query */
+	cursor: Array<ResolverInputTypes["match_check_in_versions_stream_cursor_input"] | undefined | null>,	/** filter the rows returned */
+	where?: ResolverInputTypes["match_check_in_versions_bool_exp"] | undefined | null},ResolverInputTypes["match_check_in_versions"]],
 match_clips?: [{	/** distinct select on columns */
 	distinct_on?: Array<ResolverInputTypes["match_clips_select_column"]> | undefined | null,	/** limit the number of rows returned */
 	limit?: number | undefined | null,	/** skip the first n rows. Use only with order_by */
@@ -195058,6 +195646,98 @@ export type ModelTypes = {
 	pick_order?: ModelTypes["order_by"] | undefined | null,
 	steam_id?: ModelTypes["order_by"] | undefined | null
 };
+	/** columns and relationships of "draft_game_versions" */
+["draft_game_versions"]: {
+		changed_at: ModelTypes["timestamptz"],
+	/** An object relationship */
+	draft_game?: ModelTypes["draft_games"] | undefined | null,
+	draft_game_id: ModelTypes["uuid"]
+};
+	/** aggregated selection of "draft_game_versions" */
+["draft_game_versions_aggregate"]: {
+		aggregate?: ModelTypes["draft_game_versions_aggregate_fields"] | undefined | null,
+	nodes: Array<ModelTypes["draft_game_versions"]>
+};
+	/** aggregate fields of "draft_game_versions" */
+["draft_game_versions_aggregate_fields"]: {
+		count: number,
+	max?: ModelTypes["draft_game_versions_max_fields"] | undefined | null,
+	min?: ModelTypes["draft_game_versions_min_fields"] | undefined | null
+};
+	/** Boolean expression to filter rows from the table "draft_game_versions". All fields are combined with a logical 'AND'. */
+["draft_game_versions_bool_exp"]: {
+	_and?: Array<ModelTypes["draft_game_versions_bool_exp"]> | undefined | null,
+	_not?: ModelTypes["draft_game_versions_bool_exp"] | undefined | null,
+	_or?: Array<ModelTypes["draft_game_versions_bool_exp"]> | undefined | null,
+	changed_at?: ModelTypes["timestamptz_comparison_exp"] | undefined | null,
+	draft_game?: ModelTypes["draft_games_bool_exp"] | undefined | null,
+	draft_game_id?: ModelTypes["uuid_comparison_exp"] | undefined | null
+};
+	["draft_game_versions_constraint"]:draft_game_versions_constraint;
+	/** input type for inserting data into table "draft_game_versions" */
+["draft_game_versions_insert_input"]: {
+	changed_at?: ModelTypes["timestamptz"] | undefined | null,
+	draft_game?: ModelTypes["draft_games_obj_rel_insert_input"] | undefined | null,
+	draft_game_id?: ModelTypes["uuid"] | undefined | null
+};
+	/** aggregate max on columns */
+["draft_game_versions_max_fields"]: {
+		changed_at?: ModelTypes["timestamptz"] | undefined | null,
+	draft_game_id?: ModelTypes["uuid"] | undefined | null
+};
+	/** aggregate min on columns */
+["draft_game_versions_min_fields"]: {
+		changed_at?: ModelTypes["timestamptz"] | undefined | null,
+	draft_game_id?: ModelTypes["uuid"] | undefined | null
+};
+	/** response of any mutation on the table "draft_game_versions" */
+["draft_game_versions_mutation_response"]: {
+		/** number of rows affected by the mutation */
+	affected_rows: number,
+	/** data from the rows affected by the mutation */
+	returning: Array<ModelTypes["draft_game_versions"]>
+};
+	/** on_conflict condition type for table "draft_game_versions" */
+["draft_game_versions_on_conflict"]: {
+	constraint: ModelTypes["draft_game_versions_constraint"],
+	update_columns: Array<ModelTypes["draft_game_versions_update_column"]>,
+	where?: ModelTypes["draft_game_versions_bool_exp"] | undefined | null
+};
+	/** Ordering options when selecting data from "draft_game_versions". */
+["draft_game_versions_order_by"]: {
+	changed_at?: ModelTypes["order_by"] | undefined | null,
+	draft_game?: ModelTypes["draft_games_order_by"] | undefined | null,
+	draft_game_id?: ModelTypes["order_by"] | undefined | null
+};
+	/** primary key columns input for table: draft_game_versions */
+["draft_game_versions_pk_columns_input"]: {
+	draft_game_id: ModelTypes["uuid"]
+};
+	["draft_game_versions_select_column"]:draft_game_versions_select_column;
+	/** input type for updating data in table "draft_game_versions" */
+["draft_game_versions_set_input"]: {
+	changed_at?: ModelTypes["timestamptz"] | undefined | null,
+	draft_game_id?: ModelTypes["uuid"] | undefined | null
+};
+	/** Streaming cursor of the table "draft_game_versions" */
+["draft_game_versions_stream_cursor_input"]: {
+	/** Stream column input with initial value */
+	initial_value: ModelTypes["draft_game_versions_stream_cursor_value_input"],
+	/** cursor ordering */
+	ordering?: ModelTypes["cursor_ordering"] | undefined | null
+};
+	/** Initial value of the column from where the streaming should start */
+["draft_game_versions_stream_cursor_value_input"]: {
+	changed_at?: ModelTypes["timestamptz"] | undefined | null,
+	draft_game_id?: ModelTypes["uuid"] | undefined | null
+};
+	["draft_game_versions_update_column"]:draft_game_versions_update_column;
+	["draft_game_versions_updates"]: {
+	/** sets the columns of the filtered rows to the given values */
+	_set?: ModelTypes["draft_game_versions_set_input"] | undefined | null,
+	/** filter the rows which have to be updated */
+	where: ModelTypes["draft_game_versions_bool_exp"]
+};
 	/** columns and relationships of "draft_games" */
 ["draft_games"]: {
 		access: ModelTypes["e_lobby_access_enum"],
@@ -211338,6 +212018,98 @@ export type ModelTypes = {
 	/** filter the rows which have to be updated */
 	where: ModelTypes["maps_bool_exp"]
 };
+	/** columns and relationships of "match_check_in_versions" */
+["match_check_in_versions"]: {
+		changed_at: ModelTypes["timestamptz"],
+	/** An object relationship */
+	match: ModelTypes["matches"],
+	match_id: ModelTypes["uuid"]
+};
+	/** aggregated selection of "match_check_in_versions" */
+["match_check_in_versions_aggregate"]: {
+		aggregate?: ModelTypes["match_check_in_versions_aggregate_fields"] | undefined | null,
+	nodes: Array<ModelTypes["match_check_in_versions"]>
+};
+	/** aggregate fields of "match_check_in_versions" */
+["match_check_in_versions_aggregate_fields"]: {
+		count: number,
+	max?: ModelTypes["match_check_in_versions_max_fields"] | undefined | null,
+	min?: ModelTypes["match_check_in_versions_min_fields"] | undefined | null
+};
+	/** Boolean expression to filter rows from the table "match_check_in_versions". All fields are combined with a logical 'AND'. */
+["match_check_in_versions_bool_exp"]: {
+	_and?: Array<ModelTypes["match_check_in_versions_bool_exp"]> | undefined | null,
+	_not?: ModelTypes["match_check_in_versions_bool_exp"] | undefined | null,
+	_or?: Array<ModelTypes["match_check_in_versions_bool_exp"]> | undefined | null,
+	changed_at?: ModelTypes["timestamptz_comparison_exp"] | undefined | null,
+	match?: ModelTypes["matches_bool_exp"] | undefined | null,
+	match_id?: ModelTypes["uuid_comparison_exp"] | undefined | null
+};
+	["match_check_in_versions_constraint"]:match_check_in_versions_constraint;
+	/** input type for inserting data into table "match_check_in_versions" */
+["match_check_in_versions_insert_input"]: {
+	changed_at?: ModelTypes["timestamptz"] | undefined | null,
+	match?: ModelTypes["matches_obj_rel_insert_input"] | undefined | null,
+	match_id?: ModelTypes["uuid"] | undefined | null
+};
+	/** aggregate max on columns */
+["match_check_in_versions_max_fields"]: {
+		changed_at?: ModelTypes["timestamptz"] | undefined | null,
+	match_id?: ModelTypes["uuid"] | undefined | null
+};
+	/** aggregate min on columns */
+["match_check_in_versions_min_fields"]: {
+		changed_at?: ModelTypes["timestamptz"] | undefined | null,
+	match_id?: ModelTypes["uuid"] | undefined | null
+};
+	/** response of any mutation on the table "match_check_in_versions" */
+["match_check_in_versions_mutation_response"]: {
+		/** number of rows affected by the mutation */
+	affected_rows: number,
+	/** data from the rows affected by the mutation */
+	returning: Array<ModelTypes["match_check_in_versions"]>
+};
+	/** on_conflict condition type for table "match_check_in_versions" */
+["match_check_in_versions_on_conflict"]: {
+	constraint: ModelTypes["match_check_in_versions_constraint"],
+	update_columns: Array<ModelTypes["match_check_in_versions_update_column"]>,
+	where?: ModelTypes["match_check_in_versions_bool_exp"] | undefined | null
+};
+	/** Ordering options when selecting data from "match_check_in_versions". */
+["match_check_in_versions_order_by"]: {
+	changed_at?: ModelTypes["order_by"] | undefined | null,
+	match?: ModelTypes["matches_order_by"] | undefined | null,
+	match_id?: ModelTypes["order_by"] | undefined | null
+};
+	/** primary key columns input for table: match_check_in_versions */
+["match_check_in_versions_pk_columns_input"]: {
+	match_id: ModelTypes["uuid"]
+};
+	["match_check_in_versions_select_column"]:match_check_in_versions_select_column;
+	/** input type for updating data in table "match_check_in_versions" */
+["match_check_in_versions_set_input"]: {
+	changed_at?: ModelTypes["timestamptz"] | undefined | null,
+	match_id?: ModelTypes["uuid"] | undefined | null
+};
+	/** Streaming cursor of the table "match_check_in_versions" */
+["match_check_in_versions_stream_cursor_input"]: {
+	/** Stream column input with initial value */
+	initial_value: ModelTypes["match_check_in_versions_stream_cursor_value_input"],
+	/** cursor ordering */
+	ordering?: ModelTypes["cursor_ordering"] | undefined | null
+};
+	/** Initial value of the column from where the streaming should start */
+["match_check_in_versions_stream_cursor_value_input"]: {
+	changed_at?: ModelTypes["timestamptz"] | undefined | null,
+	match_id?: ModelTypes["uuid"] | undefined | null
+};
+	["match_check_in_versions_update_column"]:match_check_in_versions_update_column;
+	["match_check_in_versions_updates"]: {
+	/** sets the columns of the filtered rows to the given values */
+	_set?: ModelTypes["match_check_in_versions_set_input"] | undefined | null,
+	/** filter the rows which have to be updated */
+	where: ModelTypes["match_check_in_versions_bool_exp"]
+};
 	/** columns and relationships of "match_clips" */
 ["match_clips"]: {
 		created_at: ModelTypes["timestamptz"],
@@ -217161,6 +217933,10 @@ export type ModelTypes = {
 	delete_draft_game_players?: ModelTypes["draft_game_players_mutation_response"] | undefined | null,
 	/** delete single row from the table: "draft_game_players" */
 	delete_draft_game_players_by_pk?: ModelTypes["draft_game_players"] | undefined | null,
+	/** delete data from the table: "draft_game_versions" */
+	delete_draft_game_versions?: ModelTypes["draft_game_versions_mutation_response"] | undefined | null,
+	/** delete single row from the table: "draft_game_versions" */
+	delete_draft_game_versions_by_pk?: ModelTypes["draft_game_versions"] | undefined | null,
 	/** delete data from the table: "draft_games" */
 	delete_draft_games?: ModelTypes["draft_games_mutation_response"] | undefined | null,
 	/** delete single row from the table: "draft_games" */
@@ -217543,6 +218319,10 @@ export type ModelTypes = {
 	delete_maps?: ModelTypes["maps_mutation_response"] | undefined | null,
 	/** delete single row from the table: "maps" */
 	delete_maps_by_pk?: ModelTypes["maps"] | undefined | null,
+	/** delete data from the table: "match_check_in_versions" */
+	delete_match_check_in_versions?: ModelTypes["match_check_in_versions_mutation_response"] | undefined | null,
+	/** delete single row from the table: "match_check_in_versions" */
+	delete_match_check_in_versions_by_pk?: ModelTypes["match_check_in_versions"] | undefined | null,
 	/** delete data from the table: "match_clips" */
 	delete_match_clips?: ModelTypes["match_clips_mutation_response"] | undefined | null,
 	/** delete single row from the table: "match_clips" */
@@ -218098,6 +218878,10 @@ export type ModelTypes = {
 	insert_draft_game_players?: ModelTypes["draft_game_players_mutation_response"] | undefined | null,
 	/** insert a single row into the table: "draft_game_players" */
 	insert_draft_game_players_one?: ModelTypes["draft_game_players"] | undefined | null,
+	/** insert data into the table: "draft_game_versions" */
+	insert_draft_game_versions?: ModelTypes["draft_game_versions_mutation_response"] | undefined | null,
+	/** insert a single row into the table: "draft_game_versions" */
+	insert_draft_game_versions_one?: ModelTypes["draft_game_versions"] | undefined | null,
 	/** insert data into the table: "draft_games" */
 	insert_draft_games?: ModelTypes["draft_games_mutation_response"] | undefined | null,
 	/** insert a single row into the table: "draft_games" */
@@ -218482,6 +219266,10 @@ export type ModelTypes = {
 	insert_maps?: ModelTypes["maps_mutation_response"] | undefined | null,
 	/** insert a single row into the table: "maps" */
 	insert_maps_one?: ModelTypes["maps"] | undefined | null,
+	/** insert data into the table: "match_check_in_versions" */
+	insert_match_check_in_versions?: ModelTypes["match_check_in_versions_mutation_response"] | undefined | null,
+	/** insert a single row into the table: "match_check_in_versions" */
+	insert_match_check_in_versions_one?: ModelTypes["match_check_in_versions"] | undefined | null,
 	/** insert data into the table: "match_clips" */
 	insert_match_clips?: ModelTypes["match_clips_mutation_response"] | undefined | null,
 	/** insert a single row into the table: "match_clips" */
@@ -219296,6 +220084,12 @@ export type ModelTypes = {
 	update_draft_game_players_by_pk?: ModelTypes["draft_game_players"] | undefined | null,
 	/** update multiples rows of table: "draft_game_players" */
 	update_draft_game_players_many?: Array<ModelTypes["draft_game_players_mutation_response"] | undefined | null> | undefined | null,
+	/** update data of the table: "draft_game_versions" */
+	update_draft_game_versions?: ModelTypes["draft_game_versions_mutation_response"] | undefined | null,
+	/** update single row of the table: "draft_game_versions" */
+	update_draft_game_versions_by_pk?: ModelTypes["draft_game_versions"] | undefined | null,
+	/** update multiples rows of table: "draft_game_versions" */
+	update_draft_game_versions_many?: Array<ModelTypes["draft_game_versions_mutation_response"] | undefined | null> | undefined | null,
 	/** update data of the table: "draft_games" */
 	update_draft_games?: ModelTypes["draft_games_mutation_response"] | undefined | null,
 	/** update single row of the table: "draft_games" */
@@ -219870,6 +220664,12 @@ export type ModelTypes = {
 	update_maps_by_pk?: ModelTypes["maps"] | undefined | null,
 	/** update multiples rows of table: "maps" */
 	update_maps_many?: Array<ModelTypes["maps_mutation_response"] | undefined | null> | undefined | null,
+	/** update data of the table: "match_check_in_versions" */
+	update_match_check_in_versions?: ModelTypes["match_check_in_versions_mutation_response"] | undefined | null,
+	/** update single row of the table: "match_check_in_versions" */
+	update_match_check_in_versions_by_pk?: ModelTypes["match_check_in_versions"] | undefined | null,
+	/** update multiples rows of table: "match_check_in_versions" */
+	update_match_check_in_versions_many?: Array<ModelTypes["match_check_in_versions_mutation_response"] | undefined | null> | undefined | null,
 	/** update data of the table: "match_clips" */
 	update_match_clips?: ModelTypes["match_clips_mutation_response"] | undefined | null,
 	/** update single row of the table: "match_clips" */
@@ -237065,6 +237865,12 @@ export type ModelTypes = {
 	draft_game_players_aggregate: ModelTypes["draft_game_players_aggregate"],
 	/** fetch data from the table: "draft_game_players" using primary key columns */
 	draft_game_players_by_pk?: ModelTypes["draft_game_players"] | undefined | null,
+	/** fetch data from the table: "draft_game_versions" */
+	draft_game_versions: Array<ModelTypes["draft_game_versions"]>,
+	/** fetch aggregated fields from the table: "draft_game_versions" */
+	draft_game_versions_aggregate: ModelTypes["draft_game_versions_aggregate"],
+	/** fetch data from the table: "draft_game_versions" using primary key columns */
+	draft_game_versions_by_pk?: ModelTypes["draft_game_versions"] | undefined | null,
 	/** An array relationship */
 	draft_games: Array<ModelTypes["draft_games"]>,
 	/** An aggregate relationship */
@@ -237701,6 +238507,12 @@ export type ModelTypes = {
 	maps_aggregate: ModelTypes["maps_aggregate"],
 	/** fetch data from the table: "maps" using primary key columns */
 	maps_by_pk?: ModelTypes["maps"] | undefined | null,
+	/** fetch data from the table: "match_check_in_versions" */
+	match_check_in_versions: Array<ModelTypes["match_check_in_versions"]>,
+	/** fetch aggregated fields from the table: "match_check_in_versions" */
+	match_check_in_versions_aggregate: ModelTypes["match_check_in_versions_aggregate"],
+	/** fetch data from the table: "match_check_in_versions" using primary key columns */
+	match_check_in_versions_by_pk?: ModelTypes["match_check_in_versions"] | undefined | null,
 	/** An array relationship */
 	match_clips: Array<ModelTypes["match_clips"]>,
 	/** An aggregate relationship */
@@ -242908,6 +243720,14 @@ export type ModelTypes = {
 	draft_game_players_by_pk?: ModelTypes["draft_game_players"] | undefined | null,
 	/** fetch data from the table in a streaming manner: "draft_game_players" */
 	draft_game_players_stream: Array<ModelTypes["draft_game_players"]>,
+	/** fetch data from the table: "draft_game_versions" */
+	draft_game_versions: Array<ModelTypes["draft_game_versions"]>,
+	/** fetch aggregated fields from the table: "draft_game_versions" */
+	draft_game_versions_aggregate: ModelTypes["draft_game_versions_aggregate"],
+	/** fetch data from the table: "draft_game_versions" using primary key columns */
+	draft_game_versions_by_pk?: ModelTypes["draft_game_versions"] | undefined | null,
+	/** fetch data from the table in a streaming manner: "draft_game_versions" */
+	draft_game_versions_stream: Array<ModelTypes["draft_game_versions"]>,
 	/** An array relationship */
 	draft_games: Array<ModelTypes["draft_games"]>,
 	/** An aggregate relationship */
@@ -243694,6 +244514,14 @@ export type ModelTypes = {
 	maps_by_pk?: ModelTypes["maps"] | undefined | null,
 	/** fetch data from the table in a streaming manner: "maps" */
 	maps_stream: Array<ModelTypes["maps"]>,
+	/** fetch data from the table: "match_check_in_versions" */
+	match_check_in_versions: Array<ModelTypes["match_check_in_versions"]>,
+	/** fetch aggregated fields from the table: "match_check_in_versions" */
+	match_check_in_versions_aggregate: ModelTypes["match_check_in_versions_aggregate"],
+	/** fetch data from the table: "match_check_in_versions" using primary key columns */
+	match_check_in_versions_by_pk?: ModelTypes["match_check_in_versions"] | undefined | null,
+	/** fetch data from the table in a streaming manner: "match_check_in_versions" */
+	match_check_in_versions_stream: Array<ModelTypes["match_check_in_versions"]>,
 	/** An array relationship */
 	match_clips: Array<ModelTypes["match_clips"]>,
 	/** An aggregate relationship */
@@ -278395,6 +279223,107 @@ export type GraphQLTypes = {
 	pick_order?: GraphQLTypes["order_by"] | undefined | null,
 	steam_id?: GraphQLTypes["order_by"] | undefined | null
 };
+	/** columns and relationships of "draft_game_versions" */
+["draft_game_versions"]: {
+	__typename: "draft_game_versions",
+	changed_at: GraphQLTypes["timestamptz"],
+	/** An object relationship */
+	draft_game?: GraphQLTypes["draft_games"] | undefined | null,
+	draft_game_id: GraphQLTypes["uuid"]
+};
+	/** aggregated selection of "draft_game_versions" */
+["draft_game_versions_aggregate"]: {
+	__typename: "draft_game_versions_aggregate",
+	aggregate?: GraphQLTypes["draft_game_versions_aggregate_fields"] | undefined | null,
+	nodes: Array<GraphQLTypes["draft_game_versions"]>
+};
+	/** aggregate fields of "draft_game_versions" */
+["draft_game_versions_aggregate_fields"]: {
+	__typename: "draft_game_versions_aggregate_fields",
+	count: number,
+	max?: GraphQLTypes["draft_game_versions_max_fields"] | undefined | null,
+	min?: GraphQLTypes["draft_game_versions_min_fields"] | undefined | null
+};
+	/** Boolean expression to filter rows from the table "draft_game_versions". All fields are combined with a logical 'AND'. */
+["draft_game_versions_bool_exp"]: {
+		_and?: Array<GraphQLTypes["draft_game_versions_bool_exp"]> | undefined | null,
+	_not?: GraphQLTypes["draft_game_versions_bool_exp"] | undefined | null,
+	_or?: Array<GraphQLTypes["draft_game_versions_bool_exp"]> | undefined | null,
+	changed_at?: GraphQLTypes["timestamptz_comparison_exp"] | undefined | null,
+	draft_game?: GraphQLTypes["draft_games_bool_exp"] | undefined | null,
+	draft_game_id?: GraphQLTypes["uuid_comparison_exp"] | undefined | null
+};
+	/** unique or primary key constraints on table "draft_game_versions" */
+["draft_game_versions_constraint"]: draft_game_versions_constraint;
+	/** input type for inserting data into table "draft_game_versions" */
+["draft_game_versions_insert_input"]: {
+		changed_at?: GraphQLTypes["timestamptz"] | undefined | null,
+	draft_game?: GraphQLTypes["draft_games_obj_rel_insert_input"] | undefined | null,
+	draft_game_id?: GraphQLTypes["uuid"] | undefined | null
+};
+	/** aggregate max on columns */
+["draft_game_versions_max_fields"]: {
+	__typename: "draft_game_versions_max_fields",
+	changed_at?: GraphQLTypes["timestamptz"] | undefined | null,
+	draft_game_id?: GraphQLTypes["uuid"] | undefined | null
+};
+	/** aggregate min on columns */
+["draft_game_versions_min_fields"]: {
+	__typename: "draft_game_versions_min_fields",
+	changed_at?: GraphQLTypes["timestamptz"] | undefined | null,
+	draft_game_id?: GraphQLTypes["uuid"] | undefined | null
+};
+	/** response of any mutation on the table "draft_game_versions" */
+["draft_game_versions_mutation_response"]: {
+	__typename: "draft_game_versions_mutation_response",
+	/** number of rows affected by the mutation */
+	affected_rows: number,
+	/** data from the rows affected by the mutation */
+	returning: Array<GraphQLTypes["draft_game_versions"]>
+};
+	/** on_conflict condition type for table "draft_game_versions" */
+["draft_game_versions_on_conflict"]: {
+		constraint: GraphQLTypes["draft_game_versions_constraint"],
+	update_columns: Array<GraphQLTypes["draft_game_versions_update_column"]>,
+	where?: GraphQLTypes["draft_game_versions_bool_exp"] | undefined | null
+};
+	/** Ordering options when selecting data from "draft_game_versions". */
+["draft_game_versions_order_by"]: {
+		changed_at?: GraphQLTypes["order_by"] | undefined | null,
+	draft_game?: GraphQLTypes["draft_games_order_by"] | undefined | null,
+	draft_game_id?: GraphQLTypes["order_by"] | undefined | null
+};
+	/** primary key columns input for table: draft_game_versions */
+["draft_game_versions_pk_columns_input"]: {
+		draft_game_id: GraphQLTypes["uuid"]
+};
+	/** select columns of table "draft_game_versions" */
+["draft_game_versions_select_column"]: draft_game_versions_select_column;
+	/** input type for updating data in table "draft_game_versions" */
+["draft_game_versions_set_input"]: {
+		changed_at?: GraphQLTypes["timestamptz"] | undefined | null,
+	draft_game_id?: GraphQLTypes["uuid"] | undefined | null
+};
+	/** Streaming cursor of the table "draft_game_versions" */
+["draft_game_versions_stream_cursor_input"]: {
+		/** Stream column input with initial value */
+	initial_value: GraphQLTypes["draft_game_versions_stream_cursor_value_input"],
+	/** cursor ordering */
+	ordering?: GraphQLTypes["cursor_ordering"] | undefined | null
+};
+	/** Initial value of the column from where the streaming should start */
+["draft_game_versions_stream_cursor_value_input"]: {
+		changed_at?: GraphQLTypes["timestamptz"] | undefined | null,
+	draft_game_id?: GraphQLTypes["uuid"] | undefined | null
+};
+	/** update columns of table "draft_game_versions" */
+["draft_game_versions_update_column"]: draft_game_versions_update_column;
+	["draft_game_versions_updates"]: {
+		/** sets the columns of the filtered rows to the given values */
+	_set?: GraphQLTypes["draft_game_versions_set_input"] | undefined | null,
+	/** filter the rows which have to be updated */
+	where: GraphQLTypes["draft_game_versions_bool_exp"]
+};
 	/** columns and relationships of "draft_games" */
 ["draft_games"]: {
 	__typename: "draft_games",
@@ -295751,6 +296680,107 @@ export type GraphQLTypes = {
 	/** filter the rows which have to be updated */
 	where: GraphQLTypes["maps_bool_exp"]
 };
+	/** columns and relationships of "match_check_in_versions" */
+["match_check_in_versions"]: {
+	__typename: "match_check_in_versions",
+	changed_at: GraphQLTypes["timestamptz"],
+	/** An object relationship */
+	match: GraphQLTypes["matches"],
+	match_id: GraphQLTypes["uuid"]
+};
+	/** aggregated selection of "match_check_in_versions" */
+["match_check_in_versions_aggregate"]: {
+	__typename: "match_check_in_versions_aggregate",
+	aggregate?: GraphQLTypes["match_check_in_versions_aggregate_fields"] | undefined | null,
+	nodes: Array<GraphQLTypes["match_check_in_versions"]>
+};
+	/** aggregate fields of "match_check_in_versions" */
+["match_check_in_versions_aggregate_fields"]: {
+	__typename: "match_check_in_versions_aggregate_fields",
+	count: number,
+	max?: GraphQLTypes["match_check_in_versions_max_fields"] | undefined | null,
+	min?: GraphQLTypes["match_check_in_versions_min_fields"] | undefined | null
+};
+	/** Boolean expression to filter rows from the table "match_check_in_versions". All fields are combined with a logical 'AND'. */
+["match_check_in_versions_bool_exp"]: {
+		_and?: Array<GraphQLTypes["match_check_in_versions_bool_exp"]> | undefined | null,
+	_not?: GraphQLTypes["match_check_in_versions_bool_exp"] | undefined | null,
+	_or?: Array<GraphQLTypes["match_check_in_versions_bool_exp"]> | undefined | null,
+	changed_at?: GraphQLTypes["timestamptz_comparison_exp"] | undefined | null,
+	match?: GraphQLTypes["matches_bool_exp"] | undefined | null,
+	match_id?: GraphQLTypes["uuid_comparison_exp"] | undefined | null
+};
+	/** unique or primary key constraints on table "match_check_in_versions" */
+["match_check_in_versions_constraint"]: match_check_in_versions_constraint;
+	/** input type for inserting data into table "match_check_in_versions" */
+["match_check_in_versions_insert_input"]: {
+		changed_at?: GraphQLTypes["timestamptz"] | undefined | null,
+	match?: GraphQLTypes["matches_obj_rel_insert_input"] | undefined | null,
+	match_id?: GraphQLTypes["uuid"] | undefined | null
+};
+	/** aggregate max on columns */
+["match_check_in_versions_max_fields"]: {
+	__typename: "match_check_in_versions_max_fields",
+	changed_at?: GraphQLTypes["timestamptz"] | undefined | null,
+	match_id?: GraphQLTypes["uuid"] | undefined | null
+};
+	/** aggregate min on columns */
+["match_check_in_versions_min_fields"]: {
+	__typename: "match_check_in_versions_min_fields",
+	changed_at?: GraphQLTypes["timestamptz"] | undefined | null,
+	match_id?: GraphQLTypes["uuid"] | undefined | null
+};
+	/** response of any mutation on the table "match_check_in_versions" */
+["match_check_in_versions_mutation_response"]: {
+	__typename: "match_check_in_versions_mutation_response",
+	/** number of rows affected by the mutation */
+	affected_rows: number,
+	/** data from the rows affected by the mutation */
+	returning: Array<GraphQLTypes["match_check_in_versions"]>
+};
+	/** on_conflict condition type for table "match_check_in_versions" */
+["match_check_in_versions_on_conflict"]: {
+		constraint: GraphQLTypes["match_check_in_versions_constraint"],
+	update_columns: Array<GraphQLTypes["match_check_in_versions_update_column"]>,
+	where?: GraphQLTypes["match_check_in_versions_bool_exp"] | undefined | null
+};
+	/** Ordering options when selecting data from "match_check_in_versions". */
+["match_check_in_versions_order_by"]: {
+		changed_at?: GraphQLTypes["order_by"] | undefined | null,
+	match?: GraphQLTypes["matches_order_by"] | undefined | null,
+	match_id?: GraphQLTypes["order_by"] | undefined | null
+};
+	/** primary key columns input for table: match_check_in_versions */
+["match_check_in_versions_pk_columns_input"]: {
+		match_id: GraphQLTypes["uuid"]
+};
+	/** select columns of table "match_check_in_versions" */
+["match_check_in_versions_select_column"]: match_check_in_versions_select_column;
+	/** input type for updating data in table "match_check_in_versions" */
+["match_check_in_versions_set_input"]: {
+		changed_at?: GraphQLTypes["timestamptz"] | undefined | null,
+	match_id?: GraphQLTypes["uuid"] | undefined | null
+};
+	/** Streaming cursor of the table "match_check_in_versions" */
+["match_check_in_versions_stream_cursor_input"]: {
+		/** Stream column input with initial value */
+	initial_value: GraphQLTypes["match_check_in_versions_stream_cursor_value_input"],
+	/** cursor ordering */
+	ordering?: GraphQLTypes["cursor_ordering"] | undefined | null
+};
+	/** Initial value of the column from where the streaming should start */
+["match_check_in_versions_stream_cursor_value_input"]: {
+		changed_at?: GraphQLTypes["timestamptz"] | undefined | null,
+	match_id?: GraphQLTypes["uuid"] | undefined | null
+};
+	/** update columns of table "match_check_in_versions" */
+["match_check_in_versions_update_column"]: match_check_in_versions_update_column;
+	["match_check_in_versions_updates"]: {
+		/** sets the columns of the filtered rows to the given values */
+	_set?: GraphQLTypes["match_check_in_versions_set_input"] | undefined | null,
+	/** filter the rows which have to be updated */
+	where: GraphQLTypes["match_check_in_versions_bool_exp"]
+};
 	/** columns and relationships of "match_clips" */
 ["match_clips"]: {
 	__typename: "match_clips",
@@ -301804,6 +302834,10 @@ export type GraphQLTypes = {
 	delete_draft_game_players?: GraphQLTypes["draft_game_players_mutation_response"] | undefined | null,
 	/** delete single row from the table: "draft_game_players" */
 	delete_draft_game_players_by_pk?: GraphQLTypes["draft_game_players"] | undefined | null,
+	/** delete data from the table: "draft_game_versions" */
+	delete_draft_game_versions?: GraphQLTypes["draft_game_versions_mutation_response"] | undefined | null,
+	/** delete single row from the table: "draft_game_versions" */
+	delete_draft_game_versions_by_pk?: GraphQLTypes["draft_game_versions"] | undefined | null,
 	/** delete data from the table: "draft_games" */
 	delete_draft_games?: GraphQLTypes["draft_games_mutation_response"] | undefined | null,
 	/** delete single row from the table: "draft_games" */
@@ -302186,6 +303220,10 @@ export type GraphQLTypes = {
 	delete_maps?: GraphQLTypes["maps_mutation_response"] | undefined | null,
 	/** delete single row from the table: "maps" */
 	delete_maps_by_pk?: GraphQLTypes["maps"] | undefined | null,
+	/** delete data from the table: "match_check_in_versions" */
+	delete_match_check_in_versions?: GraphQLTypes["match_check_in_versions_mutation_response"] | undefined | null,
+	/** delete single row from the table: "match_check_in_versions" */
+	delete_match_check_in_versions_by_pk?: GraphQLTypes["match_check_in_versions"] | undefined | null,
 	/** delete data from the table: "match_clips" */
 	delete_match_clips?: GraphQLTypes["match_clips_mutation_response"] | undefined | null,
 	/** delete single row from the table: "match_clips" */
@@ -302741,6 +303779,10 @@ export type GraphQLTypes = {
 	insert_draft_game_players?: GraphQLTypes["draft_game_players_mutation_response"] | undefined | null,
 	/** insert a single row into the table: "draft_game_players" */
 	insert_draft_game_players_one?: GraphQLTypes["draft_game_players"] | undefined | null,
+	/** insert data into the table: "draft_game_versions" */
+	insert_draft_game_versions?: GraphQLTypes["draft_game_versions_mutation_response"] | undefined | null,
+	/** insert a single row into the table: "draft_game_versions" */
+	insert_draft_game_versions_one?: GraphQLTypes["draft_game_versions"] | undefined | null,
 	/** insert data into the table: "draft_games" */
 	insert_draft_games?: GraphQLTypes["draft_games_mutation_response"] | undefined | null,
 	/** insert a single row into the table: "draft_games" */
@@ -303125,6 +304167,10 @@ export type GraphQLTypes = {
 	insert_maps?: GraphQLTypes["maps_mutation_response"] | undefined | null,
 	/** insert a single row into the table: "maps" */
 	insert_maps_one?: GraphQLTypes["maps"] | undefined | null,
+	/** insert data into the table: "match_check_in_versions" */
+	insert_match_check_in_versions?: GraphQLTypes["match_check_in_versions_mutation_response"] | undefined | null,
+	/** insert a single row into the table: "match_check_in_versions" */
+	insert_match_check_in_versions_one?: GraphQLTypes["match_check_in_versions"] | undefined | null,
 	/** insert data into the table: "match_clips" */
 	insert_match_clips?: GraphQLTypes["match_clips_mutation_response"] | undefined | null,
 	/** insert a single row into the table: "match_clips" */
@@ -303939,6 +304985,12 @@ export type GraphQLTypes = {
 	update_draft_game_players_by_pk?: GraphQLTypes["draft_game_players"] | undefined | null,
 	/** update multiples rows of table: "draft_game_players" */
 	update_draft_game_players_many?: Array<GraphQLTypes["draft_game_players_mutation_response"] | undefined | null> | undefined | null,
+	/** update data of the table: "draft_game_versions" */
+	update_draft_game_versions?: GraphQLTypes["draft_game_versions_mutation_response"] | undefined | null,
+	/** update single row of the table: "draft_game_versions" */
+	update_draft_game_versions_by_pk?: GraphQLTypes["draft_game_versions"] | undefined | null,
+	/** update multiples rows of table: "draft_game_versions" */
+	update_draft_game_versions_many?: Array<GraphQLTypes["draft_game_versions_mutation_response"] | undefined | null> | undefined | null,
 	/** update data of the table: "draft_games" */
 	update_draft_games?: GraphQLTypes["draft_games_mutation_response"] | undefined | null,
 	/** update single row of the table: "draft_games" */
@@ -304513,6 +305565,12 @@ export type GraphQLTypes = {
 	update_maps_by_pk?: GraphQLTypes["maps"] | undefined | null,
 	/** update multiples rows of table: "maps" */
 	update_maps_many?: Array<GraphQLTypes["maps_mutation_response"] | undefined | null> | undefined | null,
+	/** update data of the table: "match_check_in_versions" */
+	update_match_check_in_versions?: GraphQLTypes["match_check_in_versions_mutation_response"] | undefined | null,
+	/** update single row of the table: "match_check_in_versions" */
+	update_match_check_in_versions_by_pk?: GraphQLTypes["match_check_in_versions"] | undefined | null,
+	/** update multiples rows of table: "match_check_in_versions" */
+	update_match_check_in_versions_many?: Array<GraphQLTypes["match_check_in_versions_mutation_response"] | undefined | null> | undefined | null,
 	/** update data of the table: "match_clips" */
 	update_match_clips?: GraphQLTypes["match_clips_mutation_response"] | undefined | null,
 	/** update single row of the table: "match_clips" */
@@ -322371,6 +323429,12 @@ export type GraphQLTypes = {
 	draft_game_players_aggregate: GraphQLTypes["draft_game_players_aggregate"],
 	/** fetch data from the table: "draft_game_players" using primary key columns */
 	draft_game_players_by_pk?: GraphQLTypes["draft_game_players"] | undefined | null,
+	/** fetch data from the table: "draft_game_versions" */
+	draft_game_versions: Array<GraphQLTypes["draft_game_versions"]>,
+	/** fetch aggregated fields from the table: "draft_game_versions" */
+	draft_game_versions_aggregate: GraphQLTypes["draft_game_versions_aggregate"],
+	/** fetch data from the table: "draft_game_versions" using primary key columns */
+	draft_game_versions_by_pk?: GraphQLTypes["draft_game_versions"] | undefined | null,
 	/** An array relationship */
 	draft_games: Array<GraphQLTypes["draft_games"]>,
 	/** An aggregate relationship */
@@ -323007,6 +324071,12 @@ export type GraphQLTypes = {
 	maps_aggregate: GraphQLTypes["maps_aggregate"],
 	/** fetch data from the table: "maps" using primary key columns */
 	maps_by_pk?: GraphQLTypes["maps"] | undefined | null,
+	/** fetch data from the table: "match_check_in_versions" */
+	match_check_in_versions: Array<GraphQLTypes["match_check_in_versions"]>,
+	/** fetch aggregated fields from the table: "match_check_in_versions" */
+	match_check_in_versions_aggregate: GraphQLTypes["match_check_in_versions_aggregate"],
+	/** fetch data from the table: "match_check_in_versions" using primary key columns */
+	match_check_in_versions_by_pk?: GraphQLTypes["match_check_in_versions"] | undefined | null,
 	/** An array relationship */
 	match_clips: Array<GraphQLTypes["match_clips"]>,
 	/** An aggregate relationship */
@@ -328447,6 +329517,14 @@ export type GraphQLTypes = {
 	draft_game_players_by_pk?: GraphQLTypes["draft_game_players"] | undefined | null,
 	/** fetch data from the table in a streaming manner: "draft_game_players" */
 	draft_game_players_stream: Array<GraphQLTypes["draft_game_players"]>,
+	/** fetch data from the table: "draft_game_versions" */
+	draft_game_versions: Array<GraphQLTypes["draft_game_versions"]>,
+	/** fetch aggregated fields from the table: "draft_game_versions" */
+	draft_game_versions_aggregate: GraphQLTypes["draft_game_versions_aggregate"],
+	/** fetch data from the table: "draft_game_versions" using primary key columns */
+	draft_game_versions_by_pk?: GraphQLTypes["draft_game_versions"] | undefined | null,
+	/** fetch data from the table in a streaming manner: "draft_game_versions" */
+	draft_game_versions_stream: Array<GraphQLTypes["draft_game_versions"]>,
 	/** An array relationship */
 	draft_games: Array<GraphQLTypes["draft_games"]>,
 	/** An aggregate relationship */
@@ -329233,6 +330311,14 @@ export type GraphQLTypes = {
 	maps_by_pk?: GraphQLTypes["maps"] | undefined | null,
 	/** fetch data from the table in a streaming manner: "maps" */
 	maps_stream: Array<GraphQLTypes["maps"]>,
+	/** fetch data from the table: "match_check_in_versions" */
+	match_check_in_versions: Array<GraphQLTypes["match_check_in_versions"]>,
+	/** fetch aggregated fields from the table: "match_check_in_versions" */
+	match_check_in_versions_aggregate: GraphQLTypes["match_check_in_versions_aggregate"],
+	/** fetch data from the table: "match_check_in_versions" using primary key columns */
+	match_check_in_versions_by_pk?: GraphQLTypes["match_check_in_versions"] | undefined | null,
+	/** fetch data from the table in a streaming manner: "match_check_in_versions" */
+	match_check_in_versions_stream: Array<GraphQLTypes["match_check_in_versions"]>,
 	/** An array relationship */
 	match_clips: Array<GraphQLTypes["match_clips"]>,
 	/** An aggregate relationship */
@@ -359586,6 +360672,20 @@ export enum draft_game_players_update_column {
 	status = "status",
 	steam_id = "steam_id"
 }
+/** unique or primary key constraints on table "draft_game_versions" */
+export enum draft_game_versions_constraint {
+	draft_game_versions_pkey = "draft_game_versions_pkey"
+}
+/** select columns of table "draft_game_versions" */
+export enum draft_game_versions_select_column {
+	changed_at = "changed_at",
+	draft_game_id = "draft_game_id"
+}
+/** update columns of table "draft_game_versions" */
+export enum draft_game_versions_update_column {
+	changed_at = "changed_at",
+	draft_game_id = "draft_game_id"
+}
 /** unique or primary key constraints on table "draft_games" */
 export enum draft_games_constraint {
 	draft_games_pkey = "draft_games_pkey"
@@ -362066,6 +363166,20 @@ export enum maps_update_column {
 	seeded = "seeded",
 	type = "type",
 	workshop_map_id = "workshop_map_id"
+}
+/** unique or primary key constraints on table "match_check_in_versions" */
+export enum match_check_in_versions_constraint {
+	match_check_in_versions_pkey = "match_check_in_versions_pkey"
+}
+/** select columns of table "match_check_in_versions" */
+export enum match_check_in_versions_select_column {
+	changed_at = "changed_at",
+	match_id = "match_id"
+}
+/** update columns of table "match_check_in_versions" */
+export enum match_check_in_versions_update_column {
+	changed_at = "changed_at",
+	match_id = "match_id"
 }
 /** unique or primary key constraints on table "match_clips" */
 export enum match_clips_constraint {
@@ -368192,6 +369306,18 @@ type ZEUS_VARIABLES = {
 	["draft_game_players_var_pop_order_by"]: ValueTypes["draft_game_players_var_pop_order_by"];
 	["draft_game_players_var_samp_order_by"]: ValueTypes["draft_game_players_var_samp_order_by"];
 	["draft_game_players_variance_order_by"]: ValueTypes["draft_game_players_variance_order_by"];
+	["draft_game_versions_bool_exp"]: ValueTypes["draft_game_versions_bool_exp"];
+	["draft_game_versions_constraint"]: ValueTypes["draft_game_versions_constraint"];
+	["draft_game_versions_insert_input"]: ValueTypes["draft_game_versions_insert_input"];
+	["draft_game_versions_on_conflict"]: ValueTypes["draft_game_versions_on_conflict"];
+	["draft_game_versions_order_by"]: ValueTypes["draft_game_versions_order_by"];
+	["draft_game_versions_pk_columns_input"]: ValueTypes["draft_game_versions_pk_columns_input"];
+	["draft_game_versions_select_column"]: ValueTypes["draft_game_versions_select_column"];
+	["draft_game_versions_set_input"]: ValueTypes["draft_game_versions_set_input"];
+	["draft_game_versions_stream_cursor_input"]: ValueTypes["draft_game_versions_stream_cursor_input"];
+	["draft_game_versions_stream_cursor_value_input"]: ValueTypes["draft_game_versions_stream_cursor_value_input"];
+	["draft_game_versions_update_column"]: ValueTypes["draft_game_versions_update_column"];
+	["draft_game_versions_updates"]: ValueTypes["draft_game_versions_updates"];
 	["draft_games_aggregate_bool_exp"]: ValueTypes["draft_games_aggregate_bool_exp"];
 	["draft_games_aggregate_bool_exp_bool_and"]: ValueTypes["draft_games_aggregate_bool_exp_bool_and"];
 	["draft_games_aggregate_bool_exp_bool_or"]: ValueTypes["draft_games_aggregate_bool_exp_bool_or"];
@@ -369859,6 +370985,18 @@ type ZEUS_VARIABLES = {
 	["maps_stream_cursor_value_input"]: ValueTypes["maps_stream_cursor_value_input"];
 	["maps_update_column"]: ValueTypes["maps_update_column"];
 	["maps_updates"]: ValueTypes["maps_updates"];
+	["match_check_in_versions_bool_exp"]: ValueTypes["match_check_in_versions_bool_exp"];
+	["match_check_in_versions_constraint"]: ValueTypes["match_check_in_versions_constraint"];
+	["match_check_in_versions_insert_input"]: ValueTypes["match_check_in_versions_insert_input"];
+	["match_check_in_versions_on_conflict"]: ValueTypes["match_check_in_versions_on_conflict"];
+	["match_check_in_versions_order_by"]: ValueTypes["match_check_in_versions_order_by"];
+	["match_check_in_versions_pk_columns_input"]: ValueTypes["match_check_in_versions_pk_columns_input"];
+	["match_check_in_versions_select_column"]: ValueTypes["match_check_in_versions_select_column"];
+	["match_check_in_versions_set_input"]: ValueTypes["match_check_in_versions_set_input"];
+	["match_check_in_versions_stream_cursor_input"]: ValueTypes["match_check_in_versions_stream_cursor_input"];
+	["match_check_in_versions_stream_cursor_value_input"]: ValueTypes["match_check_in_versions_stream_cursor_value_input"];
+	["match_check_in_versions_update_column"]: ValueTypes["match_check_in_versions_update_column"];
+	["match_check_in_versions_updates"]: ValueTypes["match_check_in_versions_updates"];
 	["match_clips_aggregate_bool_exp"]: ValueTypes["match_clips_aggregate_bool_exp"];
 	["match_clips_aggregate_bool_exp_count"]: ValueTypes["match_clips_aggregate_bool_exp_count"];
 	["match_clips_aggregate_order_by"]: ValueTypes["match_clips_aggregate_order_by"];

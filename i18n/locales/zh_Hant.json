@@ -3014,6 +3014,8 @@
           "visibility_private": "私人",
           "visibility_public": "公開",
           "playback_section": "回放",
+          "demo_playback_role": "誰可以觀看 Demo",
+          "demo_playback_role_description": "比賽主辦者始終可以觀看自己的比賽。",
           "reparse_warning_title": "這會重新解析每一份 Demo——可能需要非常久的時間。",
           "reparse_warning_body": "Demo 會逐一重新處理，依你擁有的數量可能需要數小時或數天。請僅在你清楚自己在做什麼，或在重大更新改變 Demo 解析方式後執行。更新帶來的新數據會在比賽被檢視時自動重新解析——此操作僅用於一次強制處理全部。",
           "reparse_button": "重新解析所有 Demo",

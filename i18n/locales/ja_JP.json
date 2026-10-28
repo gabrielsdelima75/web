@@ -3014,6 +3014,8 @@
           "visibility_private": "非公開",
           "visibility_public": "公開",
           "playback_section": "再生",
+          "demo_playback_role": "デモを視聴できるロール",
+          "demo_playback_role_description": "試合主催者は自分の試合をいつでも視聴できます。",
           "reparse_warning_title": "すべてのデモを再パースします。非常に時間がかかる場合があります。",
           "reparse_warning_body": "デモは1件ずつ再処理されるため、保有数によっては数時間から数日かかることがあります。内容を理解したうえで実行するか、アップデートでデモの解析方法が変わった場合にのみ行ってください。アップデートによる新しいスタッツは試合閲覧時に自動的に再パースされます。これは一括で強制実行するための機能です。",
           "reparse_button": "全デモを再パース",

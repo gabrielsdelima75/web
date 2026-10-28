@@ -3014,6 +3014,8 @@
           "visibility_private": "Privato",
           "visibility_public": "Pubblico",
           "playback_section": "Riproduzione",
+          "demo_playback_role": "Chi può guardare le demo",
+          "demo_playback_role_description": "Gli organizzatori possono sempre guardare i propri match.",
           "reparse_warning_title": "Questo rianalizza ogni demo — può richiedere moltissimo tempo.",
           "reparse_warning_body": "Le demo vengono rielaborate una alla volta, un processo che può durare ore o giorni a seconda di quante ne hai. Fallo solo se sai cosa stai facendo, oppure dopo un aggiornamento importante che cambia il modo in cui le demo vengono analizzate. Le nuove statistiche introdotte dagli aggiornamenti vengono rianalizzate da sole man mano che i match vengono aperti — questo serve solo a forzare tutto in una volta.",
           "reparse_button": "Rianalizza tutte le demo",

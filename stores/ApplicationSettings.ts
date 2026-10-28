@@ -530,6 +530,20 @@ export const useApplicationSettingsStore = defineStore(
       return useAuthStore().isRoleAbove(postNewsRole.value);
     });
 
+    const demoPlaybackRole = computed(() => {
+      return (
+        settings.value?.find(
+          (setting) => setting.name === "public.demo_playback_role",
+        )?.value || e_player_roles_enum.verified_user
+      );
+    });
+
+    const canWatchDemos = computed(() => {
+      return useAuthStore().isRoleAbove(
+        demoPlaybackRole.value as e_player_roles_enum,
+      );
+    });
+
     const createAwardsRole = computed(() => {
       return (
         settings.value?.find(
@@ -821,6 +835,8 @@ export const useApplicationSettingsStore = defineStore(
       newsLabel,
       postNewsRole,
       canPostNews,
+      demoPlaybackRole,
+      canWatchDemos,
       createAwardsRole,
       grantAwardsRole,
       canManageAwards,

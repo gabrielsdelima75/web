@@ -3014,6 +3014,8 @@
           "visibility_private": "Privat",
           "visibility_public": "Publik",
           "playback_section": "Uppspelning",
+          "demo_playback_role": "Vem som kan titta på demos",
+          "demo_playback_role_description": "Matcharrangörer kan alltid titta på sina egna matcher.",
           "reparse_warning_title": "Detta tolkar om varje demo — det kan ta väldigt lång tid.",
           "reparse_warning_body": "Demos bearbetas en i taget, vilket kan pågå i timmar eller dagar beroende på hur många du har. Gör bara detta om du vet vad du gör, eller efter en större uppdatering som ändrar hur demos tolkas. Ny statistik från uppdateringar tolkas om automatiskt när matcher visas — detta är bara för att tvinga fram allt på en gång.",
           "reparse_button": "Tolka om alla demos",

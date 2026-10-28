@@ -3014,6 +3014,8 @@
           "visibility_private": "Privat",
           "visibility_public": "Offentlig",
           "playback_section": "Afspilning",
+          "demo_playback_role": "Hvem må se demoer",
+          "demo_playback_role_description": "Kamparrangører kan altid se deres egne kampe.",
           "reparse_warning_title": "Dette genindlæser hver eneste demo — det kan tage meget lang tid.",
           "reparse_warning_body": "Demoer behandles én ad gangen, hvilket kan køre i timer eller dage afhængigt af hvor mange du har. Gør kun dette, hvis du ved hvad du laver, eller efter en større opdatering ændrer måden demoer parses på. Nye stats fra opdateringer parses automatisk, efterhånden som kampe vises — dette er kun til at tvinge det hele igennem på én gang.",
           "reparse_button": "Genparse alle demoer",

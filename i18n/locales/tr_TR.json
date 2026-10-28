@@ -3014,6 +3014,8 @@
           "visibility_private": "Özel",
           "visibility_public": "Herkese açık",
           "playback_section": "Oynatma",
+          "demo_playback_role": "Demoları kim izleyebilir",
+          "demo_playback_role_description": "Maç organizatörleri kendi maçlarını her zaman izleyebilir.",
           "reparse_warning_title": "Bu, her demoyu yeniden ayrıştırır — çok uzun sürebilir.",
           "reparse_warning_body": "Demolar teker teker yeniden işlenir; kaç tane demon olduğuna bağlı olarak saatler ya da günler sürebilir. Bunu yalnızca ne yaptığını biliyorsan ya da büyük bir güncelleme demoların ayrıştırılma şeklini değiştirdiyse yap. Güncellemelerden gelen yeni istatistikler maçlar görüntülendikçe zaten otomatik yeniden ayrıştırılır — bu yalnızca hepsini tek seferde zorlamak içindir.",
           "reparse_button": "Tüm Demoları Yeniden Ayrıştır",

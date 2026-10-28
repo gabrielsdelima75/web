@@ -3014,6 +3014,8 @@
           "visibility_private": "Prywatne",
           "visibility_public": "Publiczne",
           "playback_section": "Odtwarzanie",
+          "demo_playback_role": "Kto może oglądać dema",
+          "demo_playback_role_description": "Organizatorzy zawsze mogą oglądać własne mecze.",
           "reparse_warning_title": "To ponownie przetwarza każde demo — może to zająć bardzo dużo czasu",
           "reparse_warning_body": "Demo są przetwarzane pojedynczo, co może trwać godziny lub dni w zależności od ich liczby. Rób to tylko, jeśli wiesz co robisz, lub po większej aktualizacji zmieniającej sposób przetwarzania demo. Nowe statystyki z aktualizacji są przetwarzane automatycznie przy przeglądaniu meczów — to wymusza przetworzenie wszystkiego naraz.",
           "reparse_button": "Przetwórz ponownie wszystkie demo",

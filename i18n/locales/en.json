@@ -3014,6 +3014,8 @@
           "visibility_private": "Private",
           "visibility_public": "Public",
           "playback_section": "Playback",
+          "demo_playback_role": "Who can watch demos",
+          "demo_playback_role_description": "Match organizers can always watch their own matches.",
           "reparse_warning_title": "This reparses every demo — it can take a very long time.",
           "reparse_warning_body": "Demos are reprocessed one at a time, which can run for hours or days depending on how many you have. Only do this if you know what you're doing, or after a major update changes how demos are parsed. New stats from updates are reparsed automatically as matches are viewed — this is only to force everything at once.",
           "reparse_button": "Reparse all demos",

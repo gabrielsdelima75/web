@@ -3014,6 +3014,8 @@
           "visibility_private": "Privado",
           "visibility_public": "Público",
           "playback_section": "Reproducción",
+          "demo_playback_role": "Quién puede ver demos",
+          "demo_playback_role_description": "Los organizadores siempre pueden ver sus propias partidas.",
           "reparse_warning_title": "Esto vuelve a analizar todas las demos: puede tardar muchísimo.",
           "reparse_warning_body": "Las demos se reprocesan de una en una, lo que puede durar horas o días según cuántas tengas. Hazlo solo si sabes lo que haces o después de una actualización importante que cambie el análisis de demos. Las estadísticas nuevas de las actualizaciones se reanalizan solas a medida que se ven las partidas; esto solo sirve para forzarlo todo de golpe.",
           "reparse_button": "Reanalizar todas las demos",

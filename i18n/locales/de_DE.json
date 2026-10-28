@@ -3014,6 +3014,8 @@
           "visibility_private": "Privat",
           "visibility_public": "Öffentlich",
           "playback_section": "Wiedergabe",
+          "demo_playback_role": "Wer Demos ansehen darf",
+          "demo_playback_role_description": "Match-Veranstalter können ihre eigenen Matches immer ansehen.",
           "reparse_warning_title": "Das parst jede Demo neu — es kann sehr lange dauern.",
           "reparse_warning_body": "Demos werden nacheinander neu verarbeitet, was je nach Menge Stunden oder Tage laufen kann. Mach das nur, wenn du weißt, was du tust, oder nachdem ein größeres Update das Demo-Parsing geändert hat. Neue Stats aus Updates werden ohnehin automatisch neu geparst, sobald Matches angesehen werden — das hier erzwingt nur alles auf einmal.",
           "reparse_button": "Alle Demos neu parsen",

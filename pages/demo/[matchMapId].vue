@@ -196,7 +196,7 @@ onBeforeUnmount(() => {
 });
 
 // `is_organizer` from the parent route isn't available here. The
-// action's auth check is the final word (organizer OR streamer+).
+// action's auth check is the final word (organizer OR the demo playback role).
 const isOrganizer = false;
 </script>
 

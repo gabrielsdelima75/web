@@ -31,6 +31,41 @@ import StorageCheck from "~/components/settings/StorageCheck.vue";
             $t('pages.settings.application.demo_settings.playback_section')
           "
         >
+          <FormField
+            v-slot="{ componentField }"
+            name="public.demo_playback_role"
+          >
+            <FormItem>
+              <FormLabel>{{
+                $t("pages.settings.application.demo_settings.demo_playback_role")
+              }}</FormLabel>
+              <FormDescription>{{
+                $t(
+                  "pages.settings.application.demo_settings.demo_playback_role_description",
+                )
+              }}</FormDescription>
+              <Select v-bind="componentField">
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem
+                      :value="role.value"
+                      v-for="role in roles"
+                      :key="role.value"
+                    >
+                      <span class="capitalize">{{ role.display }}</span>
+                    </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          </FormField>
+
           <p class="text-sm text-muted-foreground">
             {{ $t("pages.settings.application.demo_settings.hud_moved") }}
             <NuxtLink
@@ -177,7 +212,11 @@ import StorageCheck from "~/components/settings/StorageCheck.vue";
 </template>
 
 <script lang="ts">
-import { settings_constraint, settings_update_column } from "~/generated/zeus";
+import {
+  e_player_roles_enum,
+  settings_constraint,
+  settings_update_column,
+} from "~/generated/zeus";
 import { generateMutation } from "~/graphql/graphqlGen";
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "~/utilities/vee-validate-zod";
@@ -193,6 +232,11 @@ export default {
             s3_min_retention: z.number().int().min(1).optional().default(1),
             s3_max_storage: z.number().int().min(1).default(10),
             demo_network_limiter: z.number().int().optional().nullable(),
+            public: z.object({
+              demo_playback_role: z
+                .string()
+                .default(e_player_roles_enum.verified_user),
+            }),
           }),
         ),
       }),
@@ -240,6 +284,12 @@ export default {
                   name: "demo_network_limiter",
                   value: this.form.values.demo_network_limiter?.toString(),
                 },
+                {
+                  name: "public.demo_playback_role",
+                  value:
+                    this.form.values.public?.demo_playback_role ||
+                    e_player_roles_enum.verified_user,
+                },
               ],
               on_conflict: {
                 constraint: settings_constraint.settings_pkey,
@@ -263,6 +313,35 @@ export default {
   computed: {
     settings() {
       return useApplicationSettingsStore().settings;
+    },
+    roles() {
+      return [
+        { value: e_player_roles_enum.user, display: this.$t("roles.user") },
+        {
+          value: e_player_roles_enum.verified_user,
+          display: this.$t("roles.verified_user"),
+        },
+        {
+          value: e_player_roles_enum.streamer,
+          display: this.$t("roles.streamer"),
+        },
+        {
+          value: e_player_roles_enum.moderator,
+          display: this.$t("roles.moderator"),
+        },
+        {
+          value: e_player_roles_enum.match_organizer,
+          display: this.$t("roles.match_organizer"),
+        },
+        {
+          value: e_player_roles_enum.tournament_organizer,
+          display: this.$t("roles.tournament_organizer"),
+        },
+        {
+          value: e_player_roles_enum.administrator,
+          display: this.$t("roles.administrator"),
+        },
+      ];
     },
   },
 };

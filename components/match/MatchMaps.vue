@@ -467,8 +467,7 @@ export default {
     },
     canWatchDemo() {
       return (
-        this.match.is_organizer ||
-        useAuthStore().isRoleAbove(e_player_roles_enum.streamer)
+        this.match.is_organizer || useApplicationSettingsStore().canWatchDemos
       );
     },
     canSetMapWinner() {

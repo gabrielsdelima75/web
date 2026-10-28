@@ -3014,6 +3014,8 @@
           "visibility_private": "비공개",
           "visibility_public": "공개",
           "playback_section": "재생",
+          "demo_playback_role": "데모 시청 가능 역할",
+          "demo_playback_role_description": "매치 주최자는 자신의 매치를 항상 시청할 수 있습니다.",
           "reparse_warning_title": "모든 데모를 다시 파싱합니다 — 매우 오래 걸릴 수 있습니다.",
           "reparse_warning_body": "데모는 한 번에 하나씩 재처리되며, 보유량에 따라 몇 시간에서 며칠까지 걸릴 수 있습니다. 정확히 이해하고 있을 때만, 또는 주요 업데이트로 데모 파싱 방식이 바뀐 이후에만 실행하세요. 업데이트로 추가된 새 통계는 매치를 조회할 때 자동으로 재파싱되므로, 이 기능은 전체를 한 번에 강제 실행할 때만 필요합니다.",
           "reparse_button": "모든 데모 재파싱",

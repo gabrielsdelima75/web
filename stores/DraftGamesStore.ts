@@ -16,10 +16,11 @@ import { playerFields } from "~/graphql/playerFields";
 import { mapFields } from "~/graphql/mapGraphql";
 import { useAuthStore } from "~/stores/AuthStore";
 import {
-  checkInStreamSubscription,
-  streamedCheckIn,
-  withStreamedCheckIn,
-} from "~/utilities/checkInStream";
+  LINEUP_STREAM_STATUSES,
+  lineupStreamSubscription,
+  streamedLineups,
+  withStreamedLineups,
+} from "~/utilities/lineupStream";
 
 export const useDraftGamesStore = defineStore("draft-games", () => {
   const openDraftGames = ref<Array<any>>([]);
@@ -339,40 +340,40 @@ export const useDraftGamesStore = defineStore("draft-games", () => {
   };
 
   const polledMatch = ref<any | undefined>(undefined);
-  const streamedMatchCheckIn = ref<any | undefined>(undefined);
-  // While the match waits on check-in, who has checked in comes from its
-  // stream, ahead of the match's poll.
+  const streamedMatchLineups = ref<any | undefined>(undefined);
+  const lineupsStreaming = (match: any) =>
+    LINEUP_STREAM_STATUSES.includes(match?.status);
+  // Until the match starts, its lineups (seats, captains, check-ins) come from
+  // their stream, ahead of the match's poll.
   const currentMatch = computed(() =>
-    polledMatch.value?.status === "WaitingForCheckIn"
-      ? withStreamedCheckIn(polledMatch.value, streamedMatchCheckIn.value)
+    lineupsStreaming(polledMatch.value)
+      ? withStreamedLineups(polledMatch.value, streamedMatchLineups.value)
       : polledMatch.value,
   );
 
-  const unsubscribeFromMatchCheckIn = () => {
-    useSubscriptionManager().unsubscribe("draft-games:match-check-in");
-    streamedMatchCheckIn.value = undefined;
+  const unsubscribeFromMatchLineups = () => {
+    useSubscriptionManager().unsubscribe("draft-games:match-lineups");
+    streamedMatchLineups.value = undefined;
   };
 
   watch(
     () =>
-      polledMatch.value?.status === "WaitingForCheckIn"
-        ? polledMatch.value.id
-        : undefined,
+      lineupsStreaming(polledMatch.value) ? polledMatch.value.id : undefined,
     (matchId) => {
-      unsubscribeFromMatchCheckIn();
+      unsubscribeFromMatchLineups();
       if (!matchId) {
         return;
       }
       const subscription = getGraphqlClient().subscribe({
-        query: checkInStreamSubscription,
+        query: lineupStreamSubscription,
         variables: { matchId },
       });
       useSubscriptionManager().subscribe(
-        "draft-games:match-check-in",
+        "draft-games:match-lineups",
         subscription.subscribe({
           next: ({ data }) => {
-            streamedMatchCheckIn.value =
-              streamedCheckIn(data) ?? streamedMatchCheckIn.value;
+            streamedMatchLineups.value =
+              streamedLineups(data) ?? streamedMatchLineups.value;
           },
         }),
       );

@@ -492,10 +492,11 @@ import {
 } from "~/utilities/matchLiveSplit";
 import { vetoHandoffPhase } from "~/composables/useVetoHandoff";
 import {
-  checkInStreamSubscription,
-  streamedCheckIn,
-  withStreamedCheckIn,
-} from "~/utilities/checkInStream";
+  LINEUP_STREAM_STATUSES,
+  lineupStreamSubscription,
+  streamedLineups,
+  withStreamedLineups,
+} from "~/utilities/lineupStream";
 
 const matchSubscription = typedGql("subscription")({
   matches_by_pk: [
@@ -769,13 +770,14 @@ export default {
     "$route.params.id"() {
       this.liveShared = undefined;
       this.livePersonal = undefined;
-      this.checkInStreamed = undefined;
+      this.lineupsStreamed = undefined;
       this.matchFallback = false;
     },
-    // Its stream stops with check-in, so what it last said goes with it.
+    // Its stream stops once the match is past its lineups, so what it last
+    // said goes with it.
     "matchLive.status"(status) {
-      if (status !== "WaitingForCheckIn") {
-        this.checkInStreamed = undefined;
+      if (!LINEUP_STREAM_STATUSES.includes(status)) {
+        this.lineupsStreamed = undefined;
       }
     },
     matchContext: {
@@ -856,7 +858,7 @@ export default {
       matchLive: undefined,
       liveShared: undefined as Record<string, any> | null | undefined,
       livePersonal: undefined as Record<string, any> | null | undefined,
-      checkInStreamed: undefined as Record<string, any> | undefined,
+      lineupsStreamed: undefined as Record<string, any> | undefined,
       matchFallback: false,
       matchStatic: undefined,
       cameraReady: false,
@@ -914,18 +916,18 @@ export default {
           this.joinMatch();
         },
       },
-      // While the match waits on check-in, who has checked in comes from its
-      // stream, ahead of the poll above.
-      checkIn: {
+      // Until the match starts, its lineups (seats, captains, check-ins) come
+      // from their stream, ahead of the poll above.
+      lineups: {
         variables: function (this: any) {
           return { matchId: this.$route.params.id };
         },
-        query: checkInStreamSubscription,
+        query: lineupStreamSubscription,
         skip: function (this: any): boolean {
-          return this.matchLive?.status !== "WaitingForCheckIn";
+          return !LINEUP_STREAM_STATUSES.includes(this.matchLive?.status);
         },
         result: function (this: any, { data }: any) {
-          this.checkInStreamed = streamedCheckIn(data) ?? this.checkInStreamed;
+          this.lineupsStreamed = streamedLineups(data) ?? this.lineupsStreamed;
         },
       },
     },
@@ -980,10 +982,10 @@ export default {
           ? this.matchLive
           : { ...this.matchStatic, ...this.matchLive };
 
-      if (this.matchLive.status !== "WaitingForCheckIn") {
+      if (!LINEUP_STREAM_STATUSES.includes(this.matchLive.status)) {
         return match;
       }
-      return withStreamedCheckIn(match, this.checkInStreamed);
+      return withStreamedLineups(match, this.lineupsStreamed);
     },
     // What the static half is computed from that the live half can see: the
     // status, server, organizer, match type and substitutes (the lineup

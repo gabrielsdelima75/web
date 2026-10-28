@@ -90,7 +90,7 @@ describe("the draft room", () => {
   });
 });
 
-describe("the draft room's match during check-in", () => {
+describe("the draft room's match before it starts", () => {
   const polled = (status: string) => ({
     id: MATCH,
     status,
@@ -144,7 +144,37 @@ describe("the draft room's match during check-in", () => {
     expect(store.currentMatch.can_check_in).toBe(true);
   });
 
-  it("doesn't stream check-in for a match past it", async () => {
+  it("shows a new captain from the lineups' stream", async () => {
+    const store = useDraftGamesStore();
+    await store.subscribeToMatch(MATCH);
+    await poll("Scheduled");
+
+    streams.match_check_in_versions_stream.at(-1)!({
+      data: {
+        match_check_in_versions_stream: [
+          {
+            changed_at: "2026-10-28T12:00:00.000001+00:00",
+            match: {
+              id: MATCH,
+              status: "Scheduled",
+              lineup_1: {
+                id: "l1",
+                lineup_players: [
+                  { steam_id: ME, captain: true, checked_in: false },
+                ],
+              },
+              lineup_2: { id: "l2", lineup_players: [] },
+            },
+          },
+        ],
+      },
+    });
+    await flushPromises();
+
+    expect(store.currentMatch.lineup_1.lineup_players[0].captain).toBe(true);
+  });
+
+  it("doesn't stream the lineups of a match past them", async () => {
     const store = useDraftGamesStore();
     await store.subscribeToMatch(MATCH);
     await poll("Live");

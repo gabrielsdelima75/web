@@ -102,7 +102,8 @@ async function poll(status: string) {
   await flushPromises();
 }
 
-async function streamCheckIn() {
+// What the lineups' stream sends: the lineups as one read.
+async function stream(lineup1: any[], extra: Record<string, unknown> = {}) {
   for (const observer of checkIns) {
     observer.next({
       data: {
@@ -114,14 +115,24 @@ async function streamCheckIn() {
               status: e_match_status_enum.WaitingForCheckIn,
               cancels_at: null,
               can_check_in: false,
+              can_start: false,
+              is_in_lineup: true,
+              is_captain: true,
               lineup_1: {
                 id: "l1",
-                lineup_players: [
-                  { steam_id: ME, checked_in: true },
-                  { steam_id: MATE, checked_in: false },
-                ],
+                name: "One",
+                is_on_lineup: true,
+                can_update_lineup: true,
+                lineup_players: lineup1,
               },
-              lineup_2: { id: "l2", lineup_players: [] },
+              lineup_2: {
+                id: "l2",
+                name: "Two",
+                is_on_lineup: false,
+                can_update_lineup: false,
+                lineup_players: [],
+              },
+              ...extra,
             },
           },
         ],
@@ -140,13 +151,23 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe("the match page during check-in", () => {
-  it("shows who has checked in from the check-in stream, ahead of its poll", async () => {
+const NEW = "76561198000000003";
+
+describe("the match page before it starts", () => {
+  it("shows who has checked in from the lineups' stream, ahead of its poll", async () => {
     const wrapper = await mountMatch();
     await poll(e_match_status_enum.WaitingForCheckIn);
     expect(checkIns.length).toBeGreaterThan(0);
 
-    await streamCheckIn();
+    await stream([
+      { steam_id: ME, captain: true, checked_in: true, player: { name: "me" } },
+      {
+        steam_id: MATE,
+        captain: false,
+        checked_in: false,
+        player: { name: "mate" },
+      },
+    ]);
 
     const match = (wrapper.vm as any).match;
     expect(match.can_check_in).toBe(false);
@@ -156,20 +177,87 @@ describe("the match page during check-in", () => {
     ]);
   });
 
-  it("goes back to the poll once the match has left check-in", async () => {
+  it("shows a player filling an open seat, and a new captain, while players are picked", async () => {
+    const wrapper = await mountMatch();
+    await poll(e_match_status_enum.PickingPlayers);
+
+    await stream(
+      [
+        {
+          steam_id: MATE,
+          captain: true,
+          checked_in: false,
+          player: { name: "mate" },
+        },
+        {
+          steam_id: ME,
+          captain: false,
+          checked_in: false,
+          player: { name: "me" },
+        },
+        {
+          steam_id: NEW,
+          captain: false,
+          checked_in: false,
+          player: { name: "new" },
+        },
+      ],
+      { status: e_match_status_enum.PickingPlayers },
+    );
+
+    const players = (wrapper.vm as any).match.lineup_1.lineup_players;
+    expect(players.map((player: any) => player.steam_id)).toEqual([
+      MATE,
+      ME,
+      NEW,
+    ]);
+    expect(players[0]).toMatchObject({
+      captain: true,
+      player: { name: "mate" },
+    });
+    expect(players[2]).toMatchObject({ player: { name: "new" } });
+  });
+
+  it("drops a player who left from the lineups' stream", async () => {
+    const wrapper = await mountMatch();
+    await poll(e_match_status_enum.PickingPlayers);
+
+    await stream(
+      [
+        {
+          steam_id: ME,
+          captain: true,
+          checked_in: false,
+          player: { name: "me" },
+        },
+      ],
+      { status: e_match_status_enum.PickingPlayers },
+    );
+
+    expect(
+      (wrapper.vm as any).match.lineup_1.lineup_players.map(
+        (player: any) => player.steam_id,
+      ),
+    ).toEqual([ME]);
+  });
+
+  it("goes back to the poll once the match is past its lineups", async () => {
     const wrapper = await mountMatch();
     await poll(e_match_status_enum.WaitingForCheckIn);
-    await streamCheckIn();
+    await stream([
+      { steam_id: ME, captain: true, checked_in: true, player: { name: "me" } },
+    ]);
 
     await poll(e_match_status_enum.Veto);
 
     const match = (wrapper.vm as any).match;
     expect(match.status).toBe(e_match_status_enum.Veto);
     expect(match.can_check_in).toBe(true);
-    expect((wrapper.vm as any).checkInStreamed).toBeUndefined();
+    expect(match.lineup_1.lineup_players).toHaveLength(2);
+    expect((wrapper.vm as any).lineupsStreamed).toBeUndefined();
   });
 
-  it("doesn't stream check-in for a match that isn't waiting on it", async () => {
+  it("doesn't stream the lineups of a match that has started", async () => {
     await mountMatch();
     await poll(e_match_status_enum.Live);
 

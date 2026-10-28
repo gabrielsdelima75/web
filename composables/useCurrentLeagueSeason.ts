@@ -5,6 +5,8 @@ import {
   type LeagueSeasonRef,
 } from "~/utilities/leagueSeason";
 import { useApplicationSettingsStore } from "~/stores/ApplicationSettings";
+import { useAuthStore } from "~/stores/AuthStore";
+import getPublicGraphqlClient from "~/graphql/getPublicGraphqlClient";
 
 const seasons = ref<LeagueSeasonRef[]>([]);
 let started = false;
@@ -14,13 +16,14 @@ export function useCurrentLeagueSeason() {
     started = true;
     const apolloClient = useApolloClient().client;
     const settings = useApplicationSettingsStore();
+    const auth = useAuthStore();
 
     let sub: { unsubscribe: () => void } | null = null;
 
     effectScope(true).run(() => {
       watch(
-        () => settings.leaguesEnabled,
-        (enabled) => {
+        () => [settings.leaguesEnabled, auth.isAdmin] as const,
+        ([enabled, isAdmin]) => {
           sub?.unsubscribe();
           sub = null;
           seasons.value = [];
@@ -28,7 +31,10 @@ export function useCurrentLeagueSeason() {
             return;
           }
 
-          sub = apolloClient
+          // Every page keeps this open. Seasons still in Setup are an
+          // administrator's alone; everyone else sees the same list, so they
+          // share one guest poll instead of each polling their own.
+          sub = (isAdmin ? apolloClient : getPublicGraphqlClient())
             .subscribe({ query: LEAGUE_SEASONS_LIST_SUBSCRIPTION })
             .subscribe({
               next: ({ data }: any) => {

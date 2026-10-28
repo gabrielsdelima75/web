@@ -24,6 +24,7 @@ import {
 } from "~/graphql/scrimFields";
 import { useAuthStore } from "~/stores/AuthStore";
 import { toast } from "~/components/ui/toast";
+import getPublicGraphqlClient from "~/graphql/getPublicGraphqlClient";
 
 const PLAYED = ["Finished", "Tie", "Forfeit", "Surrendered"];
 const OVER = [...PLAYED, "Canceled"];
@@ -117,9 +118,15 @@ const postingsQuery = generateSubscription({
 function useFollow() {
   const { client } = useApolloClient();
   const subs: Array<{ unsubscribe: () => void }> = [];
-  function follow(query: any, variables: any, into: Ref<any[]>, done?: Ref<boolean>) {
+  function follow(
+    query: any,
+    variables: any,
+    into: Ref<any[]>,
+    done?: Ref<boolean>,
+    from: { subscribe: typeof client.subscribe } = client,
+  ) {
     subs.push(
-      client.subscribe({ query, variables }).subscribe({
+      from.subscribe({ query, variables }).subscribe({
         next: ({ data }: any) => {
           into.value = (Object.values(data ?? {})[0] as any[]) ?? [];
           if (done) done.value = true;
@@ -137,12 +144,15 @@ function useFollow() {
   return { follow, stop };
 }
 
-// Every team open to scrims, for guests too.
+// Every team open to scrims, the same for every viewer, so read as a guest:
+// everyone shares one Hasura poll of the board.
 export function useScrimPostings() {
   const { follow } = useFollow();
   const postings = ref<any[]>([]);
   const loaded = ref(false);
-  onMounted(() => follow(postingsQuery, {}, postings, loaded));
+  onMounted(() =>
+    follow(postingsQuery, {}, postings, loaded, getPublicGraphqlClient()),
+  );
   return { postings, loaded };
 }
 
@@ -255,7 +265,8 @@ export function useScrimTeamRequests(
   );
 
   const booked = computed(
-    () => requests.value.find((request) => request.status === "Matched") ?? null,
+    () =>
+      requests.value.find((request) => request.status === "Matched") ?? null,
   );
 
   return { requests, played, loaded, booked };

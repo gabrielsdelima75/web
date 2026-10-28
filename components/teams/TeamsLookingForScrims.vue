@@ -19,6 +19,7 @@ import {
   tacticalSectionTickClasses,
 } from "~/utilities/tacticalClasses";
 import { dateLocale } from "~/utilities/dateLocale";
+import getPublicGraphqlClient from "~/graphql/getPublicGraphqlClient";
 
 const props = defineProps<{ myTeamIds: string[] }>();
 
@@ -112,14 +113,18 @@ watch(
     postingsSub = undefined;
     postings.value = [];
     if (!enabled || typeof window === "undefined") return;
-    postingsSub = client.subscribe({ query: postingsQuery }).subscribe({
-      next: ({ data }: any) => {
-        postings.value = data?.team_scrim_settings ?? [];
-      },
-      error: (error: any) => {
-        console.error("[teams] scrim postings subscription error", error);
-      },
-    });
+    // The same for every viewer, so read as a guest: everyone shares one
+    // Hasura poll of the board.
+    postingsSub = getPublicGraphqlClient()
+      .subscribe({ query: postingsQuery })
+      .subscribe({
+        next: ({ data }: any) => {
+          postings.value = data?.team_scrim_settings ?? [];
+        },
+        error: (error: any) => {
+          console.error("[teams] scrim postings subscription error", error);
+        },
+      });
   },
   { immediate: true },
 );
